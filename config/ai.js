@@ -44,27 +44,15 @@ export const MODELS = [
   // ── Cloud: Google Gemini ──────────────────────────────────────────────────
 
   {
-    id:             'gemini-flash',
-    label:          'Gemini 1.5 Flash',
-    subtitle:       'Cloud · Fast · No doc limit',
-    provider:       'gemini',
-    requiresKey:    true,
-    geminiModel:    'gemini-1.5-flash',
-    maxOutputTokens: 2048,
-    temperature:    0.2,
-    maxDocsChars:   80000,   // Gemini has a 1M token context — no practical limit
-  },
-
-  {
-    id:             'gemini-pro',
-    label:          'Gemini 1.5 Pro',
-    subtitle:       'Cloud · Best quality · No doc limit',
-    provider:       'gemini',
-    requiresKey:    true,
-    geminiModel:    'gemini-1.5-pro',
-    maxOutputTokens: 2048,
-    temperature:    0.2,
-    maxDocsChars:   80000,
+    id:              'gemini-flash',
+    label:           'Gemini 2.5 Flash',
+    subtitle:        'Cloud · Fast · No doc limit',
+    provider:        'gemini',
+    requiresKey:     true,
+    geminiModel:     'gemini-2.5-flash',
+    maxOutputTokens: 8192,
+    temperature:     0.2,
+    maxDocsChars:    200000,  // Gemini 2.5 has a 1M token context — no practical limit
   },
 
   // ── Local: Ollama ─────────────────────────────────────────────────────────
@@ -73,87 +61,48 @@ export const MODELS = [
   //   num_ctx should comfortably fit:
   //     (maxDocsChars / 4) tokens  ← docs
   //     + ~300 tokens              ← system prompt + question
-  //     + ~1000 tokens             ← answer headroom
+  //     + ~1500 tokens             ← answer headroom
   //
-  // 3B models: keep num_ctx ≤ 8192 for stability on smaller hardware.
-  // 7–8B models: 8192–16384 depending on available VRAM/RAM.
-  // 14B+ models: 8192 is safe; raise if you have 32GB+ RAM.
+  // phi3:mini  (3.8B, 2.2 GB)  — fast, small context budget
+  // gemma4 4B  (9.6 GB)        — Google Gemma 4, strong instruction following
+  // gemma4 26B (17 GB)         — larger Gemma 4, best local quality, slower
 
   {
-    id:           'llama3.2',
-    label:        'Llama 3.2',
-    subtitle:     'Local · 3B · Fastest',
+    id:           'phi3-mini',
+    label:        'Phi-3 Mini',
+    subtitle:     'Local · 3.8B · 2.2 GB · Fastest',
     provider:     'ollama',
     requiresKey:  false,
-    ollamaModel:  'llama3.2',
+    ollamaModel:  'phi3:mini',
     num_ctx:      8192,
-    maxDocsChars: 6000,    // ≈1500 tokens — small to fit the 3B context budget
+    maxDocsChars: 6000,    // ≈1500 tokens — small model, tight context budget
     timeoutMs:    120000,
     temperature:  0.2,
   },
 
   {
-    id:           'llama3.1-8b',
-    label:        'Llama 3.1 8B',
-    subtitle:     'Local · 8B · Balanced',
+    id:           'gemma4',
+    label:        'Gemma 4 (4B)',
+    subtitle:     'Local · 4B · 9.6 GB · Balanced',
     provider:     'ollama',
     requiresKey:  false,
-    ollamaModel:  'llama3.1:8b',
+    ollamaModel:  'gemma4:latest',
     num_ctx:      8192,
-    maxDocsChars: 12000,   // ≈3000 tokens
+    maxDocsChars: 14000,   // ≈3500 tokens — Gemma 4 handles dense context well
     timeoutMs:    180000,
     temperature:  0.2,
   },
 
   {
-    id:           'mistral',
-    label:        'Mistral 7B',
-    subtitle:     'Local · 7B · Precise',
+    id:           'gemma4-26b',
+    label:        'Gemma 4 (26B)',
+    subtitle:     'Local · 26B · 17 GB · Best quality',
     provider:     'ollama',
     requiresKey:  false,
-    ollamaModel:  'mistral',
+    ollamaModel:  'gemma4:26b',
     num_ctx:      8192,
-    maxDocsChars: 12000,
-    timeoutMs:    180000,
-    temperature:  0.2,
-  },
-
-  {
-    id:           'qwen2.5-7b',
-    label:        'Qwen 2.5 7B',
-    subtitle:     'Local · 7B · Strong at RAG',
-    provider:     'ollama',
-    requiresKey:  false,
-    ollamaModel:  'qwen2.5:7b',
-    num_ctx:      8192,
-    maxDocsChars: 14000,   // ≈3500 tokens — Qwen handles dense context well
-    timeoutMs:    180000,
-    temperature:  0.2,
-  },
-
-  {
-    id:           'deepseek-r1-7b',
-    label:        'DeepSeek R1 7B',
-    subtitle:     'Local · 7B · Reasoning',
-    provider:     'ollama',
-    requiresKey:  false,
-    ollamaModel:  'deepseek-r1:7b',
-    num_ctx:      8192,
-    maxDocsChars: 10000,   // reasoning tokens can be long — leave extra headroom
-    timeoutMs:    240000,  // thinking models are slower
-    temperature:  0.1,    // lower temp for more consistent reasoning
-  },
-
-  {
-    id:           'phi4',
-    label:        'Phi-4',
-    subtitle:     'Local · 14B · High accuracy',
-    provider:     'ollama',
-    requiresKey:  false,
-    ollamaModel:  'phi4',
-    num_ctx:      8192,
-    maxDocsChars: 12000,
-    timeoutMs:    240000,
+    maxDocsChars: 12000,   // conservative — leave headroom for the larger output
+    timeoutMs:    300000,  // 5 min — 26B is significantly slower
     temperature:  0.2,
   },
 
