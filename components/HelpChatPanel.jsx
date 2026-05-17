@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { MODELS, DEFAULT_MODEL_ID, getModelById } from '@/config/ai'
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
@@ -389,7 +390,8 @@ function DocPicker({ productCode, selectedDocKeys, onToggle, onSelectAll, onSele
 
 // ─── Chat Sub-Components ──────────────────────────────────────────────────────
 
-function WelcomeContent({ productName, selectedCount, useLocalAI }) {
+function WelcomeContent({ productName, selectedCount, model }) {
+  const isLocal = model?.provider === 'ollama'
   return (
     <div className="p-6 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-100 dark:border-blue-900">
       <div className="flex items-center gap-3 mb-3">
@@ -414,13 +416,15 @@ function WelcomeContent({ productName, selectedCount, useLocalAI }) {
         </Badge>
         <span className="hidden sm:inline">•</span>
         <span className="text-gray-400 dark:text-gray-500">
-          {useLocalAI ? '🖥️ Local AI (Ollama)' : '☁️ Cloud AI (Gemini)'}
+          {isLocal ? '🖥️' : '☁️'} {model?.label ?? 'AI'}
         </span>
       </div>
       <div className="text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800/60 rounded p-3 border border-gray-200 dark:border-gray-700">
-        <strong>💡 Tips:</strong> Select fewer docs for faster local AI responses. Use the doc picker above
-        to choose the files most relevant to your question.
-        Press <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> to send,{' '}
+        <strong>💡 Tips:</strong>{' '}
+        {isLocal
+          ? 'Local models have a smaller context window — pick the docs most relevant to your question for best results.'
+          : 'Cloud AI supports large doc selections with no slowdown.'}
+        {' '}Press <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> to send,{' '}
         <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Shift+Enter</kbd> for a new line.
       </div>
     </div>
@@ -506,18 +510,19 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
   const [inputValue,      setInputValue]      = useState('')
   const [isLoading,       setIsLoading]       = useState(false)
   const [copiedId,        setCopiedId]        = useState(null)
-  const [useLocalAI,      setUseLocalAI]      = useState(false)
+  const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
 
   const textareaRef    = useRef(null)
   const messagesEndRef = useRef(null)
 
-  const productName = PRODUCT_NAMES[activeProduct] || 'Timebars'
+  const productName  = PRODUCT_NAMES[activeProduct] || 'Timebars'
+  const activeModel  = getModelById(selectedModelId)
 
-  // Restore useLocalAI preference
+  // Restore saved model preference
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('helpUseLocalAI')
-      if (saved !== null) setUseLocalAI(saved === 'true')
+      const saved = localStorage.getItem('helpSelectedModel')
+      if (saved && MODELS.some(m => m.id === saved)) setSelectedModelId(saved)
     } catch { /* ignore */ }
   }, [])
 
@@ -532,10 +537,10 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  function handleLocalAIToggle(e) {
-    const checked = e.target.checked
-    setUseLocalAI(checked)
-    try { localStorage.setItem('helpUseLocalAI', String(checked)) } catch { /* ignore */ }
+  function handleModelChange(e) {
+    const id = e.target.value
+    setSelectedModelId(id)
+    try { localStorage.setItem('helpSelectedModel', id) } catch { /* ignore */ }
   }
 
   function handleDocToggle(key) {
@@ -603,7 +608,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userQuestion: question, productCode: activeProduct, docsContext, useLocalAI }),
+        body: JSON.stringify({ userQuestion: question, productCode: activeProduct, docsContext, modelId: selectedModelId }),
       })
 
       if (!res.ok) {
@@ -628,9 +633,9 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
       } else if (error.message?.includes('GEMINI_API_KEY')) {
         errorText += 'Cloud AI is not configured. Check your GEMINI_API_KEY in .env.local.'
       } else if (error.message?.includes('timed out')) {
-        errorText += 'The local AI took too long. Try selecting fewer docs.'
-      } else if (error.message?.includes('Ollama') || error.message?.includes('fetch')) {
-        errorText += 'Could not reach the local AI. Make sure Ollama is running at the configured host.'
+        errorText += `${activeModel.label} took too long. Try a cloud model or select fewer docs.`
+      } else if (error.message?.includes('Ollama') || error.message?.includes('ECONNREFUSED') || error.message?.includes('fetch')) {
+        errorText += 'Could not reach Ollama. Check that Ollama is running and the host in config/ai.js is correct.'
       } else {
         errorText += error.message || 'Please try again later.'
       }
@@ -642,7 +647,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
       setIsLoading(false)
       textareaRef.current?.focus()
     }
-  }, [inputValue, isLoading, activeProduct, selectedDocKeys, useLocalAI])
+  }, [inputValue, isLoading, activeProduct, selectedDocKeys, selectedModelId, activeModel])
 
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() }
@@ -678,7 +683,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
                 Help Assistant
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {useLocalAI ? '🖥️ Local AI (Ollama)' : '☁️ Cloud AI (Gemini)'} · Official documentation only
+                {activeModel.provider === 'ollama' ? '🖥️' : '☁️'} {activeModel.label} · Official documentation only
               </p>
             </div>
           </div>
@@ -716,7 +721,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
               <WelcomeContent
                 productName={productName}
                 selectedCount={selectedDocKeys.length}
-                useLocalAI={useLocalAI}
+                model={activeModel}
               />
             ) : (
               messages.map(msg => {
@@ -772,17 +777,23 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
                 Clear
               </Button>
 
-              {/* Local AI toggle */}
-              <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-gray-600 dark:text-gray-400">
-                <input
-                  type="checkbox"
-                  checked={useLocalAI}
-                  onChange={handleLocalAIToggle}
+              {/* Model picker */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">Model:</span>
+                <select
+                  value={selectedModelId}
+                  onChange={handleModelChange}
                   disabled={isLoading}
-                  className="w-4 h-4 rounded accent-tbBlue cursor-pointer"
-                />
-                Use Local AI Model
-              </label>
+                  className="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-tbBlue disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Select AI model"
+                >
+                  {MODELS.map(m => (
+                    <option key={m.id} value={m.id}>
+                      {m.provider === 'ollama' ? '🖥️' : '☁️'} {m.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <span className="text-xs text-gray-400 dark:text-gray-500">

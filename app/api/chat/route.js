@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { AI_CONFIG } from '@/config/ai'
+import { getModelById, OLLAMA_HOST } from '@/config/ai'
 
 function buildSystemPrompt(productCode) {
   const productNames = { TB: 'Timebars', AB: 'Agilebars', CB: 'Costbars' }
@@ -13,25 +13,32 @@ function buildSystemPrompt(productCode) {
   )
 }
 
-async function callGemini(systemPrompt, userQuestion, docsContext) {
+async function callGemini(systemPrompt, userQuestion, docsContext, model) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set in environment')
 
+  const trimmedDocs = docsContext.length > model.maxDocsChars
+    ? docsContext.slice(0, model.maxDocsChars) + '\n\n[Documentation trimmed]'
+    : docsContext
+
   const fullPrompt =
     `${systemPrompt}\n\n` +
-    `=== DOCUMENTATION ===\n${docsContext}\n` +
+    `=== DOCUMENTATION ===\n${trimmedDocs}\n` +
     `=== END DOCUMENTATION ===\n\n` +
     `User question: ${userQuestion}`
 
   const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/${AI_CONFIG.gemini.model}:generateContent?key=${apiKey}`
+    `https://generativelanguage.googleapis.com/v1beta/models/${model.geminiModel}:generateContent?key=${apiKey}`
 
   const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: fullPrompt }] }],
-      generationConfig: { temperature: 0.2, maxOutputTokens: 2048 },
+      generationConfig: {
+        temperature:     model.temperature,
+        maxOutputTokens: model.maxOutputTokens,
+      },
     }),
   })
 
@@ -46,10 +53,9 @@ async function callGemini(systemPrompt, userQuestion, docsContext) {
   return answer
 }
 
-async function callOllama(systemPrompt, userQuestion, docsContext) {
-  const { host, model, num_ctx, maxDocsChars, timeoutMs } = AI_CONFIG.ollama
+async function callOllama(systemPrompt, userQuestion, docsContext, model) {
+  const { ollamaModel, num_ctx, maxDocsChars, timeoutMs, temperature } = model
 
-  // Trim docs to fit safely within the context window
   const trimmedDocs = docsContext.length > maxDocsChars
     ? docsContext.slice(0, maxDocsChars) + '\n\n[Documentation trimmed to fit local model context]'
     : docsContext
@@ -58,12 +64,12 @@ async function callOllama(systemPrompt, userQuestion, docsContext) {
   const timer = setTimeout(() => controller.abort(), timeoutMs)
 
   try {
-    const res = await fetch(`${host}/api/chat`, {
+    const res = await fetch(`${OLLAMA_HOST}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       signal: controller.signal,
       body: JSON.stringify({
-        model,
+        model:  ollamaModel,
         stream: false,
         messages: [
           {
@@ -75,7 +81,7 @@ async function callOllama(systemPrompt, userQuestion, docsContext) {
           },
           { role: 'user', content: userQuestion },
         ],
-        options: { temperature: 0.2, num_ctx },
+        options: { temperature, num_ctx },
       }),
     })
 
@@ -90,7 +96,12 @@ async function callOllama(systemPrompt, userQuestion, docsContext) {
     return answer
 
   } catch (err) {
-    if (err.name === 'AbortError') throw new Error('Ollama request timed out — the model may be busy or overloaded')
+    if (err.name === 'AbortError') {
+      throw new Error(
+        `Local AI timed out after ${Math.round(timeoutMs / 1000)}s — ` +
+        `the model may be busy or overloaded`
+      )
+    }
     throw err
   } finally {
     clearTimeout(timer)
@@ -99,17 +110,18 @@ async function callOllama(systemPrompt, userQuestion, docsContext) {
 
 export async function POST(request) {
   try {
-    const { userQuestion, productCode, docsContext, useLocalAI } = await request.json()
+    const { userQuestion, productCode, docsContext, modelId } = await request.json()
 
     if (!userQuestion?.trim()) {
       return NextResponse.json({ success: false, error: 'No question provided' }, { status: 400 })
     }
 
+    const model = getModelById(modelId)
     const systemPrompt = buildSystemPrompt(productCode)
 
-    const answer = useLocalAI
-      ? await callOllama(systemPrompt, userQuestion, docsContext)
-      : await callGemini(systemPrompt, userQuestion, docsContext)
+    const answer = model.provider === 'ollama'
+      ? await callOllama(systemPrompt, userQuestion, docsContext, model)
+      : await callGemini(systemPrompt, userQuestion, docsContext, model)
 
     return NextResponse.json({ success: true, answer })
 
