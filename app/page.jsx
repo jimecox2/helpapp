@@ -16,7 +16,7 @@ export default function HomePage() {
           Ask questions about your product — answered instantly from the official documentation.
         </p>
       </div>
-      <HelpChatPanel defaultProduct="TB" />
+      <HelpChatPanel />
     </main>
   )
 }

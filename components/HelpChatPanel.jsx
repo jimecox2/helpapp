@@ -8,271 +8,298 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle } from 'lucide-react'
+import { MODELS, DEFAULT_MODEL_ID, getModelById } from '@/config/ai'
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
 const MAX_HISTORY_ITEMS = 10
-const DOCS_CACHE_TTL    = 1000 * 60 * 60 // 1 hour per doc
+const DOCS_CACHE_TTL    = 1000 * 60 * 60 // 1 hour
 
-const PRODUCT_NAMES = { AB: 'Agilebars', TB: 'Timebars', CB: 'Costbars' }
-
-// Per-doc cache keyed by file path
 const _docCache = {}
 
 // ─── Help Docs Registry ───────────────────────────────────────────────────────
+//
+// category values used for layout:
+//   'Timebars'         → Timebars product column
+//   'Agilebars'        → Agilebars product column
+//   'Costbars'         → Costbars product column
+//   'Common Help Files'→ shared section below the columns
+//   'Advanced'         → advanced/technical section at the bottom
 
 const HELP_DOCS = {
-  'getting-started.md': {
-    title: 'Getting Started Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_01_Getting_Started.md',
-    priority: 1,
-  },
-  'innovations.md': {
-    title: 'Innovations by Timebars Ltd',
-    category: 'Overview',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_01_Innovations_By_Timebars_Ltd.md',
-    priority: 2,
-  },
-  'product-design-strategy.md': {
-    title: 'Product Design Strategy',
-    category: 'Overview',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_01_Product_Design_Strategy.md',
-    priority: 3,
-  },
-  'user-interface-guide.md': {
-    title: 'User Interface Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_02_User_Interface_Guide.md',
-    priority: 2,
-  },
-  'configurable-features.md': {
-    title: 'Configurable Features User Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Configurable_Features_User_Guide.md',
-    priority: 3,
-  },
-  'data-management.md': {
-    title: 'Data Management User Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Data_Management_User_Guide.md',
-    priority: 3,
-  },
-  'data-model-scheduling.md': {
-    title: 'Data Model and Scheduling Engine Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Data_Model_and_Scheduling_Engine_Guide.md',
-    priority: 3,
-  },
-  'data-structure.md': {
-    title: 'Data Structure User Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Data_Structure_User_Guide.md',
-    priority: 3,
-  },
-  'metadata-fields.md': {
-    title: 'MetaData Fields Detail Report',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_MetaData_Fields_Detail_Report.md',
-    priority: 3,
-  },
-  'picklists-tagging.md': {
-    title: 'Picklists and Tagging Help',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Picklists_And_Tagging_Help.md',
-    priority: 3,
-  },
-  'spreadsheet-sync.md': {
-    title: 'Spreadsheet Sync User Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Spreadsheet_Sync_User_Guide.md',
-    priority: 3,
-  },
-  'focd-forms.md': {
-    title: 'FOCD Forms User Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_04_FOCD_Forms_User_Guide.md',
-    priority: 4,
-  },
-  'local-reports-graphs.md': {
-    title: 'Local Reports and Graphs Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_05_Local_Reports_And_Graphs_Guide.md',
-    priority: 5,
-  },
-  'risks-issues-change-requests.md': {
-    title: 'Risks, Issues and Change Requests',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_05_Risks_Issues_Change_Requests_User_Guide.md',
-    priority: 5,
-  },
-  'ask-ai.md': {
-    title: 'How to Use Ask AI',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_06_How_To_Use_Ask_AI.md',
-    priority: 6,
-  },
-  'cloud-publishing.md': {
-    title: 'Cloud Publishing Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_07_Cloud_Publishing_Guide.md',
-    priority: 7,
-  },
-  'personal-dashboard-guide.md': {
-    title: 'Cloud Reports and Dashboard Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_08_Personal_Dashboard_Guide.md',
-    priority: 8,
-  },
-  'enterprise-dashboard-guide.md': {
-    title: 'Enterprise Dashboard Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_09_Enterprise_Dashboard_Guide.md',
-    priority: 8,
-  },
-  'text-notifications.md': {
-    title: 'Text Notifications',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_10_Text_Notifications.md',
-    priority: 7,
-  },
-  'text-notifications-technical.md': {
-    title: 'Text Notifications Technical Details',
-    category: 'Technical',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_10_Text_Notifications_Technical_Details.md',
-    priority: 9,
-  },
-  'supply-demand-grids.md': {
-    title: 'Supply and Demand Grids User Guide',
-    category: 'User Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_11_Supply_And_Demand_Grids_User_Guide.md',
-    priority: 5,
-  },
-  'customer-installation-options.md': {
-    title: 'Customer Installation Options',
-    category: 'Installation',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_12_Customer_Installation_Options.md',
-    priority: 9,
-  },
-  'data-migration.md': {
-    title: 'Data Migration Assistance',
-    category: 'Installation',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_12_Data_Migration_Assistance.md',
-    priority: 9,
-  },
-  'on-prem-installation.md': {
-    title: 'Products Installation For On-Premises',
-    category: 'Installation',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_12_Products_Installation_For_On_Prem.md',
-    priority: 9,
-  },
-  'writing-business-case.md': {
-    title: 'Writing a Business Case',
-    category: 'PPM Guide',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Costbars_Writing_A_Business_Case.md',
-    priority: 5,
-  },
-  'costbars-user-guide.md': {
-    title: 'Costbars User Guide',
-    category: 'User Guide',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_User_Guide.md',
-    priority: 1,
-  },
-  'ppm-portfolio-status-balancing.md': {
-    title: 'PPM Portfolio Status and Balancing Report',
-    category: 'PPM Guide',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_PPM_Portfolio_Status_And_Balancing_Report.md',
-    priority: 3,
-  },
-  'ppm-project-assessment.md': {
-    title: 'PPM Project Assessment Tool',
-    category: 'PPM Guide',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_PPM_Project_Assessment_Tool.md',
-    priority: 4,
-  },
-  'ppm-scoring-guide.md': {
-    title: 'PPM Scoring Guide - 5 Step Process',
-    category: 'PPM Guide',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_PPM_Scoring_Guide_5_Step_Process.md',
-    priority: 3,
-  },
+
+  // ── Timebars column ────────────────────────────────────────────────────────
   'timebars-user-guide.md': {
     title: 'Timebars User Guide',
-    category: 'User Guide',
+    category: 'Timebars',
     products: ['TB'],
     path: '/docsHelp/Timebars_User_Guide.md',
     priority: 1,
   },
+
+  // ── Agilebars column ──────────────────────────────────────────────────────
   'agilebars-user-guide.md': {
     title: 'Agilebars User Guide',
-    category: 'User Guide',
+    category: 'Agilebars',
     products: ['AB'],
     path: '/docsHelp/Agilebars_User_Guide.md',
     priority: 1,
   },
   'kanban-primer.md': {
     title: 'Kanban Primer',
-    category: 'Methodology',
+    category: 'Agilebars',
     products: ['AB'],
     path: '/docsHelp/Agilebars_Kanban_Primer.md',
+    priority: 2,
+  },
+
+  // ── Costbars column ───────────────────────────────────────────────────────
+  'costbars-user-guide.md': {
+    title: 'Costbars User Guide',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsHelp/Costbars_User_Guide.md',
+    priority: 1,
+  },
+  'writing-business-case.md': {
+    title: 'Writing a Business Case',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsHelp/Costbars_Writing_A_Business_Case.md',
+    priority: 2,
+  },
+  'ppm-portfolio-status-balancing.md': {
+    title: 'PPM Portfolio Status & Balancing',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsHelp/Costbars_PPM_Portfolio_Status_And_Balancing_Report.md',
     priority: 3,
+  },
+  'ppm-project-assessment.md': {
+    title: 'PPM Project Assessment Tool',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsHelp/Costbars_PPM_Project_Assessment_Tool.md',
+    priority: 4,
+  },
+  'ppm-scoring-guide.md': {
+    title: 'PPM Scoring Guide (5 Steps)',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsHelp/Costbars_PPM_Scoring_Guide_5_Step_Process.md',
+    priority: 5,
+  },
+
+  // ── Common Help Files ──────────────────────────────────────────────────────
+  'getting-started.md': {
+    title: 'Getting Started Guide',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_01_Getting_Started.md',
+    priority: 1,
+  },
+  'innovations.md': {
+    title: 'Innovations by Timebars Ltd',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_01_Innovations_By_Timebars_Ltd.md',
+    priority: 2,
+  },
+  'product-design-strategy.md': {
+    title: 'Product Design Strategy',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_01_Product_Design_Strategy.md',
+    priority: 3,
+  },
+  'user-interface-guide.md': {
+    title: 'User Interface Guide',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_02_User_Interface_Guide.md',
+    priority: 4,
+  },
+  'configurable-features.md': {
+    title: 'Configurable Features',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_Configurable_Features_User_Guide.md',
+    priority: 5,
+  },
+  'data-management.md': {
+    title: 'Data Management',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_Data_Management_User_Guide.md',
+    priority: 6,
+  },
+  'data-model-scheduling.md': {
+    title: 'Data Model & Scheduling Engine',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_Data_Model_and_Scheduling_Engine_Guide.md',
+    priority: 7,
+  },
+  'data-structure.md': {
+    title: 'Data Structure',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_Data_Structure_User_Guide.md',
+    priority: 8,
+  },
+  'metadata-fields.md': {
+    title: 'MetaData Fields',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_MetaData_Fields_Detail_Report.md',
+    priority: 9,
+  },
+  'picklists-tagging.md': {
+    title: 'Picklists & Tagging',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_Picklists_And_Tagging_Help.md',
+    priority: 10,
+  },
+  'spreadsheet-sync.md': {
+    title: 'Spreadsheet Sync',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_03_Spreadsheet_Sync_User_Guide.md',
+    priority: 11,
+  },
+  'focd-forms.md': {
+    title: 'FOCD Forms',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_04_FOCD_Forms_User_Guide.md',
+    priority: 12,
+  },
+  'local-reports-graphs.md': {
+    title: 'Local Reports & Graphs',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_05_Local_Reports_And_Graphs_Guide.md',
+    priority: 13,
+  },
+  'risks-issues-change-requests.md': {
+    title: 'Risks, Issues & Change Requests',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_05_Risks_Issues_Change_Requests_User_Guide.md',
+    priority: 14,
+  },
+  'ask-ai.md': {
+    title: 'How to Use Ask AI',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_06_How_To_Use_Ask_AI.md',
+    priority: 15,
+  },
+  'cloud-publishing.md': {
+    title: 'Cloud Publishing',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_07_Cloud_Publishing_Guide.md',
+    priority: 16,
+  },
+  'personal-dashboard-guide.md': {
+    title: 'Cloud Reports & Dashboard',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_08_Personal_Dashboard_Guide.md',
+    priority: 17,
+  },
+  'enterprise-dashboard-guide.md': {
+    title: 'Enterprise Dashboard',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_09_Enterprise_Dashboard_Guide.md',
+    priority: 18,
+  },
+  'text-notifications.md': {
+    title: 'Text Notifications',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_10_Text_Notifications.md',
+    priority: 19,
+  },
+  'supply-demand-grids.md': {
+    title: 'Supply & Demand Grids',
+    category: 'Common Help Files',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_11_Supply_And_Demand_Grids_User_Guide.md',
+    priority: 20,
+  },
+
+  // ── Advanced ───────────────────────────────────────────────────────────────
+  'text-notifications-technical.md': {
+    title: 'Text Notifications — Technical Details',
+    category: 'Advanced',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_10_Text_Notifications_Technical_Details.md',
+    priority: 1,
+  },
+  'customer-installation-options.md': {
+    title: 'Customer Installation Options',
+    category: 'Advanced',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_12_Customer_Installation_Options.md',
+    priority: 2,
+  },
+  'data-migration.md': {
+    title: 'Data Migration Assistance',
+    category: 'Advanced',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_12_Data_Migration_Assistance.md',
+    priority: 3,
+  },
+  'on-prem-installation.md': {
+    title: 'On-Premises Installation',
+    category: 'Advanced',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsHelp/Common_12_Products_Installation_For_On_Prem.md',
+    priority: 4,
   },
 }
 
 // ─── Pure Helpers ─────────────────────────────────────────────────────────────
 
-function getProductDocKeys(productCode) {
+// Returns sorted [key, cfg] pairs for a given category
+function getDocsByCategory(category) {
   return Object.entries(HELP_DOCS)
-    .filter(([, cfg]) => cfg.products.includes(productCode))
+    .filter(([, cfg]) => cfg.category === category)
     .sort((a, b) => a[1].priority - b[1].priority)
+}
+
+// Returns all keys for a category
+function getKeysByCategory(category) {
+  return getDocsByCategory(category).map(([key]) => key)
+}
+
+// Default selection: all Timebars column docs + all Common Help Files
+function getDefaultDocKeys() {
+  return Object.entries(HELP_DOCS)
+    .filter(([, cfg]) => cfg.category === 'Timebars' || cfg.category === 'Common Help Files')
     .map(([key]) => key)
 }
 
-function getGroupedDocs(productCode) {
-  const entries = Object.entries(HELP_DOCS)
-    .filter(([, cfg]) => cfg.products.includes(productCode))
-    .sort((a, b) => a[1].priority - b[1].priority)
-  const groups = {}
-  for (const [key, cfg] of entries) {
-    if (!groups[cfg.category]) groups[cfg.category] = []
-    groups[cfg.category].push([key, cfg])
-  }
-  return groups
+// Detect the primary product from selected docs to build the right system prompt
+function detectProductCode(docKeys) {
+  const hasTB = docKeys.some(k => HELP_DOCS[k]?.category === 'Timebars')
+  const hasAB = docKeys.some(k => HELP_DOCS[k]?.category === 'Agilebars')
+  const hasCB = docKeys.some(k => HELP_DOCS[k]?.category === 'Costbars')
+  const count = [hasTB, hasAB, hasCB].filter(Boolean).length
+  if (count > 1) return 'ALL'
+  if (hasTB)    return 'TB'
+  if (hasAB)    return 'AB'
+  if (hasCB)    return 'CB'
+  return 'TB' // only common/advanced docs selected — default to TB
 }
 
 async function fetchDoc(path) {
-  const now = Date.now()
+  const now    = Date.now()
   const cached = _docCache[path]
   if (cached && (now - cached.ts) < DOCS_CACHE_TTL) return cached.content
   const res = await fetch(path)
@@ -316,111 +343,188 @@ function makeId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
 }
 
-// ─── Doc Picker Sub-Component ─────────────────────────────────────────────────
+// ─── Doc Picker ───────────────────────────────────────────────────────────────
 
-function DocPicker({ productCode, selectedDocKeys, onToggle, onSelectAll, onSelectNone }) {
-  const [open, setOpen] = useState(false)
-  const groups   = getGroupedDocs(productCode)
-  const totalCount    = Object.values(groups).flat().length
-  const selectedCount = selectedDocKeys.length
+function DocCheckbox({ docKey, cfg, selectedDocKeys, onToggle }) {
+  return (
+    <label className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white group">
+      <input
+        type="checkbox"
+        checked={selectedDocKeys.includes(docKey)}
+        onChange={() => onToggle(docKey)}
+        className="mt-0.5 w-3.5 h-3.5 accent-tbBlue cursor-pointer flex-shrink-0"
+      />
+      <span className="group-hover:text-tbBlue transition-colors leading-tight">{cfg.title}</span>
+    </label>
+  )
+}
+
+function SectionHeader({ label, onSelectAll, onSelectNone }) {
+  return (
+    <div className="flex items-center justify-between mb-2">
+      <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        {label}
+      </span>
+      <span className="flex gap-2">
+        <button onClick={onSelectAll}  className="text-xs text-tbBlue hover:underline font-medium">All</button>
+        <button onClick={onSelectNone} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline">None</button>
+      </span>
+    </div>
+  )
+}
+
+function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
+  const tbDocs     = getDocsByCategory('Timebars')
+  const abDocs     = getDocsByCategory('Agilebars')
+  const cbDocs     = getDocsByCategory('Costbars')
+  const commonDocs = getDocsByCategory('Common Help Files')
+  const advDocs    = getDocsByCategory('Advanced')
+
+  const totalSelected = selectedDocKeys.length
+  const totalDocs     = Object.keys(HELP_DOCS).length
 
   return (
-    <div className="mt-3">
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-tbBlue dark:hover:text-tbBlue2 transition-colors"
-      >
-        {open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-        <span>
-          📚 {selectedCount} of {totalCount} docs selected
-          {selectedCount === 0 && (
+    <div className="space-y-5">
+
+      {/* Summary row */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-gray-500 dark:text-gray-400">
+          📚 <span className="font-semibold text-gray-700 dark:text-gray-300">{totalSelected}</span> of {totalDocs} docs selected
+          {totalSelected === 0 && (
             <span className="ml-1 text-red-500 font-medium">— select at least one</span>
           )}
         </span>
-      </button>
+        <div className="flex gap-3">
+          <button
+            onClick={() => onSectionSelect(Object.keys(HELP_DOCS), true)}
+            className="text-xs text-tbBlue hover:underline font-medium"
+          >
+            Select all
+          </button>
+          <button
+            onClick={() => onSectionSelect([], false)}
+            className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline"
+          >
+            Clear all
+          </button>
+        </div>
+      </div>
 
-      {open && (
-        <div className="mt-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/60 p-3">
-          <div className="flex gap-3 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
-            <button
-              onClick={onSelectAll}
-              className="text-xs text-tbBlue hover:underline font-medium"
-            >
-              Select all
-            </button>
-            <button
-              onClick={onSelectNone}
-              className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline"
-            >
-              Select none
-            </button>
-          </div>
+      {/* Three product columns */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
-          <div className="max-h-52 overflow-y-auto space-y-4 pr-1">
-            {Object.entries(groups).map(([category, entries]) => (
-              <div key={category}>
-                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">
-                  {category}
-                </p>
-                <div className="space-y-1">
-                  {entries.map(([key, cfg]) => (
-                    <label
-                      key={key}
-                      className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white group"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedDocKeys.includes(key)}
-                        onChange={() => onToggle(key)}
-                        className="w-3.5 h-3.5 accent-tbBlue cursor-pointer flex-shrink-0"
-                      />
-                      <span className="group-hover:text-tbBlue transition-colors">{cfg.title}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+        {/* Timebars */}
+        <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-lg p-3">
+          <SectionHeader
+            label="Timebars"
+            onSelectAll={() => onSectionSelect(getKeysByCategory('Timebars'), true)}
+            onSelectNone={() => onSectionSelect(getKeysByCategory('Timebars'), false)}
+          />
+          <div className="space-y-2">
+            {tbDocs.map(([key, cfg]) => (
+              <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
             ))}
           </div>
         </div>
-      )}
+
+        {/* Agilebars */}
+        <div className="bg-green-50 dark:bg-green-950/20 border border-green-100 dark:border-green-900/40 rounded-lg p-3">
+          <SectionHeader
+            label="Agilebars"
+            onSelectAll={() => onSectionSelect(getKeysByCategory('Agilebars'), true)}
+            onSelectNone={() => onSectionSelect(getKeysByCategory('Agilebars'), false)}
+          />
+          <div className="space-y-2">
+            {abDocs.map(([key, cfg]) => (
+              <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
+            ))}
+          </div>
+        </div>
+
+        {/* Costbars */}
+        <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-100 dark:border-orange-900/40 rounded-lg p-3">
+          <SectionHeader
+            label="Costbars"
+            onSelectAll={() => onSectionSelect(getKeysByCategory('Costbars'), true)}
+            onSelectNone={() => onSectionSelect(getKeysByCategory('Costbars'), false)}
+          />
+          <div className="space-y-2">
+            {cbDocs.map(([key, cfg]) => (
+              <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Common Help Files */}
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+        <SectionHeader
+          label="Common Help Files"
+          onSelectAll={() => onSectionSelect(getKeysByCategory('Common Help Files'), true)}
+          onSelectNone={() => onSectionSelect(getKeysByCategory('Common Help Files'), false)}
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+          {commonDocs.map(([key, cfg]) => (
+            <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
+          ))}
+        </div>
+      </div>
+
+      {/* Advanced */}
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
+        <SectionHeader
+          label="Advanced"
+          onSelectAll={() => onSectionSelect(getKeysByCategory('Advanced'), true)}
+          onSelectNone={() => onSectionSelect(getKeysByCategory('Advanced'), false)}
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+          {advDocs.map(([key, cfg]) => (
+            <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
+          ))}
+        </div>
+      </div>
+
     </div>
   )
 }
 
 // ─── Chat Sub-Components ──────────────────────────────────────────────────────
 
-function WelcomeContent({ productName, selectedCount, useLocalAI }) {
+function WelcomeContent({ selectedCount, model }) {
+  const isLocal = model?.provider === 'ollama'
   return (
     <div className="p-6 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-100 dark:border-blue-900">
       <div className="flex items-center gap-3 mb-3">
         <Bot className="w-8 h-8 text-tbBlue flex-shrink-0" />
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {productName} Help Assistant
+          Timebars Help Assistant
         </h3>
       </div>
       <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-        Ask me anything about how to use {productName}. I answer only from the selected documentation.
+        Ask me anything about Timebars, Agilebars, or Costbars. I answer only from the selected documentation — tick the docs most relevant to your question above.
       </p>
       <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc ml-5 space-y-1 mb-4">
         <li>Creating and managing projects, tasks, and milestones</li>
         <li>Reports, graphs, and dashboards</li>
         <li>Resource allocation and scheduling</li>
         <li>Field definitions and data management</li>
-        <li>Features specific to {productName}</li>
+        <li>Product-specific features and workflows</li>
       </ul>
       <div className="flex flex-wrap gap-2 items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
         <Badge variant="secondary" className="text-xs">
           📚 {selectedCount} doc{selectedCount !== 1 ? 's' : ''} selected
         </Badge>
-        <span className="hidden sm:inline">•</span>
-        <span className="text-gray-400 dark:text-gray-500">
-          {useLocalAI ? '🖥️ Local AI (Ollama)' : '☁️ Cloud AI (Gemini)'}
-        </span>
+        <span>•</span>
+        <span>{isLocal ? '🖥️' : '☁️'} {model?.label ?? 'AI'}</span>
       </div>
       <div className="text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800/60 rounded p-3 border border-gray-200 dark:border-gray-700">
-        <strong>💡 Tips:</strong> Select fewer docs for faster local AI responses. Use the doc picker above
-        to choose the files most relevant to your question.
-        Press <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> to send,{' '}
+        <strong>💡 Tips:</strong>{' '}
+        {isLocal
+          ? 'Local models have a smaller context window — select only the docs relevant to your question.'
+          : 'Cloud AI handles large doc selections with no slowdown.'}
+        {' '}Press{' '}
+        <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> to send,{' '}
         <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Shift+Enter</kbd> for a new line.
       </div>
     </div>
@@ -499,62 +603,31 @@ function ErrorBubble({ content }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export default function HelpChatPanel({ defaultProduct = 'TB' }) {
-  const [activeProduct,   setActiveProduct]   = useState(defaultProduct)
-  const [selectedDocKeys, setSelectedDocKeys] = useState(() => getProductDocKeys(defaultProduct))
+export default function HelpChatPanel() {
+  const [selectedDocKeys, setSelectedDocKeys] = useState(getDefaultDocKeys)
   const [messages,        setMessages]        = useState([])
   const [inputValue,      setInputValue]      = useState('')
   const [isLoading,       setIsLoading]       = useState(false)
   const [copiedId,        setCopiedId]        = useState(null)
-  const [useLocalAI,      setUseLocalAI]      = useState(false)
+  const [selectedModelId, setSelectedModelId] = useState(DEFAULT_MODEL_ID)
 
   const textareaRef    = useRef(null)
   const messagesEndRef = useRef(null)
 
-  const productName = PRODUCT_NAMES[activeProduct] || 'Timebars'
+  const activeModel = getModelById(selectedModelId)
 
-  // Restore useLocalAI preference
+  // Restore saved model preference
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('helpUseLocalAI')
-      if (saved !== null) setUseLocalAI(saved === 'true')
+      const saved = localStorage.getItem('helpSelectedModel')
+      if (saved && MODELS.some(m => m.id === saved)) setSelectedModelId(saved)
     } catch { /* ignore */ }
   }, [])
 
-  // Reset docs and history when product tab changes
+  // Restore chat history on mount
   useEffect(() => {
-    setSelectedDocKeys(getProductDocKeys(activeProduct))
-    setMessages([])
-    loadConversationHistory(activeProduct)
-  }, [activeProduct])
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
-  function handleLocalAIToggle(e) {
-    const checked = e.target.checked
-    setUseLocalAI(checked)
-    try { localStorage.setItem('helpUseLocalAI', String(checked)) } catch { /* ignore */ }
-  }
-
-  function handleDocToggle(key) {
-    setSelectedDocKeys(prev =>
-      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
-    )
-  }
-
-  function handleSelectAll() {
-    setSelectedDocKeys(getProductDocKeys(activeProduct))
-  }
-
-  function handleSelectNone() {
-    setSelectedDocKeys([])
-  }
-
-  function loadConversationHistory(product) {
     try {
-      const saved = localStorage.getItem(`helpAiHistory_${product}`)
+      const saved = localStorage.getItem('helpAiHistory')
       if (!saved) return
       const history = JSON.parse(saved)
       const restored = history.slice(-5).flatMap(item => [
@@ -563,16 +636,41 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
       ])
       if (restored.length > 0) setMessages(restored)
     } catch { /* ignore */ }
+  }, [])
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  function handleModelChange(e) {
+    const id = e.target.value
+    setSelectedModelId(id)
+    try { localStorage.setItem('helpSelectedModel', id) } catch { /* ignore */ }
+  }
+
+  function handleDocToggle(key) {
+    setSelectedDocKeys(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    )
+  }
+
+  // onSectionSelect(keys, add) — add=true adds those keys, add=false removes them
+  function handleSectionSelect(keys, add) {
+    if (add) {
+      setSelectedDocKeys(prev => [...new Set([...prev, ...keys])])
+    } else {
+      const remove = new Set(keys)
+      setSelectedDocKeys(prev => prev.filter(k => !remove.has(k)))
+    }
   }
 
   function saveToHistory(question, answer) {
     try {
-      const key     = `helpAiHistory_${activeProduct}`
-      const saved   = localStorage.getItem(key)
+      const saved   = localStorage.getItem('helpAiHistory')
       const history = saved ? JSON.parse(saved) : []
       history.push({ question, answer, ts: Date.now() })
       if (history.length > MAX_HISTORY_ITEMS) history.splice(0, history.length - MAX_HISTORY_ITEMS)
-      localStorage.setItem(key, JSON.stringify(history))
+      localStorage.setItem('helpAiHistory', JSON.stringify(history))
     } catch { /* ignore */ }
   }
 
@@ -598,12 +696,18 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
     setIsLoading(true)
 
     try {
-      const docsContext = await loadSelectedDocs(selectedDocKeys)
+      const docsContext   = await loadSelectedDocs(selectedDocKeys)
+      const productCode   = detectProductCode(selectedDocKeys)
 
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userQuestion: question, productCode: activeProduct, docsContext, useLocalAI }),
+        body: JSON.stringify({
+          userQuestion: question,
+          productCode,
+          docsContext,
+          modelId: selectedModelId,
+        }),
       })
 
       if (!res.ok) {
@@ -628,9 +732,9 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
       } else if (error.message?.includes('GEMINI_API_KEY')) {
         errorText += 'Cloud AI is not configured. Check your GEMINI_API_KEY in .env.local.'
       } else if (error.message?.includes('timed out')) {
-        errorText += 'The local AI took too long. Try selecting fewer docs.'
-      } else if (error.message?.includes('Ollama') || error.message?.includes('fetch')) {
-        errorText += 'Could not reach the local AI. Make sure Ollama is running at the configured host.'
+        errorText += `${activeModel.label} took too long. Try a cloud model or select fewer docs.`
+      } else if (error.message?.includes('Ollama') || error.message?.includes('ECONNREFUSED') || error.message?.includes('fetch')) {
+        errorText += 'Could not reach Ollama. Check that Ollama is running and the host in config/ai.js is correct.'
       } else {
         errorText += error.message || 'Please try again later.'
       }
@@ -642,7 +746,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
       setIsLoading(false)
       textareaRef.current?.focus()
     }
-  }, [inputValue, isLoading, activeProduct, selectedDocKeys, useLocalAI])
+  }, [inputValue, isLoading, selectedDocKeys, selectedModelId, activeModel])
 
   function handleKeyDown(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() }
@@ -650,7 +754,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
 
   function handleClear() {
     setMessages([])
-    try { localStorage.removeItem(`helpAiHistory_${activeProduct}`) } catch { /* ignore */ }
+    try { localStorage.removeItem('helpAiHistory') } catch { /* ignore */ }
   }
 
   async function handleCopy(messageId, content) {
@@ -666,9 +770,9 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
   return (
     <Card className="w-full shadow-md border border-gray-200 dark:border-gray-700">
 
-      {/* Header */}
-      <CardHeader className="pb-3 border-b border-gray-100 dark:border-gray-800">
-        <div className="flex items-center justify-between mb-4">
+      {/* ── Header ── */}
+      <CardHeader className="pb-4 border-b border-gray-100 dark:border-gray-800">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-tbBlue flex items-center justify-center flex-shrink-0">
               <Bot className="w-5 h-5 text-white" />
@@ -678,45 +782,34 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
                 Help Assistant
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {useLocalAI ? '🖥️ Local AI (Ollama)' : '☁️ Cloud AI (Gemini)'} · Official documentation only
+                {activeModel.provider === 'ollama' ? '🖥️' : '☁️'} {activeModel.label} · Official documentation only
               </p>
             </div>
           </div>
           <Badge variant="outline" className="text-tbBlue border-tbBlue font-medium hidden sm:flex">
-            {productName}
+            Timebars Ltd.
           </Badge>
         </div>
-
-        {/* Product Tabs */}
-        <Tabs value={activeProduct} onValueChange={setActiveProduct}>
-          <TabsList className="grid grid-cols-3 w-full max-w-sm">
-            {['TB', 'AB', 'CB'].map(code => (
-              <TabsTrigger key={code} value={code} title={`Switch to ${PRODUCT_NAMES[code]}`}>
-                {PRODUCT_NAMES[code]}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
-
-        {/* Doc Picker */}
-        <DocPicker
-          productCode={activeProduct}
-          selectedDocKeys={selectedDocKeys}
-          onToggle={handleDocToggle}
-          onSelectAll={handleSelectAll}
-          onSelectNone={handleSelectNone}
-        />
       </CardHeader>
 
-      {/* Message Area */}
       <CardContent className="p-0">
-        <ScrollArea className="h-[480px]">
+
+        {/* ── Doc Picker (always visible) ── */}
+        <div className="px-6 pt-5 pb-4 border-b border-gray-100 dark:border-gray-800">
+          <DocPicker
+            selectedDocKeys={selectedDocKeys}
+            onToggle={handleDocToggle}
+            onSectionSelect={handleSectionSelect}
+          />
+        </div>
+
+        {/* ── Messages ── */}
+        <ScrollArea className="h-[420px]">
           <div className="px-6 py-5 space-y-4">
             {messages.length === 0 ? (
               <WelcomeContent
-                productName={productName}
                 selectedCount={selectedDocKeys.length}
-                useLocalAI={useLocalAI}
+                model={activeModel}
               />
             ) : (
               messages.map(msg => {
@@ -738,14 +831,14 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
           </div>
         </ScrollArea>
 
-        {/* Input Area */}
+        {/* ── Input Area ── */}
         <div className="border-t border-gray-100 dark:border-gray-800 p-4 space-y-3">
           <Textarea
             ref={textareaRef}
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={`Ask a question about ${productName}...\nExample: How do I create a new project?`}
+            placeholder="Ask a question about any of the selected products…&#10;Example: How do I create a new project?"
             rows={3}
             disabled={isLoading}
             className="resize-none focus-visible:ring-tbBlue"
@@ -760,7 +853,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
                 className="bg-tbBlue hover:bg-blue-800 text-white"
               >
                 <Send className="w-4 h-4 mr-2" />
-                {isLoading ? 'Thinking...' : 'Ask'}
+                {isLoading ? 'Thinking…' : 'Ask'}
               </Button>
               <Button
                 variant="outline"
@@ -772,17 +865,23 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
                 Clear
               </Button>
 
-              {/* Local AI toggle */}
-              <label className="flex items-center gap-2 cursor-pointer select-none text-sm text-gray-600 dark:text-gray-400">
-                <input
-                  type="checkbox"
-                  checked={useLocalAI}
-                  onChange={handleLocalAIToggle}
+              {/* Model picker */}
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">Model:</span>
+                <select
+                  value={selectedModelId}
+                  onChange={handleModelChange}
                   disabled={isLoading}
-                  className="w-4 h-4 rounded accent-tbBlue cursor-pointer"
-                />
-                Use Local AI Model
-              </label>
+                  className="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 cursor-pointer focus:outline-none focus:ring-1 focus:ring-tbBlue disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Select AI model"
+                >
+                  {MODELS.map(m => (
+                    <option key={m.id} value={m.id}>
+                      {m.provider === 'ollama' ? '🖥️' : '☁️'} {m.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <span className="text-xs text-gray-400 dark:text-gray-500">
@@ -790,6 +889,7 @@ export default function HelpChatPanel({ defaultProduct = 'TB' }) {
             </span>
           </div>
         </div>
+
       </CardContent>
     </Card>
   )
