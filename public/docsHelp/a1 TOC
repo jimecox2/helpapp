@@ -1,0 +1,111 @@
+
+# Timebars Ltd. Help Files
+
+## Complete Reference Guides
+
+- Agilebars Complete Reference Guide
+- Timebars Complete Reference Guide
+- Costbars Complete Reference Guide V1
+
+## Common Help Files
+
+- Getting Started
+- Innovations By Timebars Ltd
+- How To Use Ask AI
+- Product Design Strategy
+- User Interface Guide
+- Data Structure User Guide
+- Picklists And Tagging Help
+- Spreadsheet Sync User Guide
+- FOCD Forms User Guide
+- Supply And Demand Grids User Guide
+- Risks Issues Change Requests User Guide
+- Local Reports And Graphs Guide
+- Cloud Publishing Guide
+- Personal Dashboard Guide
+- Enterprise Dashboard Guide
+- Text Notifications
+- Products Installation For On Prem
+
+## Product Help Files
+
+- Agilebars Kanban Primer
+- Agilebars User Guide
+- Timebars User Guide
+- Costbars PPM Portfolio Status And Balancing Report
+- Costbars PPM Project Assessment Tool
+- Costbars PPM Scoring Guide 5 Step Process
+- Costbars User Guide
+- Costbars Writing A Business Case
+
+# HOW TO MAKE THE COMPLETE GUIDES
+
+Do a pull of tbrunp, and look at /docsHelp folder and all the help files in there and help me write 3 new complete reference guides, as follows, to reflect proper help file content.
+Agilebars_Complete_Reference_Guide_28Apr2026.md
+Timebars_Complete_Reference_Guide_28Apr2026.md
+Costbars_Complete_Reference_Guide_28Apr2026.md
+
+The file docsHelp/a1 TOC, is the table of contents categorized as to how the help files are structured. The Product Help Files (unique help for the product), Common Help Files make up help information common across the 3 products.
+
+I laid out how to make each of these new files by listing below the content to be merged to generate the complete documents.
+
+Please make a plan to complete all the work in this session so we can do one at a time, i can approve and then we can do the next two, start with Agilebars.
+
+
+# Agilebars Complete Reference guide
+Agilebars User Guide
+Agilebars Kanban Primer
+How To Use Ask AI
+User Interface Guide
+Data Structure User Guide
+Picklists And Tagging Help
+Spreadsheet Sync User Guide
+FOCD Forms User Guide
+Supply And Demand Grids User Guide
+Risks Issues Change Requests User Guide
+Local Reports And Graphs Guide
+Cloud Publishing Guide
+Personal Dashboard Guide
+Enterprise Dashboard Guide
+Text Notifications
+Products Installation For On Prem
+
+
+# Timebars Complete Reference guide
+Timebars User Guide
+How To Use Ask AI
+User Interface Guide
+Data Structure User Guide
+Picklists And Tagging Help
+Spreadsheet Sync User Guide
+FOCD Forms User Guide
+Supply And Demand Grids User Guide
+Risks Issues Change Requests User Guide
+Local Reports And Graphs Guide
+Cloud Publishing Guide
+Personal Dashboard Guide
+Enterprise Dashboard Guide
+Text Notifications
+Products Installation For On Prem
+
+
+# Costbars Complete Reference guide
+Costbars User Guide
+Costbars PPM Project Assessment Tool
+Costbars PPM Scoring Guide 5 Step Process
+How To Use Ask AI
+User Interface Guide
+Data Structure User Guide
+Picklists And Tagging Help
+Spreadsheet Sync User Guide
+FOCD Forms User Guide
+Supply And Demand Grids User Guide
+Risks Issues Change Requests User Guide
+Local Reports And Graphs Guide
+Cloud Publishing Guide
+Personal Dashboard Guide
+Enterprise Dashboard Guide
+Text Notifications
+Products Installation For On Prem
+Costbars PPM Portfolio Status And Balancing Report
+Costbars Writing A Business Case
