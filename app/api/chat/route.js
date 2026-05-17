@@ -2,10 +2,18 @@ import { NextResponse } from 'next/server'
 import { getModelById, OLLAMA_HOST } from '@/config/ai'
 
 function buildSystemPrompt(productCode) {
-  const productNames = { TB: 'Timebars', AB: 'Agilebars', CB: 'Costbars' }
+  const productNames = {
+    TB:  'Timebars',
+    AB:  'Agilebars',
+    CB:  'Costbars',
+    ALL: 'Timebars, Agilebars, and Costbars',
+  }
   const product = productNames[productCode] || 'the product'
+  const isMulti = productCode === 'ALL'
   return (
-    `You are a helpful support assistant for ${product}, a project management application by Timebars Ltd. ` +
+    `You are a helpful support assistant for ${product}` +
+    (isMulti ? ', a suite of project management applications' : ', a project management application') +
+    ` by Timebars Ltd. ` +
     `Answer the user's question using ONLY the documentation provided below. ` +
     `If the answer is not in the documentation, say so clearly — do not make up information. ` +
     `Format your answers using markdown where helpful (bullet points, bold, code blocks). ` +
