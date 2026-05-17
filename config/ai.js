@@ -94,6 +94,32 @@ export const MODELS = [
   },
 
   {
+    id:           'mistral',
+    label:        'Mistral 7B',
+    subtitle:     'Local · 7B · 4.4 GB · Precise',
+    provider:     'ollama',
+    requiresKey:  false,
+    ollamaModel:  'mistral:latest',
+    num_ctx:      8192,
+    maxDocsChars: 14000,   // Mistral handles dense instruction context well
+    timeoutMs:    180000,
+    temperature:  0.2,
+  },
+
+  {
+    id:           'qwen2.5-7b',
+    label:        'Qwen 2.5 7B',
+    subtitle:     'Local · 7B · 4.7 GB · Best at RAG',
+    provider:     'ollama',
+    requiresKey:  false,
+    ollamaModel:  'qwen2.5:7b',
+    num_ctx:      16384,   // Qwen 2.5 supports 128K natively; 16K is safe and fast
+    maxDocsChars: 20000,   // ≈5000 tokens — Qwen 2.5 excels at long-context retrieval
+    timeoutMs:    180000,
+    temperature:  0.15,   // slightly lower — Qwen 2.5 is very accurate, less randomness needed
+  },
+
+  {
     id:           'gemma4-26b',
     label:        'Gemma 4 (26B)',
     subtitle:     'Local · 26B · 17 GB · Best quality',
