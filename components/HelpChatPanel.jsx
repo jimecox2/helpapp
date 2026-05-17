@@ -726,15 +726,18 @@ export default function HelpChatPanel() {
       saveToHistory(question, data.answer)
 
     } catch (error) {
-      let errorText = '❌ Something went wrong. '
+      let errorText = '❌ '
       if (error.message?.includes('429')) {
         errorText += 'Rate limit reached — please wait a minute and try again.'
       } else if (error.message?.includes('GEMINI_API_KEY')) {
         errorText += 'Cloud AI is not configured. Check your GEMINI_API_KEY in .env.local.'
       } else if (error.message?.includes('timed out')) {
         errorText += `${activeModel.label} took too long. Try a cloud model or select fewer docs.`
-      } else if (error.message?.includes('Ollama') || error.message?.includes('ECONNREFUSED') || error.message?.includes('fetch')) {
-        errorText += 'Could not reach Ollama. Check that Ollama is running and the host in config/ai.js is correct.'
+      } else if (error.message?.includes('ECONNREFUSED') || error.message?.includes('fetch failed') || error.message?.includes('Failed to fetch')) {
+        errorText += `Cannot connect to Ollama at the configured host. Check that Ollama is running and OLLAMA_HOST in config/ai.js is correct.`
+      } else if (error.message?.includes('Ollama error:')) {
+        // Ollama is reachable but returned an API error — show the real message
+        errorText += `Ollama rejected the request: ${error.message.replace('Ollama error: ', '')}`
       } else {
         errorText += error.message || 'Please try again later.'
       }
