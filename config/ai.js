@@ -4,11 +4,11 @@
 
 export const AI_CONFIG = {
   gemini: {
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash',
   },
   ollama: {
-    host:          'http://10.0.0.152:11434',
-    model:         'llama3.2',
+    host:          'http://192.168.1.195:11434',
+    model:         'phi3:mini',
     num_ctx:       4096,  // safe for most hardware — raise to 8192 if you have 16GB+ RAM
     maxDocsChars:  8000,  // docs are trimmed to this before sending (≈ 2000 tokens)
     timeoutMs:     120000,
