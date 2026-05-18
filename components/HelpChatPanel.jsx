@@ -554,7 +554,7 @@ function UserBubble({ content }) {
   )
 }
 
-function AssistantBubble({ id, content, copiedId, onCopy }) {
+function AssistantBubble({ id, content, elapsed, copiedId, onCopy }) {
   return (
     <div className="flex items-start gap-3">
       <div className="w-8 h-8 rounded-full bg-tbBlue flex items-center justify-center flex-shrink-0">
@@ -565,17 +565,24 @@ function AssistantBubble({ id, content, copiedId, onCopy }) {
           className="text-sm text-gray-800 dark:text-gray-200 prose prose-sm dark:prose-invert max-w-none"
           dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }}
         />
-        <button
-          onClick={() => onCopy(id, content)}
-          className="mt-2 flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-          aria-label="Copy response"
-        >
-          {copiedId === id ? (
-            <><CheckCheck className="w-3 h-3 text-green-500" /><span className="text-green-500">Copied!</span></>
-          ) : (
-            <><Copy className="w-3 h-3" /><span>Copy</span></>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <button
+            onClick={() => onCopy(id, content)}
+            className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            aria-label="Copy response"
+          >
+            {copiedId === id ? (
+              <><CheckCheck className="w-3 h-3 text-green-500" /><span className="text-green-500">Copied!</span></>
+            ) : (
+              <><Copy className="w-3 h-3" /><span>Copy</span></>
+            )}
+          </button>
+          {elapsed && (
+            <span className="text-xs text-gray-400 dark:text-gray-500">
+              ⏱ {elapsed}s
+            </span>
           )}
-        </button>
+        </div>
       </div>
     </div>
   )
@@ -681,6 +688,7 @@ export default function HelpChatPanel() {
 
     setInputValue('')
     const loadingId = `l-${makeId()}`
+    const startTime = Date.now()
     setMessages(prev => [
       ...prev,
       { id: `u-${makeId()}`, role: 'user',    content: question },
@@ -711,10 +719,11 @@ export default function HelpChatPanel() {
       const data = await res.json()
       if (!data.success) throw new Error(data.error || 'Unknown error from AI service')
 
+      const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
       const answerId = `a-${makeId()}`
       setMessages(prev =>
         prev.filter(m => m.id !== loadingId)
-            .concat({ id: answerId, role: 'assistant', content: data.answer })
+            .concat({ id: answerId, role: 'assistant', content: data.answer, elapsed })
       )
       saveToHistory(question, data.answer)
 
@@ -817,6 +826,7 @@ export default function HelpChatPanel() {
                     key={msg.id}
                     id={msg.id}
                     content={msg.content}
+                    elapsed={msg.elapsed}
                     copiedId={copiedId}
                     onCopy={handleCopy}
                   />
