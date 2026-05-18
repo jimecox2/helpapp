@@ -99,7 +99,7 @@ export const MODELS = [
     subtitle:     'Local · 7B · 4.4 GB · Precise',
     provider:     'ollama',
     requiresKey:  false,
-    ollamaModel:  'mistral',   // Ollama resolves :latest automatically
+    ollamaModel:  'mistral:latest',
     num_ctx:      4096,        // Mistral v0.3 native default in Ollama — safe and stable
     maxDocsChars: 8000,        // ≈2000 tokens — leaves headroom for answer within 4096 ctx
     timeoutMs:    180000,
