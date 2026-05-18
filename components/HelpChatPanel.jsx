@@ -782,7 +782,7 @@ export default function HelpChatPanel() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-                Help Assistant
+                Ask questions about Agilebars, Timebars or Costbars
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {activeModel.provider === 'ollama' ? '🖥️' : '☁️'} {activeModel.label} · Official documentation only
