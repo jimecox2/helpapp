@@ -504,13 +504,6 @@ function WelcomeContent({ selectedCount, model }) {
       <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
         Ask me anything about Timebars, Agilebars, or Costbars. I answer only from the selected documentation — tick the docs most relevant to your question above.
       </p>
-      <ul className="text-sm text-gray-700 dark:text-gray-300 list-disc ml-5 space-y-1 mb-4">
-        <li>Creating and managing projects, tasks, and milestones</li>
-        <li>Reports, graphs, and dashboards</li>
-        <li>Resource allocation and scheduling</li>
-        <li>Field definitions and data management</li>
-        <li>Product-specific features and workflows</li>
-      </ul>
       <div className="flex flex-wrap gap-2 items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
         <Badge variant="secondary" className="text-xs">
           📚 {selectedCount} doc{selectedCount !== 1 ? 's' : ''} selected
@@ -844,7 +837,7 @@ export default function HelpChatPanel() {
             placeholder="Ask a question about any of the selected products…&#10;Example: How do I create a new project?"
             rows={3}
             disabled={isLoading}
-            className="resize-none focus-visible:ring-tbBlue"
+            className="resize-none border-gray-400 dark:border-gray-500 focus-visible:ring-tbBlue"
             aria-label="Help question input"
           />
 
