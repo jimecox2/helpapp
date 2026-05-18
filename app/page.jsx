@@ -18,14 +18,9 @@ export default function HomePage() {
           style={{ height: 'auto' }}
           priority
         />
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            AI Help Assistant
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
-            Ask questions about Agilebars, Timebars or Costbars — answered instantly from the official documentation.
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          AI Help Assistant
+        </h1>
       </div>
       <HelpChatPanel />
     </main>
