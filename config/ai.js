@@ -10,7 +10,7 @@
 // All local models share OLLAMA_HOST; each has its own context window and limits.
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const OLLAMA_HOST = 'http://10.0.0.152:11434'
+export const OLLAMA_HOST = 'http://192.168.1.195:11434'
 
 // Default model shown on first load (must match an id in MODELS)
 export const DEFAULT_MODEL_ID = 'gemini-flash'
