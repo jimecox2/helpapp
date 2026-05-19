@@ -554,7 +554,7 @@ function UserBubble({ content }) {
   )
 }
 
-function AssistantBubble({ id, content, elapsed, copiedId, onCopy }) {
+function AssistantBubble({ id, content, elapsed, modelLabel, copiedId, onCopy }) {
   return (
     <div className="flex items-start gap-3">
       <div className="w-8 h-8 rounded-full bg-tbBlue flex items-center justify-center flex-shrink-0">
@@ -579,7 +579,7 @@ function AssistantBubble({ id, content, elapsed, copiedId, onCopy }) {
           </button>
           {elapsed && (
             <span className="text-xs text-gray-400 dark:text-gray-500">
-              ⏱ {elapsed}s
+              ⏱ {elapsed}s · {modelLabel}
             </span>
           )}
         </div>
@@ -723,7 +723,7 @@ export default function HelpChatPanel() {
       const answerId = `a-${makeId()}`
       setMessages(prev =>
         prev.filter(m => m.id !== loadingId)
-            .concat({ id: answerId, role: 'assistant', content: data.answer, elapsed })
+            .concat({ id: answerId, role: 'assistant', content: data.answer, elapsed, modelLabel: activeModel.label })
       )
       saveToHistory(question, data.answer)
 
@@ -827,6 +827,7 @@ export default function HelpChatPanel() {
                     id={msg.id}
                     content={msg.content}
                     elapsed={msg.elapsed}
+                    modelLabel={msg.modelLabel}
                     copiedId={copiedId}
                     onCopy={handleCopy}
                   />
