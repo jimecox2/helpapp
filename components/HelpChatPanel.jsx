@@ -747,11 +747,25 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
 
       {/* Common Help Files */}
       <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
-        <SectionHeader
-          label="Common Help Files"
-          onSelectAll={() => onSectionSelect(getKeysByCategory('Common Help Files'), true)}
-          onSelectNone={() => onSectionSelect(getKeysByCategory('Common Help Files'), false)}
-        />
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+              Common Help Files
+            </span>
+            <a
+              href="https://cdn.timebars.com/other/helpfiles/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-tbBlue hover:underline font-medium"
+            >
+              ⬇ Download PDF of Help Files
+            </a>
+          </div>
+          <span className="flex gap-2">
+            <button onClick={() => onSectionSelect(getKeysByCategory('Common Help Files'), true)}  className="text-xs text-tbBlue hover:underline font-medium">All</button>
+            <button onClick={() => onSectionSelect(getKeysByCategory('Common Help Files'), false)} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline">None</button>
+          </span>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
           {commonDocs.map(([key, cfg]) => (
             <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
@@ -1107,9 +1121,19 @@ export default function HelpChatPanel() {
               </p>
             </div>
           </div>
-          <Badge variant="outline" className="text-tbBlue border-tbBlue font-medium hidden sm:flex">
-            Timebars Ltd.
-          </Badge>
+          <div className="flex flex-col items-end gap-2">
+            <Badge variant="outline" className="text-tbBlue border-tbBlue font-medium hidden sm:flex">
+              Timebars Ltd.
+            </Badge>
+            <a
+              href="https://www.timebars.com/knowledgebase"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:flex items-center gap-1 text-xs text-tbBlue hover:underline font-medium"
+            >
+              📖 Knowledge Base
+            </a>
+          </div>
         </div>
       </CardHeader>
 
