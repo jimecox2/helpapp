@@ -21,11 +21,13 @@ const _docCache = {}
 // ─── Help Docs Registry ───────────────────────────────────────────────────────
 //
 // category values used for layout:
-//   'Timebars'         → Timebars product column
-//   'Agilebars'        → Agilebars product column
-//   'Costbars'         → Costbars product column
-//   'Common Help Files'→ shared section below the columns
-//   'Advanced'         → advanced/technical section at the bottom
+//   'Timebars'          → Timebars product column
+//   'Agilebars'         → Agilebars product column
+//   'Costbars'          → Costbars product column
+//   'Common Help Files' → shared section below the columns
+//   'Advanced'          → advanced/technical section at the bottom
+//   'Marketing Articles'→ marketing articles section
+//   'Blog Articles'     → blog articles section
 
 const HELP_DOCS = {
 
@@ -36,6 +38,48 @@ const HELP_DOCS = {
     products: ['TB'],
     path: '/docsHelp/Timebars_User_Guide.md',
     priority: 1,
+  },
+  'other-timebars-product-features.md': {
+    title: 'Product Features',
+    category: 'Timebars',
+    products: ['TB'],
+    path: '/docsOther/timebars-product-features.md',
+    priority: 10,
+  },
+  'other-timebars-specific-functionality.md': {
+    title: 'Specific Functionality',
+    category: 'Timebars',
+    products: ['TB'],
+    path: '/docsOther/timebars-specific-functionality.md',
+    priority: 11,
+  },
+  'other-timebars-benefits-resource-scheduler.md': {
+    title: 'Benefits of Our Resource Scheduler',
+    category: 'Timebars',
+    products: ['TB'],
+    path: '/docsOther/timebars-benefits-of-our-resource-scheduler.md',
+    priority: 12,
+  },
+  'other-solving-problems-timebars.md': {
+    title: 'Solving Problems with Timebars',
+    category: 'Timebars',
+    products: ['TB'],
+    path: '/docsOther/solving-problems-timebars.md',
+    priority: 13,
+  },
+  'other-innovations-by-timebars-ltd.md': {
+    title: 'Innovations by Timebars Ltd',
+    category: 'Timebars',
+    products: ['TB'],
+    path: '/docsOther/innovations-by-timebars-ltd.md',
+    priority: 14,
+  },
+  'other-who-is-timebars-ltd.md': {
+    title: 'Who Is Timebars Ltd',
+    category: 'Timebars',
+    products: ['TB'],
+    path: '/docsOther/who-is-timebars-ltd.md',
+    priority: 15,
   },
 
   // ── Agilebars column ──────────────────────────────────────────────────────
@@ -52,6 +96,41 @@ const HELP_DOCS = {
     products: ['AB'],
     path: '/docsHelp/Agilebars_Kanban_Primer.md',
     priority: 2,
+  },
+  'other-agilebars-product-features.md': {
+    title: 'Product Features',
+    category: 'Agilebars',
+    products: ['AB'],
+    path: '/docsOther/agilebars-product-features.md',
+    priority: 10,
+  },
+  'other-agilebars-specific-functionality.md': {
+    title: 'Specific Functionality',
+    category: 'Agilebars',
+    products: ['AB'],
+    path: '/docsOther/agilebars-specific-functionality.md',
+    priority: 11,
+  },
+  'other-agilebars-solving-problems.md': {
+    title: 'Solving Problems: Sprint Scheduler',
+    category: 'Agilebars',
+    products: ['AB'],
+    path: '/docsOther/agilebars-solving-problems-with-our-sprint-scheduler.md',
+    priority: 12,
+  },
+  'other-benefits-agilebars-product.md': {
+    title: 'Benefits of Agilebars',
+    category: 'Agilebars',
+    products: ['AB'],
+    path: '/docsOther/benefits-agilebars-product.md',
+    priority: 13,
+  },
+  'other-understanding-agilebars-kanban.md': {
+    title: 'Understanding Timescale & Kanban Integration',
+    category: 'Agilebars',
+    products: ['AB'],
+    path: '/docsOther/understanding-agilebars-timescale-and-kanban-integration.md',
+    priority: 14,
   },
 
   // ── Costbars column ───────────────────────────────────────────────────────
@@ -89,6 +168,69 @@ const HELP_DOCS = {
     products: ['CB'],
     path: '/docsHelp/Costbars_PPM_Scoring_Guide_5_Step_Process.md',
     priority: 5,
+  },
+  'other-costbars-product-features.md': {
+    title: 'Product Features',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/costbars-product-features.md',
+    priority: 10,
+  },
+  'other-costbars-specific-functionality.md': {
+    title: 'Specific Functionality',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/costbars-specific-functionality.md',
+    priority: 11,
+  },
+  'other-costbars-benefits-features.md': {
+    title: 'Benefits and Features',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/costbars-benefits-and-features.md',
+    priority: 12,
+  },
+  'other-costbars-executive-notifications.md': {
+    title: 'Executive Notification & Alert Hub',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/costbars-executive-notification-and-alert-hub.md',
+    priority: 13,
+  },
+  'other-costbars-ppm-process.md': {
+    title: 'How to Design a PPM Process',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/costbars-how-to-design-a-ppm-process.md',
+    priority: 14,
+  },
+  'other-costbars-solving-problems.md': {
+    title: 'Solving Problems: Project Pipeline',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/costbars-solving-problems-with-our-project-pipeline-scheduler.md',
+    priority: 15,
+  },
+  'other-costbars-faq-pipeline.md': {
+    title: 'FAQs: Project Pipeline Scheduler',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/frequently-asked-questions-about-costbars-project-pipeline-scheduler.md',
+    priority: 16,
+  },
+  'other-ppm-compliance-rules.md': {
+    title: 'PPM Compliance Rules',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/ppm-compliance-rules.md',
+    priority: 17,
+  },
+  'other-resource-management-ppm.md': {
+    title: 'Resource Management Techniques (PPM)',
+    category: 'Costbars',
+    products: ['CB'],
+    path: '/docsOther/resource-management-techniques-ppm.md',
+    priority: 18,
   },
 
   // ── Common Help Files ──────────────────────────────────────────────────────
@@ -262,6 +404,150 @@ const HELP_DOCS = {
     path: '/docsHelp/Common_12_Products_Installation_For_On_Prem.md',
     priority: 4,
   },
+
+  // ── Marketing Articles ─────────────────────────────────────────────────────
+  'other-baseline-management.md': {
+    title: 'Baseline Management: Why and How',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/baseline-management-why-and-how.md',
+    priority: 1,
+  },
+  'other-common-benefits-all-products.md': {
+    title: 'Common Benefits: All Products',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/common-benefits-agilebars-timebars-costbars.md',
+    priority: 2,
+  },
+  'other-common-functionality-all-products.md': {
+    title: 'Common Functionality Across All Products',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/common-functionality-across-all-products.md',
+    priority: 3,
+  },
+  'other-comparing-2018-agile-to-2025.md': {
+    title: '2018 Agile Notes vs 2025 PM Trends',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/comparing-my-2018-agile-discussion-notes-to-2025-trends-in-pm.md',
+    priority: 4,
+  },
+  'other-kanban-tasks-on-track.md': {
+    title: 'How Our Kanban App Keeps Tasks on Track',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/how-my-kanban-app-keeps-your-tasks-on-track.md',
+    priority: 5,
+  },
+  'other-own-the-code-buyer-guide.md': {
+    title: 'Own the Code: Buyer Guide',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/own-the-code-buyer-guide.md',
+    priority: 6,
+  },
+  'other-product-design-strategy.md': {
+    title: 'Product Design Strategy',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/product-design-strategy.md',
+    priority: 7,
+  },
+  'other-product-help-overview.md': {
+    title: 'Product Help Overview',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/product-help-agilebars-timebars-costbars-2.md',
+    priority: 8,
+  },
+  'other-project-scheduling-glossary.md': {
+    title: 'Project Scheduling Glossary',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/project-scheduling-glossary.md',
+    priority: 9,
+  },
+  'other-traffic-light-indicator-questions.md': {
+    title: 'Project Status: Traffic Light Questions',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/project-status-reporting-traffic-light-indicator-questions.md',
+    priority: 10,
+  },
+  'other-recommended-backup-strategy.md': {
+    title: 'Recommended Backup Strategy',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/recommended-backup-strategy.md',
+    priority: 11,
+  },
+  'other-resource-management-techniques.md': {
+    title: 'Resource Management Techniques',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/resource-management-techniques.md',
+    priority: 12,
+  },
+  'other-technology-stack.md': {
+    title: 'Technology Stack',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/technology-stack.md',
+    priority: 13,
+  },
+  'other-balanced-portfolio-process.md': {
+    title: 'What Is a Balanced Project Portfolio Process?',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/what-is-a-balanced-project-portfolio-process-for-a-typical-organisation.md',
+    priority: 14,
+  },
+  'other-why-sync-spreadsheet.md': {
+    title: 'Why Synchronize with a Spreadsheet?',
+    category: 'Marketing Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/why-synchronize-with-a-spreadsheet.md',
+    priority: 15,
+  },
+
+  // ── Blog Articles ──────────────────────────────────────────────────────────
+  'other-blog-advantages-pm-software.md': {
+    title: 'Advantages of Project Management Software',
+    category: 'Blog Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/blog-advantages-of-project-management-software.md',
+    priority: 1,
+  },
+  'other-blog-agile-resource-management.md': {
+    title: 'Agile & Resource Management: Is There a Conflict?',
+    category: 'Blog Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/blog-agile-and-resource-management-is-there-an-conflict.md',
+    priority: 2,
+  },
+  'other-blog-ai-compares-ppm.md': {
+    title: 'AI Compares PPM Insights: PMI vs Wikipedia',
+    category: 'Blog Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/blog-ai-compares-ppm-insights-between-pmi-and-wikipedia.md',
+    priority: 3,
+  },
+  'other-blog-faq-agilebars-sprint.md': {
+    title: 'FAQs: Agilebars Sprint Management',
+    category: 'Blog Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/blog-frequently-asked-questions-about-agilebars-sprint-management.md',
+    priority: 4,
+  },
+  'other-blog-faq-timebars-scheduling.md': {
+    title: 'FAQs: Timebars Project Scheduling',
+    category: 'Blog Articles',
+    products: ['TB', 'AB', 'CB'],
+    path: '/docsOther/blog-frequently-asked-questions-about-timebars-project-scheduling.md',
+    priority: 5,
+  },
 }
 
 // ─── Pure Helpers ─────────────────────────────────────────────────────────────
@@ -374,11 +660,13 @@ function SectionHeader({ label, onSelectAll, onSelectNone }) {
 }
 
 function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
-  const tbDocs     = getDocsByCategory('Timebars')
-  const abDocs     = getDocsByCategory('Agilebars')
-  const cbDocs     = getDocsByCategory('Costbars')
-  const commonDocs = getDocsByCategory('Common Help Files')
-  const advDocs    = getDocsByCategory('Advanced')
+  const tbDocs         = getDocsByCategory('Timebars')
+  const abDocs         = getDocsByCategory('Agilebars')
+  const cbDocs         = getDocsByCategory('Costbars')
+  const commonDocs     = getDocsByCategory('Common Help Files')
+  const advDocs        = getDocsByCategory('Advanced')
+  const marketingDocs  = getDocsByCategory('Marketing Articles')
+  const blogDocs       = getDocsByCategory('Blog Articles')
 
   const totalSelected = selectedDocKeys.length
   const totalDocs     = Object.keys(HELP_DOCS).length
@@ -480,6 +768,34 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
           {advDocs.map(([key, cfg]) => (
+            <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
+          ))}
+        </div>
+      </div>
+
+      {/* Marketing Articles */}
+      <div className="border border-purple-200 dark:border-purple-800/40 rounded-lg p-3 bg-purple-50 dark:bg-purple-950/10">
+        <SectionHeader
+          label="Marketing Articles"
+          onSelectAll={() => onSectionSelect(getKeysByCategory('Marketing Articles'), true)}
+          onSelectNone={() => onSectionSelect(getKeysByCategory('Marketing Articles'), false)}
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+          {marketingDocs.map(([key, cfg]) => (
+            <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
+          ))}
+        </div>
+      </div>
+
+      {/* Blog Articles */}
+      <div className="border border-teal-200 dark:border-teal-800/40 rounded-lg p-3 bg-teal-50 dark:bg-teal-950/10">
+        <SectionHeader
+          label="Blog Articles"
+          onSelectAll={() => onSectionSelect(getKeysByCategory('Blog Articles'), true)}
+          onSelectNone={() => onSectionSelect(getKeysByCategory('Blog Articles'), false)}
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
+          {blogDocs.map(([key, cfg]) => (
             <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
           ))}
         </div>
