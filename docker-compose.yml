@@ -1,0 +1,23 @@
+# Production — help.timebars.com
+# Image is pre-built and pushed to Docker Hub; no build step here.
+# Deploy: docker compose pull && docker compose up -d
+
+services:
+  tbhelpapp:
+    image: jimecox807/tbhelpapp:latest
+    container_name: tbhelpapp
+    ports:
+      - "3010:3002"          # host:container — app runs on 3002 internally
+    environment:
+      NODE_ENV: production
+    env_file:
+      - .env.local           # must contain GEMINI_API_KEY
+    extra_hosts:
+      - "ollama-server:192.168.1.195"   # resolves ollama-server inside the container
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3002 > /dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s     # give Next.js time to boot before first check
