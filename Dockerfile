@@ -13,7 +13,7 @@ FROM node:18-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=3002
+ENV PORT=3010
 ENV HOSTNAME="0.0.0.0"
 
 # Non-root user for security
@@ -27,5 +27,5 @@ COPY --from=builder /app/.next/static        ./.next/static
 RUN chown -R nextjs:nodejs /app
 USER nextjs
 
-EXPOSE 3002
+EXPOSE 3010
 CMD ["node", "server.js"]

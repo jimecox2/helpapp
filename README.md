@@ -2,12 +2,12 @@
 ## Simple steps deploy prod on lser
 
 git pull
-docker stop tbwwwp && docker rm tbwwwp  
-docker rmi jimecox807/tbwwwp:latest   
+docker stop tbhelpapp && docker rm tbhelpapp  
+docker rmi jimecox807/tbhelpapp:latest   
 ./deploy-push-to-hub-secure.sh
 
 ## on prod lser for ollama-server
-cd /home/jcox/docker/tbhelpapp
+cd /docker/compose/tbhelpapp
 ./deploy.sh
 
 
