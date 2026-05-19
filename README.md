@@ -1,4 +1,17 @@
 
+## Simple steps deploy prod on lser
+
+git pull
+docker stop tbwwwp && docker rm tbwwwp  
+docker rmi jimecox807/tbwwwp:latest   
+./deploy-push-to-hub-secure.sh
+
+## on prod lser for ollama-server
+cd /home/jcox/docker/tbhelpapp
+./deploy.sh
+
+
+
 
 Why would I use Timebars, what would be the benefits to me as a PM
 

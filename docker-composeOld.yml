@@ -1,0 +1,18 @@
+# production help app help.timebars.com
+services:
+  tbwwwp:
+    build: .
+    image: jimecox807/tbhelpapp:latest   # Customize the image name
+    container_name: tbhelpapp  # Customize the container name
+    ports:
+      - "3010:3010"
+    environment:
+      NODE_ENV: production
+    env_file:
+      - .env
+    networks:
+      postgres_tbpg_net:
+        ipv4_address: 192.168.5.10  # Make sure to assign another static IP
+networks:
+  postgres_tbpg_net:
+    external: true       
