@@ -1,0 +1,39 @@
+TBID,tbMDWBS,tbMDPhase,Sub-Project or WorkPackage,tbName,tbBudget,tbDuration,tbWork,tbMDNotes
+100,C-BCS-CBL,Equipment Procurement,Bandwidth Control System,Cable — Wired Network,$300,10,0,Wired network cabling
+101,C-BCS-CHW,Equipment Procurement,Bandwidth Control System,Bandwidth Control Gateway — Hardware,"$4,000",21,0,Bandwidth control gateway
+102,C-BCS-CSW,Equipment Procurement,Bandwidth Control System,Bandwidth Control Gateway — Software,"$1,500",14,0,Bandwidth control gateway
+103,C-BCS-LGP*,Equipment Procurement,Bandwidth Control System,Power Outage Protection & Conditioning,$150,10,0,*Wired network side; cost by analogy to C-BDS-LGP (no dedicated WBS row)
+104,C-BDS-AMP,Equipment Procurement,Bandwidth Distrubution System,Bi-Directional Amplifier,"$1,600",14,0,2 – Antennas/Amplifier (amplifier side)
+105,C-BDS-ANT,Equipment Procurement,Bandwidth Distrubution System,Omni Antenna,"$1,200",14,0,2 – Antennas/Amplifier (antenna side)
+106,C-BDS-APC,Equipment Procurement,Bandwidth Distrubution System,Access Point Cabinet,"$2,200",21,0,1 – Access point & cabinet
+107,C-BDS-CBL,Equipment Procurement,Bandwidth Distrubution System,Cable Coax,$300,7,0,2 – Cabling and connectors (cable)
+108,C-BDS-CON,Equipment Procurement,Bandwidth Distrubution System,Connectors,$200,7,0,2 – Cabling and connectors (connectors)
+109,C-BDS-LGP,Equipment Procurement,Bandwidth Distrubution System,Lightning Protection,$150,10,0,Power outage protection and power conditioning
+110,C-BDS-POE,Equipment Procurement,Bandwidth Distrubution System,Power Over Ethernet / Conditioning,$200,10,0,Power outage protection and power conditioning
+111,C-BDS-WAP,Equipment Procurement,Bandwidth Distrubution System,Wireless Access Point / Radio Card,"$4,400",21,0,2 – Radio Card (AP radio modules)
+112,C-BSS-RTR,Equipment Procurement,Bandwidth Supply system,Router / Main Hub-Switch,"$2,500",21,0,Main Hub/switch
+113,C-CPE-ANT,Equipment Procurement,Customer Premise Equipment,Patch Antenna,"$1,250",14,0,50 – Patch Antenna
+114,C-CPE-BRK,Equipment Procurement,Customer Premise Equipment,Mounting Bracket,$750,7,0,Premise antenna mounting hardware
+115,C-CPE-CBL,Equipment Procurement,Customer Premise Equipment,RF Cable with Connectors,$400,7,0,50 – RF Cable with Connectors
+116,C-CPE-CWD,Equipment Procurement,Customer Premise Equipment,Modem/Radio (Wireless Device),"$8,750",14,0,50 – Modem/Radio
+117,E-BCS,Engineerring,Engineering - Bandwidth Control System,Engineering — Wired Network subsystem,"$1,600",4,32,Coordination — wired network / bandwidth control gateway engineering
+118,E-BDS,Engineerring,Engineering - Bandwidth Distrubution System,Engineering — Base Station subsystem,"$1,200",5,24,Coordination — base station (Bandwidth Distribution System) engineering
+119,E-CPE,Engineerring,Engineering - Customer Premise Equipment,Engineering — Premise Equipment subsystem,$400,5,8,Coordination — CPE configuration template for 50 units
+121,I-BCS,Installation,Install - Bandwidth Control System,Install — Wired Network,"$2,000",6,24,Installation of equipment / configuration (wired network)
+122,I-BDS,Installation,Install - Bandwidth Distrubution System,Install — Base Station,$800,5,16,Installation of equipment (base station)
+123,I-CPE,Installation,Install - Customer Premise Equipment,Install — Premise Equipment,"$15,000",10,300,"Installation of equipment (premise); duration is crew-adjusted (2-person crew, ~5 installs/day) — NOT a simple x50 of the WBS per-unit day figure; effort hours (300 = 6 hrs x 50) do scale linearly"
+124,E-NDD,Engineerring,Network design and drawing,Network design and drawing,"$1,200",3,24,Network design and configuration drawings
+125,E-SLD,Engineerring,Site layout drawing,Site layout drawing,$800,7,16,Layout drawing and BOM
+126,E-SST,Engineerring,Site study,Site study,"$2,000",5,40,Site study & conceptual design
+127,E-SVT,Engineerring,Site visit 2 days,Site visit (2 days),"$1,400",2,16,Site study & conceptual design — kickoff site visit
+128,S-BCS,Startup,Startup - Bandwidth Control System,Startup — Wired Network,$800,4,16,On-the-ground / installed on-site testing (wired network)
+129,S-BDS,Startup,Startup - Bandwidth Distrubution System,Startup — Base Station,$400,10,8,On-the-ground / installed on-site testing (base station)
+130,S-CPE,Startup,Startup - Customer Premise Equipment,Startup — Premise Equipment (batch commissioning),"$1,200",20,24,Installed on-site testing across all 50 premises (single batch commissioning task)
+131,T-BCU,Support,Support - Bandwidth Control Unit,Support — Bandwidth Control Unit,$200,20,4,24/7 technical support
+132,T-CSW,Support,Support - Computer Software,Support — Computer Software,$200,20,4,24/7 technical support
+133,T-CWD,Support,Support - Customer Wireless Device,Support — Customer Wireless Device (fleet),$100,20,2,24/7 technical support
+134,T-SPT,Support,Support - General Support,Support — General (24/7 coordination + telephone support),$400,20,8,Two months telephone support and remote administration included
+135,T-RTR,Support,Support - Router,Support — Router,$200,20,4,24/7 technical support
+136,T-WAP,Support,Support - Wireless Access Point,Support — Wireless Access Point,$200,20,4,24/7 technical support
+137,E-TMN,Engineerring,Technical Manual,Technical/Training Manual,"$2,000",5,40,Training manual documentation
+,,,,,,20,,
