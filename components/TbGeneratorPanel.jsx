@@ -5,11 +5,22 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Wand2, FolderOpen, FileText, AlertCircle, Loader2 } from 'lucide-react'
+import { Wand2, FolderOpen, FileText, AlertCircle, Loader2, Download } from 'lucide-react'
+
+// Only these document types can be sent to Gemini for now
+const SUPPORTED_EXTS = ['.md', '.csv']
 
 // ─── Doc Picker ───────────────────────────────────────────────────────────────
 
-function DocCheckbox({ docPath, label, selectedPaths, onToggle }) {
+function DocCheckbox({ docPath, label, disabled, selectedPaths, onToggle }) {
+  if (disabled) {
+    return (
+      <label className="flex items-start gap-2 text-xs text-gray-400 dark:text-gray-600 cursor-not-allowed" title="Only .md and .csv files are supported for now">
+        <input type="checkbox" checked={false} disabled className="mt-0.5 w-3.5 h-3.5 flex-shrink-0" readOnly />
+        <span className="leading-tight line-through decoration-gray-300 dark:decoration-gray-700">{label}</span>
+      </label>
+    )
+  }
   return (
     <label className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white group">
       <input
@@ -24,7 +35,7 @@ function DocCheckbox({ docPath, label, selectedPaths, onToggle }) {
 }
 
 function CustomerSection({ customer, selectedPaths, onToggle, onSectionSelect }) {
-  const allPaths = customer.docs.map(d => d.path)
+  const allPaths = customer.docs.filter(d => SUPPORTED_EXTS.includes(d.ext)).map(d => d.path)
   return (
     <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-lg p-3">
       <div className="flex items-center justify-between mb-2">
@@ -43,6 +54,7 @@ function CustomerSection({ customer, selectedPaths, onToggle, onSectionSelect })
             key={doc.path}
             docPath={doc.path}
             label={doc.relPath}
+            disabled={!SUPPORTED_EXTS.includes(doc.ext)}
             selectedPaths={selectedPaths}
             onToggle={onToggle}
           />
@@ -61,6 +73,7 @@ export default function TbGeneratorPanel() {
   const [promptValue,   setPromptValue]   = useState('')
   const [isGenerating,  setIsGenerating]  = useState(false)
   const [statusMessage, setStatusMessage] = useState(null)
+  const [result,        setResult]        = useState(null)   // { data, notes, elapsed }
 
   const textareaRef = useRef(null)
 
@@ -106,16 +119,50 @@ export default function TbGeneratorPanel() {
 
     setIsGenerating(true)
     setStatusMessage(null)
+    setResult(null)
+    const startTime = Date.now()
 
-    // TODO: push selected doc content + prompt to Gemini via a new
-    // /api/generate endpoint. The response format spec will be provided later.
-    setStatusMessage({
-      type: 'info',
-      text: `Generation logic is not wired up yet. When it is, ${selectedPaths.length} selected document${selectedPaths.length !== 1 ? 's' : ''} and your prompt will be sent to Gemini.`,
-    })
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ docPaths: selectedPaths, userPrompt: prompt }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`)
 
-    setIsGenerating(false)
-    textareaRef.current?.focus()
+      setResult({
+        data:    data.data,
+        notes:   data.notes || [],
+        elapsed: ((Date.now() - startTime) / 1000).toFixed(1),
+      })
+    } catch (error) {
+      let text = '❌ '
+      if (error.message?.includes('GEMINI_API_KEY')) {
+        text += 'Cloud AI is not configured. Check your GEMINI_API_KEY in .env.local.'
+      } else if (error.message?.includes('429')) {
+        text += 'Rate limit reached — please wait a minute and try again.'
+      } else {
+        text += error.message || 'Generation failed. Please try again.'
+      }
+      setStatusMessage({ type: 'error', text })
+    } finally {
+      setIsGenerating(false)
+      textareaRef.current?.focus()
+    }
+  }
+
+  function handleDownload() {
+    if (!result?.data) return
+    const blob = new Blob([JSON.stringify(result.data, null, 2)], { type: 'application/json' })
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href     = url
+    a.download = `tbGeneratedData-${new Date().toISOString().slice(0, 10)}.json`
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
   }
 
   function handleKeyDown(e) {
@@ -180,7 +227,10 @@ export default function TbGeneratorPanel() {
                 </span>
                 <div className="flex gap-3">
                   <button
-                    onClick={() => handleSectionSelect(customers.flatMap(c => c.docs.map(d => d.path)), true)}
+                    onClick={() => handleSectionSelect(
+                      customers.flatMap(c => c.docs.filter(d => SUPPORTED_EXTS.includes(d.ext)).map(d => d.path)),
+                      true
+                    )}
                     className="text-xs text-tbBlue hover:underline font-medium"
                   >
                     Select all
@@ -215,13 +265,46 @@ export default function TbGeneratorPanel() {
           )}
         </div>
 
-        {/* ── Status / result area ── */}
+        {/* ── Status / error area ── */}
         {statusMessage && (
           <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-            <div className="flex items-start gap-2 text-sm bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900 rounded-lg p-4 text-gray-700 dark:text-gray-300">
-              <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-tbBlue" />
+            <div className={statusMessage.type === 'error'
+              ? 'flex items-start gap-2 text-sm bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-400'
+              : 'flex items-start gap-2 text-sm bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900 rounded-lg p-4 text-gray-700 dark:text-gray-300'}>
+              <AlertCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${statusMessage.type === 'error' ? 'text-red-500' : 'text-tbBlue'}`} />
               <span>{statusMessage.text}</span>
             </div>
+          </div>
+        )}
+
+        {/* ── Generated result ── */}
+        {result && (
+          <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 space-y-3">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap">
+                <Badge variant="secondary" className="text-xs">
+                  📊 {result.data.tbTimebars.length} tbTimebars row{result.data.tbTimebars.length !== 1 ? 's' : ''}
+                </Badge>
+                <Badge variant="secondary" className="text-xs">
+                  🗂 {result.data.tbMetaData.length} tbMetaData row{result.data.tbMetaData.length !== 1 ? 's' : ''}
+                </Badge>
+                <span className="text-xs text-gray-400 dark:text-gray-500">⏱ {result.elapsed}s</span>
+              </div>
+              <Button onClick={handleDownload} variant="outline" size="sm" className="text-tbBlue border-tbBlue">
+                <Download className="w-4 h-4 mr-2" />
+                Download JSON
+              </Button>
+            </div>
+
+            {result.notes.length > 0 && (
+              <ul className="text-xs text-gray-500 dark:text-gray-400 list-disc pl-5 space-y-0.5">
+                {result.notes.map((note, i) => <li key={i}>{note}</li>)}
+              </ul>
+            )}
+
+            <pre className="text-xs bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3 overflow-auto max-h-80 text-gray-700 dark:text-gray-300">
+{JSON.stringify(result.data, null, 2)}
+            </pre>
           </div>
         )}
 
