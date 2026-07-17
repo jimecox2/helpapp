@@ -1,13 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import HelpChatPanel from '@/components/HelpChatPanel'
+import TbGeneratorPanel from '@/components/TbGeneratorPanel'
 
 export const metadata = {
-  title: 'AI Help Assistant | Timebars',
-  description: 'Get instant answers about Timebars, Agilebars, or Costbars — powered by official documentation.',
+  title: 'TB Generator | Timebars',
+  description: 'Generate Timebars data from customer documents — powered by AI.',
 }
 
-export default function HomePage() {
+export default function TbGeneratorPage() {
   return (
     <main className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="flex items-center justify-between gap-5 mb-8 flex-wrap">
@@ -21,14 +21,14 @@ export default function HomePage() {
             priority
           />
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            AI Help Assistant
+            TB Generator
           </h1>
         </div>
-        <Link href="/tbgenerator" className="text-sm text-tbBlue hover:underline font-medium">
-          🛠 TB Generator →
+        <Link href="/" className="text-sm text-tbBlue hover:underline font-medium">
+          ← Back to Help Assistant
         </Link>
       </div>
-      <HelpChatPanel />
+      <TbGeneratorPanel />
     </main>
   )
 }
