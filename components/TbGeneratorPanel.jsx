@@ -171,7 +171,10 @@ export default function TbGeneratorPanel() {
     const url  = URL.createObjectURL(blob)
     const a    = document.createElement('a')
     a.href     = url
-    a.download = `tbGeneratedData-${new Date().toISOString().slice(0, 10)}.json`
+    const now = new Date()
+    const pad = n => String(n).padStart(2, '0')
+    const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`
+    a.download = `transferBarsTbGeneratedData-${stamp}.json`
     document.body.appendChild(a)
     a.click()
     a.remove()
