@@ -115,52 +115,93 @@ function salvageTruncatedArrays(text) {
   return text.slice(0, lastCompleteRow + 1) + ']}'
 }
 
+// Streaming endpoint (SSE): the non-streaming generateContent endpoint closes
+// the connection at ~60s with nothing sent ("other side closed") when a large
+// generation takes longer than that. With streamGenerateContent tokens flow as
+// they are produced, so long generations complete.
 async function callGeminiJson(prompt, model) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set in environment')
 
   const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/${model.geminiModel}:generateContent?key=${apiKey}`
+    `https://generativelanguage.googleapis.com/v1beta/models/${model.geminiModel}:streamGenerateContent?alt=sse&key=${apiKey}`
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature:      model.temperature,
-        maxOutputTokens:  GEN_MAX_OUTPUT_TOKENS,
-        responseMimeType: 'application/json',
-        thinkingConfig:   { thinkingBudget: 0 },
-      },
-    }),
-  })
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 300000) // 5 min hard cap
 
-  if (!res.ok) {
-    const errBody = await res.text().catch(() => '')
-    console.error('Gemini HTTP', res.status, errBody.slice(0, 2000))
-    let message = `Gemini API error: HTTP ${res.status}`
-    try { message = JSON.parse(errBody)?.error?.message || message } catch { /* keep default */ }
-    throw new Error(message)
+  let res
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature:      model.temperature,
+          maxOutputTokens:  GEN_MAX_OUTPUT_TOKENS,
+          responseMimeType: 'application/json',
+          thinkingConfig:   { thinkingBudget: 0 },
+        },
+      }),
+    })
+
+    if (!res.ok) {
+      const errBody = await res.text().catch(() => '')
+      console.error('Gemini HTTP', res.status, errBody.slice(0, 2000))
+      let message = `Gemini API error: HTTP ${res.status}`
+      try {
+        const parsed = JSON.parse(errBody)
+        message = (Array.isArray(parsed) ? parsed[0] : parsed)?.error?.message || message
+      } catch { /* keep default */ }
+      throw new Error(message)
+    }
+
+    // Accumulate the SSE stream: lines of "data: {chunk}"
+    let text = ''
+    let finishReason = null
+    let blockReason  = null
+    const raw = await res.text()
+    for (const line of raw.split('\n')) {
+      const t = line.trim()
+      if (!t.startsWith('data:')) continue
+      const payload = t.slice(5).trim()
+      if (!payload || payload === '[DONE]') continue
+      try {
+        const chunk = JSON.parse(payload)
+        const cand = chunk?.candidates?.[0]
+        for (const p of cand?.content?.parts || []) text += p.text || ''
+        if (cand?.finishReason) finishReason = cand.finishReason
+        if (chunk?.promptFeedback?.blockReason) blockReason = chunk.promptFeedback.blockReason
+      } catch { /* skip malformed chunk */ }
+    }
+
+    if (!text) {
+      console.error('Gemini empty stream:', raw.slice(0, 2000))
+      const blocked = blockReason || finishReason
+      throw new Error(`Gemini returned an empty response${blocked ? ` (${blocked})` : ''}`)
+    }
+
+    const parsed = tryParseJSONLoose(text)
+    if (parsed) return parsed
+
+    console.error('Gemini unparseable JSON (finishReason:', finishReason, '):', text.slice(0, 2000))
+    if (finishReason === 'MAX_TOKENS') {
+      throw new Error('Gemini\'s response was cut off at the output limit — try selecting fewer documents or a smaller CSV')
+    }
+    throw new Error('Gemini did not return valid JSON — please try again')
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('Gemini took longer than 5 minutes — try selecting fewer documents or a smaller CSV')
+    }
+    if (error.message?.includes('fetch failed') || error.cause) {
+      const detail = error.cause?.code || error.cause?.message || ''
+      throw new Error(`Network error calling Gemini${detail ? ` (${detail})` : ''} — check your connection and try again`)
+    }
+    throw error
+  } finally {
+    clearTimeout(timer)
   }
-
-  const data = await res.json()
-  const candidate = data?.candidates?.[0]
-  const text = (candidate?.content?.parts || []).map(p => p.text || '').join('')
-  if (!text) {
-    console.error('Gemini empty response:', JSON.stringify(data).slice(0, 2000))
-    const blocked = data?.promptFeedback?.blockReason || candidate?.finishReason
-    throw new Error(`Gemini returned an empty response${blocked ? ` (${blocked})` : ''}`)
-  }
-
-  const parsed = tryParseJSONLoose(text)
-  if (parsed) return parsed
-
-  console.error('Gemini unparseable JSON (finishReason:', candidate?.finishReason, '):', text.slice(0, 2000))
-  if (candidate?.finishReason === 'MAX_TOKENS') {
-    throw new Error('Gemini\'s response was cut off at the output limit — try selecting fewer documents or a smaller CSV')
-  }
-  throw new Error('Gemini did not return valid JSON — please try again')
 }
 
 export async function POST(request) {
