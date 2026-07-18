@@ -97,13 +97,18 @@ export default function TbGeneratorPanel() {
 
   const totalDocs = customers ? customers.reduce((n, c) => n + c.docs.length, 0) : 0
 
-  // Selection rules: max two items — at most one CSV of tasks + one document
-  const csvCount = selectedPaths.filter(p => p.toLowerCase().endsWith('.csv')).length
-  const mdCount  = selectedPaths.filter(p => p.toLowerCase().endsWith('.md')).length
+  // Selection rules: max three items — one CSV of tasks + one charter/business
+  // case + one risk file ("risk" must be in the file name)
+  const isRiskFile = p => /risk/i.test(p.split('/').pop())
+  const csvCount   = selectedPaths.filter(p => p.toLowerCase().endsWith('.csv')).length
+  const mdPaths    = selectedPaths.filter(p => p.toLowerCase().endsWith('.md'))
+  const riskCount  = mdPaths.filter(isRiskFile).length
+  const plainMd    = mdPaths.length - riskCount
   let selectionError = null
-  if (selectedPaths.length > 2)  selectionError = 'Select at most two items — one CSV of tasks and one charter/business-case document.'
+  if (selectedPaths.length > 3)  selectionError = 'Select at most three items — one CSV of tasks, one charter/business case, and one risk file.'
   else if (csvCount > 1)         selectionError = 'Only one CSV file can be selected.'
-  else if (mdCount > 1)          selectionError = 'Only one markdown document can be selected.'
+  else if (riskCount > 1)        selectionError = 'Only one risk file can be selected.'
+  else if (plainMd > 1)          selectionError = 'Only one charter/business-case document can be selected — a second doc must have "risk" in its file name.'
 
   function handleToggle(docPath) {
     setSelectedPaths(prev =>
@@ -229,7 +234,7 @@ export default function TbGeneratorPanel() {
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   <FileText className="w-3.5 h-3.5 inline mr-1" />
                   <span className="font-semibold text-gray-700 dark:text-gray-300">{selectedPaths.length}</span> of {totalDocs} docs selected
-                  <span className="ml-1 text-gray-400">(max 2: one CSV + one document)</span>
+                  <span className="ml-1 text-gray-400">(max 3: one CSV + one charter/business case + one risk file)</span>
                   {selectedPaths.length === 0 && (
                     <span className="ml-1 text-red-500 font-medium">— select at least one</span>
                   )}

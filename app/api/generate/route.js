@@ -46,10 +46,16 @@ async function readSelectedDocs(docPaths) {
   return { docs, skipped }
 }
 
+function docKind(doc) {
+  if (doc.ext === '.csv') return 'CSV — first row is tbTimebars field names'
+  if (/risk/i.test(doc.name)) return 'RISK LIST — standalone list of known risks, see RISK EXTRACTION'
+  return 'Markdown — charter / business case'
+}
+
 function buildDocsBlock(docs) {
   return docs.map(doc =>
     `═══════════════════════════════════════\n` +
-    `📄 ${doc.name} (${doc.ext === '.csv' ? 'CSV — first row is tbTimebars field names' : 'Markdown'})\n` +
+    `📄 ${doc.name} (${docKind(doc)})\n` +
     `═══════════════════════════════════════\n\n${doc.content}\n`
   ).join('\n\n')
 }
@@ -118,19 +124,27 @@ export async function POST(request) {
     if (!Array.isArray(docPaths) || docPaths.length === 0) {
       return NextResponse.json({ success: false, error: 'Select at least one document' }, { status: 400 })
     }
-    if (docPaths.length > 2) {
+    if (docPaths.length > 3) {
       return NextResponse.json(
-        { success: false, error: 'Select at most two items — one CSV of tasks and one charter/business-case document' },
+        { success: false, error: 'Select at most three items — one CSV of tasks, one charter/business-case document, and one risk file ("risk" in the file name)' },
         { status: 400 }
       )
     }
 
     const { docs, skipped } = await readSelectedDocs(docPaths)
-    const csvCount = docs.filter(d => d.ext === '.csv').length
-    const mdCount  = docs.filter(d => d.ext === '.md').length
-    if (csvCount > 1 || mdCount > 1) {
+    const csvCount  = docs.filter(d => d.ext === '.csv').length
+    const mdDocs    = docs.filter(d => d.ext === '.md')
+    const riskCount = mdDocs.filter(d => /risk/i.test(d.name)).length
+    const plainMd   = mdDocs.length - riskCount
+    if (csvCount > 1) {
+      return NextResponse.json({ success: false, error: 'Select at most one CSV file' }, { status: 400 })
+    }
+    if (riskCount > 1) {
+      return NextResponse.json({ success: false, error: 'Select at most one risk file' }, { status: 400 })
+    }
+    if (plainMd > 1) {
       return NextResponse.json(
-        { success: false, error: 'Select at most one CSV and one markdown document' },
+        { success: false, error: 'Select at most one charter/business-case document — a second markdown file must have "risk" in its file name' },
         { status: 400 }
       )
     }
