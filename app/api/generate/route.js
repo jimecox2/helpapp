@@ -118,8 +118,22 @@ export async function POST(request) {
     if (!Array.isArray(docPaths) || docPaths.length === 0) {
       return NextResponse.json({ success: false, error: 'Select at least one document' }, { status: 400 })
     }
+    if (docPaths.length > 2) {
+      return NextResponse.json(
+        { success: false, error: 'Select at most two items — one CSV of tasks and one charter/business-case document' },
+        { status: 400 }
+      )
+    }
 
     const { docs, skipped } = await readSelectedDocs(docPaths)
+    const csvCount = docs.filter(d => d.ext === '.csv').length
+    const mdCount  = docs.filter(d => d.ext === '.md').length
+    if (csvCount > 1 || mdCount > 1) {
+      return NextResponse.json(
+        { success: false, error: 'Select at most one CSV and one markdown document' },
+        { status: 400 }
+      )
+    }
     if (docs.length === 0) {
       return NextResponse.json(
         { success: false, error: 'None of the selected documents could be processed (only .md and .csv are supported for now)' },

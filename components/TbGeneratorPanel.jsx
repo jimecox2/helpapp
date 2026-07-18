@@ -97,6 +97,14 @@ export default function TbGeneratorPanel() {
 
   const totalDocs = customers ? customers.reduce((n, c) => n + c.docs.length, 0) : 0
 
+  // Selection rules: max two items — at most one CSV of tasks + one document
+  const csvCount = selectedPaths.filter(p => p.toLowerCase().endsWith('.csv')).length
+  const mdCount  = selectedPaths.filter(p => p.toLowerCase().endsWith('.md')).length
+  let selectionError = null
+  if (selectedPaths.length > 2)  selectionError = 'Select at most two items — one CSV of tasks and one charter/business-case document.'
+  else if (csvCount > 1)         selectionError = 'Only one CSV file can be selected.'
+  else if (mdCount > 1)          selectionError = 'Only one markdown document can be selected.'
+
   function handleToggle(docPath) {
     setSelectedPaths(prev =>
       prev.includes(docPath) ? prev.filter(p => p !== docPath) : [...prev, docPath]
@@ -115,7 +123,7 @@ export default function TbGeneratorPanel() {
 
   async function handleGenerate() {
     const prompt = promptValue.trim()
-    if (!prompt || isGenerating || selectedPaths.length === 0) return
+    if (!prompt || isGenerating || selectedPaths.length === 0 || selectionError) return
 
     setIsGenerating(true)
     setStatusMessage(null)
@@ -221,8 +229,12 @@ export default function TbGeneratorPanel() {
                 <span className="text-xs text-gray-500 dark:text-gray-400">
                   <FileText className="w-3.5 h-3.5 inline mr-1" />
                   <span className="font-semibold text-gray-700 dark:text-gray-300">{selectedPaths.length}</span> of {totalDocs} docs selected
+                  <span className="ml-1 text-gray-400">(max 2: one CSV + one document)</span>
                   {selectedPaths.length === 0 && (
                     <span className="ml-1 text-red-500 font-medium">— select at least one</span>
+                  )}
+                  {selectionError && (
+                    <span className="ml-1 text-red-500 font-medium">— {selectionError}</span>
                   )}
                 </span>
                 <div className="flex gap-3">
@@ -325,7 +337,7 @@ export default function TbGeneratorPanel() {
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating || !promptValue.trim() || selectedPaths.length === 0}
+              disabled={isGenerating || !promptValue.trim() || selectedPaths.length === 0 || !!selectionError}
               className="bg-tbBlue hover:bg-blue-800 text-white"
             >
               <Wand2 className="w-4 h-4 mr-2" />
