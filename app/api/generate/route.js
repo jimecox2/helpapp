@@ -54,7 +54,11 @@ function buildDocsBlock(docs) {
   ).join('\n\n')
 }
 
-// Gemini in JSON mode; fences stripped as a fallback for models that add them
+// Generation needs far more output headroom than chat: rows are wide and a
+// CSV can produce 40+ of them. Thinking is disabled so the whole budget goes
+// to the JSON itself.
+const GEN_MAX_OUTPUT_TOKENS = 32768
+
 async function callGeminiJson(prompt, model) {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('GEMINI_API_KEY is not set in environment')
@@ -69,8 +73,9 @@ async function callGeminiJson(prompt, model) {
       contents: [{ parts: [{ text: prompt }] }],
       generationConfig: {
         temperature:      model.temperature,
-        maxOutputTokens:  model.maxOutputTokens,
+        maxOutputTokens:  GEN_MAX_OUTPUT_TOKENS,
         responseMimeType: 'application/json',
+        thinkingConfig:   { thinkingBudget: 0 },
       },
     }),
   })
@@ -81,13 +86,23 @@ async function callGeminiJson(prompt, model) {
   }
 
   const data = await res.json()
-  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text
+  const candidate = data?.candidates?.[0]
+  const text = candidate?.content?.parts?.map(p => p.text || '').join('')
   if (!text) throw new Error('Gemini returned an empty response')
 
+  // Strip fences, then parse; fall back to the outermost {...} block
   const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '')
   try {
     return JSON.parse(cleaned)
   } catch {
+    const first = cleaned.indexOf('{')
+    const last  = cleaned.lastIndexOf('}')
+    if (first !== -1 && last > first) {
+      try { return JSON.parse(cleaned.slice(first, last + 1)) } catch { /* fall through */ }
+    }
+    if (candidate?.finishReason === 'MAX_TOKENS') {
+      throw new Error('Gemini\'s response was cut off at the output limit — try selecting fewer documents or a smaller CSV')
+    }
     throw new Error('Gemini did not return valid JSON — please try again')
   }
 }
