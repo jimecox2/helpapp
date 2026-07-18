@@ -63,7 +63,57 @@ function buildDocsBlock(docs) {
 // Generation needs far more output headroom than chat: rows are wide and a
 // CSV can produce 40+ of them. Thinking is disabled so the whole budget goes
 // to the JSON itself.
-const GEN_MAX_OUTPUT_TOKENS = 32768
+const GEN_MAX_OUTPUT_TOKENS = 65536
+
+// Forgiving JSON parse (pattern from the aiCreateWbs worker): strip fences,
+// drop trailing commas, and as a last resort salvage the complete rows from a
+// response truncated mid-object.
+function tryParseJSONLoose(text) {
+  const cleaned = String(text)
+    .replace(/```json\s*([\s\S]*?)```/gi, '$1')
+    .replace(/```([\s\S]*?)```/g, '$1')
+    .trim()
+  try { return JSON.parse(cleaned) } catch { /* next */ }
+  const noTrailingCommas = cleaned.replace(/,\s*([}\]])/g, '$1')
+  try { return JSON.parse(noTrailingCommas) } catch { /* next */ }
+  const first = cleaned.indexOf('{')
+  const last  = cleaned.lastIndexOf('}')
+  if (first !== -1 && last > first) {
+    try { return JSON.parse(cleaned.slice(first, last + 1)) } catch { /* next */ }
+  }
+  const salvaged = salvageTruncatedArrays(cleaned)
+  if (salvaged) {
+    try { return JSON.parse(salvaged) } catch { /* fall through */ }
+  }
+  return null
+}
+
+// Rebuild valid JSON from a response truncated inside the tbTimebars/
+// tbMetaData arrays: walk the text tracking string/brace depth, cut at the
+// last fully closed row object, and re-close the open arrays and root.
+function salvageTruncatedArrays(text) {
+  const start = text.indexOf('{')
+  if (start === -1) return null
+  let depth = 0, inStr = false, esc = false, lastCompleteRow = -1
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i]
+    if (inStr) {
+      if (esc) esc = false
+      else if (ch === '\\') esc = true
+      else if (ch === '"') inStr = false
+      continue
+    }
+    if (ch === '"') { inStr = true; continue }
+    if (ch === '[' || ch === '{') depth++
+    else if (ch === ']' || ch === '}') {
+      depth--
+      if (depth === 0) return null // fully closed — plain parse should have worked
+      if (depth === 2) lastCompleteRow = i // a row object inside a table array just closed
+    }
+  }
+  if (lastCompleteRow === -1) return null
+  return text.slice(0, lastCompleteRow + 1) + ']}'
+}
 
 async function callGeminiJson(prompt, model) {
   const apiKey = process.env.GEMINI_API_KEY
@@ -87,30 +137,30 @@ async function callGeminiJson(prompt, model) {
   })
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err?.error?.message || `Gemini API error: HTTP ${res.status}`)
+    const errBody = await res.text().catch(() => '')
+    console.error('Gemini HTTP', res.status, errBody.slice(0, 2000))
+    let message = `Gemini API error: HTTP ${res.status}`
+    try { message = JSON.parse(errBody)?.error?.message || message } catch { /* keep default */ }
+    throw new Error(message)
   }
 
   const data = await res.json()
   const candidate = data?.candidates?.[0]
-  const text = candidate?.content?.parts?.map(p => p.text || '').join('')
-  if (!text) throw new Error('Gemini returned an empty response')
-
-  // Strip fences, then parse; fall back to the outermost {...} block
-  const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '')
-  try {
-    return JSON.parse(cleaned)
-  } catch {
-    const first = cleaned.indexOf('{')
-    const last  = cleaned.lastIndexOf('}')
-    if (first !== -1 && last > first) {
-      try { return JSON.parse(cleaned.slice(first, last + 1)) } catch { /* fall through */ }
-    }
-    if (candidate?.finishReason === 'MAX_TOKENS') {
-      throw new Error('Gemini\'s response was cut off at the output limit — try selecting fewer documents or a smaller CSV')
-    }
-    throw new Error('Gemini did not return valid JSON — please try again')
+  const text = (candidate?.content?.parts || []).map(p => p.text || '').join('')
+  if (!text) {
+    console.error('Gemini empty response:', JSON.stringify(data).slice(0, 2000))
+    const blocked = data?.promptFeedback?.blockReason || candidate?.finishReason
+    throw new Error(`Gemini returned an empty response${blocked ? ` (${blocked})` : ''}`)
   }
+
+  const parsed = tryParseJSONLoose(text)
+  if (parsed) return parsed
+
+  console.error('Gemini unparseable JSON (finishReason:', candidate?.finishReason, '):', text.slice(0, 2000))
+  if (candidate?.finishReason === 'MAX_TOKENS') {
+    throw new Error('Gemini\'s response was cut off at the output limit — try selecting fewer documents or a smaller CSV')
+  }
+  throw new Error('Gemini did not return valid JSON — please try again')
 }
 
 export async function POST(request) {
