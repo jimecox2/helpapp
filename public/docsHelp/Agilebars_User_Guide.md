@@ -1,7 +1,17 @@
-
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
 
 # Agilebars User Guide
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+
+> **This is the master user guide for Agilebars.** It is complete for everything
+> Agilebars does on its own, and is used **alongside the common guides**, which
+> cover what all three products share — the canvas and the user interface, the
+> data model and scheduling engine, configuration and picklists, spreadsheet sync
+> and data control, reports, risks and issues, cloud publishing and notifications.
+> Costbars and Timebars each have their own master guide in the same way.
+>
+> The **Kanban Primer** at the end of this guide was previously a separate
+> document and is now part of this one.
 
 **Agilebars Sprint Scheduler** is a visual sprint planning tool designed for Agile Scrum teams to manage product backlogs, plan sprints, track progress, and generate burndown charts. This guide focuses on **Agilebars-specific features**—the differences from Timebars and Costbars.
 
@@ -11,19 +21,21 @@ For features common across all products (Bar Creator, Spreadsheet Sync, Reports,
 
 ## Table of Contents
 
-- [What Makes Agilebars Different?](#what-makes-agilebars-different)
-- [Getting Started with Agilebars](#getting-started-with-agilebars)
-- [The Agilebars Hierarchy](#the-agilebars-hierarchy)
-- [Dual-Mode Canvas: Timescale and Kanban](#dual-mode-canvas-timescale-and-kanban)
-- [Kanban Board: Visual Workflow Management](#kanban-board-visual-workflow-management)
-- [Prerequisites for Accurate Burndown Charts](#prerequisites-for-accurate-burndown-charts)
-- [Burndown Charts](#burndown-charts)
-- [Kanban Board KPIs](#kanban-board-kpis)
-- [Agilebars Scheduling Engine](#agilebars-scheduling-engine)
-- [Tips for Agile Scrum Teams](#tips-for-agile-scrum-teams)
-- [Common Help Topics](#common-help-topics)
-- [Quick Reference](#quick-reference)
-- [Support](#support)
+1. [What Makes Agilebars Different?](#what-makes-agilebars-different)
+2. [Getting Started with Agilebars](#getting-started-with-agilebars)
+3. [⚡ Get Started Fast with Ask AI](#-get-started-fast-with-ask-ai)
+4. [The Agilebars Hierarchy](#the-agilebars-hierarchy)
+5. [Dual-Mode Canvas: Timescale and Kanban](#dual-mode-canvas-timescale-and-kanban)
+6. [Kanban Board: Visual Workflow Management](#kanban-board-visual-workflow-management)
+7. [Prerequisites for Accurate Burndown Charts](#prerequisites-for-accurate-burndown-charts)
+8. [Burndown Charts](#burndown-charts)
+9. [Kanban Board KPIs](#kanban-board-kpis)
+10. [Agilebars Scheduling Engine](#agilebars-scheduling-engine)
+11. [Tips for Agile Scrum Teams](#tips-for-agile-scrum-teams)
+12. [Common Help Topics](#common-help-topics)
+13. [Quick Reference](#quick-reference)
+14. [Support](#support)
+15. [Kanban Primer](#kanban-primer)
 
 ---
 
@@ -72,6 +84,26 @@ Before diving into Agilebars, we recommend:
 ### Access Agilebars Sprint Planner Client Application
 
 Visit: **[ab.timebars.com](https://ab.timebars.com)**
+
+---
+
+## ⚡ Get Started Fast with Ask AI
+
+**Ask AI** can help you in two ways inside Agilebars:
+
+1. **Answer your questions.** The **Ask AI** button on the main menu opens a help chat that answers "how do I…" questions about using Agilebars, based on the official documentation.
+2. **Create work items for you.** From a **Project (sprint backlog)** bar, you can have AI generate Tasks and Milestones instead of adding each one by hand.
+
+**To generate work items:**
+
+1. **Click the Project bar's ID** to open its status pop-up form.
+2. Click the **✨ sparkle icon** (the Ask AI button) on that form.
+3. **Describe the work** in plain English — for example, *"Create the user-story tasks for a mobile login and registration feature"* — and click **Create**.
+4. **Refresh the page (F5)** to see the new tasks on the board.
+
+> **Agilebars is different:** Agilebars uses a simple **two-level** structure (Projects and Tasks — no Portfolios, Sub-Projects or resource Allocations). For that reason, Agilebars does **not** create the automatic "Get Started" Portfolio bar that Timebars and Costbars provide, and the resource-staffing options described in the common guide do not apply here. In Agilebars you begin from a Project (sprint backlog) bar.
+
+> 📚 For the full Ask AI walkthrough and tips, see **Common_06_How_To_Use_Ask_AI** ("How to Use Ask AI") in the Common Help Topics.
 
 ---
 
@@ -469,38 +501,40 @@ Burndown charts are **time-phased**—they show work remaining by day. You must 
    - Click **"Burndown Chart"** link
    - Burndown Chart page opens
 
-3. **Calculate the Chart**:
-   - Click the **"Refresh"** button on the Burndown Chart page
-   - Wait for calculation (watch for popups showing progress)
-   - When complete, you'll see green text: **"Current/Forecast Created!"**
+3. **Take the Current Forecast**:
+   - Under the **"Current Forecast"** heading, click **[Create!]**
+   - This takes a snapshot of the sprint from your task bars
+   - The button then reads **[Recalculate!]**, and the field shows the date the snapshot was taken
+   - The x-axis is the sprint's own working days, taken from the project bar's start and finish
 
-4. **Run the Chart**:
-   - Click **"Run"** button to render the chart
-   - Chart displays with Ideal Line and Current/Forecast Line
-
-5. **Create Baseline (First Time)**:
-   - Under the **"Planned"** heading, click **[Create]** button
-   - This saves the current forecast as the "Planned" baseline
+4. **Create the Baseline (first time)**:
+   - Under the **"Planned (Baseline)"** heading, click **[Create!]**
+   - This freezes the plan you will be measured against
    - Now you have two lines:
-     - **Planned Line**: Your original sprint plan (won't change)
-     - **Forecast Line**: Updates as you move tasks in Kanban mode
+     - **Planned (Baseline)**: your original sprint plan — frozen, it will not move
+     - **Current Forecast**: re-taken each reporting period, so it tracks the team's progress
 
-6. **Update Progress in Kanban**:
+5. **Update Progress in Kanban**:
    - Switch back to Kanban mode
-   - Move tasks between lanes as work progresses
+   - Move cards between lanes as work progresses
    - Each movement updates progress and remaining work
 
-7. **Refresh Chart**:
-   - Return to Burndown Chart page
-   - Click **"Refresh"** button again
-   - Chart recalculates with updated progress
-   - **Forecast Line** shows new actual progress
-   - **Planned Line** remains unchanged (original baseline)
+6. **Recalculate, then Re-run**:
+   - Once the team has finished updating the board for the reporting period, return to the
+     Burndown Chart page and click **[Recalculate!]** under **Current Forecast**
+   - Then click **"Run!"** to redraw
+   - **Planned (Baseline)** stays exactly where it was
 
-8. **Compare Lines**:
-   - Compare Forecast Line to Planned Line
-   - Assess if team is ahead, on track, or behind
-   - Use insights for daily standups and sprint retrospectives
+   > **Run! only draws — it never recalculates.** That is deliberate: your Current Forecast is
+   > the snapshot as at the reporting date. Come back the next day, press **Run!**, and you still
+   > see the picture the team reported, rather than one that has quietly absorbed actuals entered
+   > after the cutoff. Recalculating is always your decision.
+
+7. **Compare the Lines**:
+   - Compare the Current Forecast against Planned (Baseline)
+   - Assess if the team is ahead, on track, or behind
+   - Use the insights for daily standups and sprint retrospectives
+   - After a scope change, take a **Revised Baseline Plan** and compare against that instead
 
 ---
 
@@ -531,7 +565,7 @@ Understanding how to read the burndown chart is essential for making informed de
 - Shows perfect linear progress
 - Remains **unchanged** throughout the sprint (represents original plan)
 
-**Actual Burndown Line (Current/Forecast):**
+**Actual Burndown Line (Current Forecast):**
 - Updates as the sprint progresses
 - Plots the actual amount of remaining work at the end of each day
 - Connects the data points to form the actual burndown line
@@ -660,15 +694,24 @@ Understanding how to read the burndown chart is essential for making informed de
 
 ### Advanced Burndown Features
 
-**Additional Baselines:**
-- Create multiple baselines to compare different scenarios
-- Under **"Additional Baselines"** heading, click buttons to create more
-- Use radio buttons under **"Compare Current/Forecast to..."** to switch between baselines
+**Additional Revised Plans (Baselines):**
+- Re-baseline the sprint after a scope change, so you can compare against the plan you are
+  actually working to rather than the one you abandoned
+- Under the **"Additional Revised Plans (Baselines)"** heading, click **[Create!]** on
+  **Revised Baseline Plan 1**, **2** or **3**
+- Use the radio buttons under **"Compare the Current Forecast against one of these baselines:"**
+  to choose which one the chart is drawn against
+
+**The two kinds of series:**
+- **Current Forecast** — the live line. It is rebuilt from your task bars every time you press
+  **Run!**, so it moves through the reporting periods as the team updates the board.
+- **Planned (Baseline)** and **Revised Baseline Plan 1-3** — frozen snapshots. They do not move,
+  which is what makes them worth comparing against.
 
 **Use Cases:**
-- Baseline 1: Original sprint plan
-- Baseline 2: Mid-sprint re-plan after scope change
-- Baseline 3: End-of-sprint final for retrospective analysis
+- Planned (Baseline): the original sprint plan, taken when scope was settled
+- Revised Baseline Plan 1: mid-sprint re-plan after a scope change
+- Revised Baseline Plan 2: end-of-sprint final, for retrospective analysis
 
 ---
 
@@ -916,14 +959,14 @@ For features shared across Agilebars, Timebars, and Costbars, refer to these com
 
 ### Core Functionality
 - [Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Bar Creator, Canvas, Shortcuts, Tools
-- [Common Data Structure User Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-structure-user-guide) - Data hierarchy, IndexedDB, backups
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data hierarchy, IndexedDB, backups
 
 ### Data Management
-- [Common Spreadsheet Sync User Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-spreadsheet-sync-user-guide) - Bulk data import/export
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Bulk data import/export
 - [Common Risks Issues Change Requests User Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-risks-issues-change-requests-user-guide) - RIC management
 
 ### Reporting
-- [Common Local Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-local-reports-and-graphs-guide) - In-app reports
+- [Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - In-app reports
 - [Common Cloud Reports and Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) - Cloud dashboard
 
 ### Cloud Features
@@ -962,6 +1005,48 @@ For features shared across Agilebars, Timebars, and Costbars, refer to these com
 - **Knowledge Base**: www.timebars.com/knowledgebase
 - **Product Site**: www.timebars.com/agilebars
 - **Phone**: (613) 255-5374
+
+---
+
+## Kanban Primer
+
+### What is the Agilebars Kanban
+
+Have you ever considered using a **Kanban board** with sticky notes on a wall? This simple yet effective visual management technique can significantly enhance productivity and organization.  
+
+* A Kanban board provides a **clear overview** of tasks, promotes **collaboration**, and helps maintain **focus** by encouraging the completion of one task at a time. Sticky notes represent tasks or items, which are moved across the board as they progress through the **workflow lanes (stages)**.
+
+* Choose as large a screen as possible providing ample space for all your tasks.
+* You can also toggle between bar and text boxes on the Kanban view as shown in this graphic. Right Click on Canvas > Toggle Bars/Boxes.
+* You can also toggle to show bar relationship lines. Right Click on Canvas > Bar Relationships.  
+
+* Tasks or work items, are represented by blue bars on the Kanban Canvas. The Green bar represents the Project or Sprint. The Canvas is divided into 5 lanes:
+
+1. Backlog
+2. Will Do
+3. Doing
+4. Finalizing
+5. Done
+
+Each lane is a stage in the Sprint progress workflow. 
+
+#### What is the Finalizing Stage
+The "Finalizing" stage offers inspecific functionality for the workflow that signifies that the work item is in the final stage such as testing, approving etc, you decide your own rules.
+
+The movement of tasks between lanes **automatically updates progress**, enabling the system to generate a **burndown chart** in real-time.  
+
+- When you **move a backlog item to the "Doing" lane**, the system:
+  - **Automatically sets the actual start date**  
+  - **Adds progress** based on predefined rules  
+
+- When you **move the task into the "Finalizing" lane**, the system:  
+  - **Records additional progress**, reflecting the task's nearing completion  
+
+- When you **move the task to the "Done" lane**, the system:  
+  - **Marks the task as 100% complete**  
+  - **Automatically sets the actual finish date**  
+
+These calculations occur **behind the scenes**, eliminating the need for **manual updates** while ensuring an accurate burndown chart.
 
 ---
 

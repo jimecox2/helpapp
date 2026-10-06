@@ -1,69 +1,208 @@
-# User Interface Guide - Common Across Products
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
+# Product Help - Common Across Products
 
 ## Table of Contents
 
-- [What You Should Know First](#what-you-should-know-first)
-- [The Canvas](#the-canvas)
-- [How to Manage your Data](#how-to-manage-your-data)
-- [Data Actions Menu](#data-actions-menu)
-- [Core Product Functionality](#core-product-functionality)
-  - [Automatic Calculations](#automatic-calculations)
-  - [How to Create Bars](#how-to-create-bars)
-  - [Filter Menu](#filter-menu)
-  - [Shortcut Menu](#shortcut-menu)
-  - [Toggle Light/Dark Mode](#toggle-lightdark-mode)
-  - [Creating Relationships between Tasks](#creating-relationships-between-tasks)
-  - [Show/Hide Hierarchy Lines](#showhide-hierarchy-lines)
-  - [How to Turn On/Off Bar Relationship Lines](#how-to-turn-onoff-bar-relationship-lines)
-  - [Task Bar Lines (Relationships)](#task-bar-lines-relationships)
-  - [Drop to Delete Bar Lines](#drop-to-delete-bar-lines)
-  - [Manage Constraints](#manage-constraints)
-  - [Popup Cost Schedule Form Off of Bar](#popup-cost-schedule-form-off-of-bar)
-  - [How to Make Edits to Bar and Metadata](#how-to-make-edits-to-bar-and-metadata)
-  - [Metadata Coding](#metadata-coding)
-  - [Metadata View](#metadata-view)
-  - [How to Create a Baseline](#how-to-create-a-baseline)
-  - [How to Update a Baseline for Added Scope](#how-to-update-a-baseline-for-added-scope)
-  - [How to Delete Bars](#how-to-delete-bars)
-  - [Drop to Duplicate Bars](#drop-to-duplicate-bars)
-  - [Bulk Move Tasks](#bulk-move-tasks)
-  - [Bulk Move Projects (Costbars Only)](#bulk-move-projects-costbars-only)
-  - [Change Creator Bar Names](#change-creator-bar-names)
-  - [Metadata View (2)](#metadata-view-1)
-  - [Get Started Page](#get-started-page)
-  - [FAQ](#faq)
-  - [Intro](#intro)
-  - [Tour](#tour)
-- [Risk & Issues Features](#risk-issues-features)
-  - [Overview of Risks and Issues](#overview-of-risks-and-issues)
-- [Local Reports Menu](#local-reports-menu)
-  - [Schedule Reports](#schedule-reports)
-  - [Resource Reports](#resource-reports)
-  - [Joining tbTimebars and tbMetaData Stores](#joining-tbtimebars-and-tbmetadata-stores)
-- [Burndown Chart](#burndown-chart)
-  - [What is a Burndown Chart](#what-is-a-burndown-chart)
-  - [How to Calculate the Burndown Chart](#how-to-calculate-the-burndown-chart)
-- [Local Dashboard](#local-dashboard)
-  - [What is Local Dashboard](#what-is-local-dashboard)
-  - [Summary Tab](#summary-tab)
-  - [Resources Tab](#resources-tab)
-  - [Project Tab](#project-tab)
-  - [Financial Tab](#financial-tab)
-- [Documents Features](#documents-features)
-  - [Overview of Documents](#overview-of-documents)
-  - [Create New Documents](#create-new-documents)
-  - [Filter Documents](#filter-documents)
-  - [Edit Documents](#edit-documents)
-  - [Add fields to the Documents Form](#add-fields-to-the-documents-form)
-- [Cloud Publishing](#cloud-publishing)
-  - [Overview of Publishing](#overview-of-publishing)
-  - [Cloud Login](#cloud-login)
-  - [Show License](#show-license)
-  - [Create Your Pubsets](#create-your-pubsets)
-  - [Publish to Update Cloud Dashboard](#publish-to-update-cloud-dashboard)
+1. [Why These Products Work the Way They Do](#why-these-products-work-the-way-they-do)
+2. [What You Should Know First](#what-you-should-know-first)
+3. [The Canvas](#the-canvas)
+4. [How to Manage your Data](#how-to-manage-your-data)
+5. [Data Actions Menu](#data-actions-menu)
+
+**Core Product Functionality**
+
+1. [Automatic Calculations](#automatic-calculations)
+2. [How to Create Bars](#how-to-create-bars)
+3. [Filter Menu](#filter-menu-1)
+4. [Shortcut Menu](#shortcut-menu)
+5. [Toggle Light/Dark Mode](#toggle-lightdark-mode)
+6. [Creating Relationships between Tasks](#creating-relationships-between-tasks)
+7. [Show/Hide Hierarchy Lines](#showhide-hierarchy-lines)
+8. [How to Turn On/Off Bar Relationship Lines](#how-to-turn-onoff-bar-relationship-lines)
+9. [Task Bar Lines (Relationships)](#task-bar-lines-relationships)
+10. [Drop to Delete Bar Lines](#drop-to-delete-bar-lines)
+11. [Manage Constraints](#manage-constraints)
+12. [Popup Cost Schedule Form Off of Bar](#popup-cost-schedule-form-off-of-bar)
+13. [How to Make Edits to Bar and Metadata](#how-to-make-edits-to-bar-and-metadata)
+14. [Metadata Coding](#metadata-coding)
+15. [Metadata View](#metadata-view)
+16. [How to Create a Baseline](#how-to-create-a-baseline)
+17. [How to Update a Baseline for Added Scope](#how-to-update-a-baseline-for-added-scope)
+18. [How to Delete Bars](#how-to-delete-bars)
+19. [Drop to Duplicate Bars](#drop-to-duplicate-bars)
+20. [Bulk Move Tasks](#bulk-move-tasks)
+21. [Bulk Move Projects (Costbars Only)](#bulk-move-projects-costbars-only)
+22. [Change Creator Bar Names](#change-creator-bar-names)
+23. [Metadata View](#metadata-view-1)
+24. [Get Started Page](#get-started-page)
+25. [FAQ](#faq)
+26. [Intro](#intro)
+27. [Tour](#tour)
+
+**Risk & Issues Features**
+
+1. [Overview of Risks and Issues](#overview-of-risks-and-issues)
+
+**Local Reports Menu**
+
+1. [Portfolio, Project and Task Reports](#portfolio-project-and-task-reports)
+2. [Resource Reports](#resource-reports)
+3. [Other](#other)
+4. [Joining tbTimebars and tbMetaData Stores](#joining-tbtimebars-and-tbmetadata-stores)
+
+**Burndown Chart**
+
+1. [What is a Burndown Chart](#what-is-a-burndown-chart)
+2. [How to Calculate the Burndown Chart](#how-to-calculate-the-burndown-chart)
+
+**Local Dashboard**
+
+1. [What is Local Dashboard](#what-is-local-dashboard)
+2. [Summary Tab](#summary-tab)
+3. [Resources Tab](#resources-tab)
+4. [Project Tab](#project-tab)
+5. [Financial Tab](#financial-tab)
+
+**Cloud Publishing**
+
+1. [Overview of Publishing](#overview-of-publishing)
+2. [Cloud Login](#cloud-login)
+3. [Show License](#show-license)
+4. [Create Your Pubsets](#create-your-pubsets)
+5. [Publish to Update Cloud Dashboard](#publish-to-update-cloud-dashboard)
 
 ---
+
+## Why These Products Work the Way They Do
+
+*New here? Read this first. It is short, and it explains the decisions behind
+almost everything else in this guide — why there is no software to install, why
+your data lives in your browser rather than on our servers, and why the products
+keep working when your connection does not.*
+
+At the heart of Agilebars, Timebars, Costbars and our Cloud Dashboard is a bold
+idea: management tools should not be clunky, device-specific, or tethered to
+outdated technology. We set out to rethink how software supports Agile, resource
+and project managers — building something that is not just functional but
+genuinely different. Here is what we did differently.
+
+### A Web Application, Not an Installed App
+
+We did not settle for desktop-only software or a rigid cloud platform. Our tools
+are built from the ground up as web-native applications on open-source
+technologies — HTML5, JavaScript and CSS.
+
+Why? Because the web is universal. The software runs on any device with a modern
+browser, from your iPad to a large desktop monitor. There are no apps to install
+and no proprietary ecosystem to join — just a secure web page that adapts to your
+screen, whether you are tapping a touchscreen or clicking a mouse.
+
+**The bigger the screen, the more you see**, but the experience stays smooth on
+smaller devices too. This is what lets a browser deliver desktop-level power
+without a dedicated application.
+
+### Your Data Moves Freely In and Out
+
+Forget complex imports and locked-in formats. Drag a spreadsheet from Excel or
+LibreOffice Calc onto the canvas and it is instantly part of your project. Our
+tools speak **JSON and CSV** natively, so you can pull data in and push it back
+out without wrestling with converters.
+
+This is not just convenience. It is what keeps your existing data alive and your
+workflow fluid — your plan is never trapped inside our product.
+
+### Security: No Cookies, Nothing Stored on Our Servers
+
+We did not simply add encryption and call it done.
+
+- **End-to-end HTTPS/TLS** — the same level of encryption banking websites use,
+  on every interaction
+- **No browser cookies at all.** Rather than storing a login token on your device
+  where an attacker could reach it, we deliver a **JSON Web Token (JWT)**
+  securely at login, held server-side and encrypted with your password
+- **Your data stays in your browser** unless *you* choose to publish it to the
+  Cloud Dashboard
+
+This is a deliberate rethink of where trust and control should sit: with you, not
+with us.
+
+### The Cloud Dashboard Publishes, It Does Not Host
+
+The optional Cloud Dashboard is not a typical cloud service — it is a
+**publishing platform**. You push your data up securely with a single click,
+where it is stored in a shared database isolated by your credentials. No one
+reaches your data without your username and password.
+
+This is not about locking you into the cloud. It is an optional hub for
+dashboards and insights, while the core experience stays offline-first.
+
+### Offline by Design
+
+We flipped the script on cloud dependency. The tools work **fully offline**,
+storing data locally in your browser's cache, available any time, anywhere, with
+no internet connection required.
+
+This is not a fallback for when the network drops. It is a deliberate choice to
+put flexibility and resilience first, in a world where connectivity is not
+guaranteed.
+
+### What Each Product Adds
+
+| Product | The rethink |
+|---|---|
+| **Agilebars** | Sprint planning reimagined by blending Kanban and time-scaled views into one web-based tool. Switch modes instantly — no imports, no exports |
+| **Timebars** | Traditional project management given a web-native overhaul, with a scheduling engine that adapts to resource demand, all inside a browser |
+| **Costbars** | Pipeline management plus analytics and selection tools, turning a scheduler into a strategic instrument while staying lightweight |
+
+### Comfort and Accessibility
+
+**Dark mode** cuts eye strain during long or late sessions, and accessibility
+features are there so everyone can use the tools, not only the technically
+confident. We optimised for touch and mouse across screen sizes, because web
+software can rival native apps without compromise.
+
+It is not perfect on every Apple device yet — web technology moves quickly — but
+staying ahead of it is a standing commitment.
+
+### The Design Goals We Build To
+
+These goals guided the products throughout development. We do not guarantee they
+will all be met to your satisfaction at all times, because web technology
+constantly changes.
+
+| Area | What we committed to |
+|---|---|
+| **Devices and browsers** | Work on any device shipping the latest browsers from Apple, Google, Firefox and Microsoft |
+| **Technology** | Standard web page architecture built on open-source technologies — HTML5, JavaScript and CSS |
+| **Access** | Reached with a supported browser like any other secure web page |
+| **Interface** | Touch screen and mouse-driven, adapting to screens of any size |
+| **Apple devices** | Work on iPads as it does on the desktop (it works on Apple devices, though not perfectly) |
+| **Screen size** | The bigger the screen, the better the experience and the productivity gain |
+| **Data portability** | Move existing data in and back out easily using JSON and CSV |
+| **Spreadsheets** | Synchronise with Excel and LibreOffice Calc through drag-and-drop gestures |
+| **Encryption** | Full end-to-end HTTPS encryption at the level banking websites use |
+| **Login** | A secure standard web token (JWT) login for the paid versions |
+| **Tokens** | JWTs delivered automatically at login and never stored in the local browser as cookies |
+| **Your data** | Never stored on our servers unless you publish it to the Cloud Dashboard |
+| **Publishing** | The optional Cloud Dashboard and the Pubset feature do publish data stored on our servers, secured by HTTPS and JWT in the same way |
+| **Dashboard database** | All customers share one physical Dashboard database. The only way to reach another customer's data is by knowing their username and password |
+| **Dark mode** | Available to reduce eye strain during extended use in low light |
+| **Offline** | Offline access to essential features, so critical tasks continue without a connection |
+| **Accessibility** | Features ensuring all users, including those with disabilities, can use the product effectively |
+
+### On the Roadmap
+
+- Support for voice commands and natural language processing, for richer
+  interaction with the products
+
+### Why This Matters
+
+We did not build another me-too tool. We harnessed the openness of the web, broke
+free of old software traps, and gave you control — over your data, your device
+and your workflow. This is management software rethought for a connected,
+flexible, secure future.
 
 ## What You Should Know First
 
@@ -72,7 +211,9 @@ The following sub-section describes important Need to Know information First, be
 The following help topics describe how to use any Timebars Ltd. products. For help related to an individual product see other tabs in the knowledge base for each product (Timebars, Agilebars, Costbars)
 
 ### How to Use for Free
-You can try out our products for free without registering, but with data limitations based on the number of projects, tasks and Pubsets. se it for as long as you wishSee sales site for limits. Could put table in here!! No software to install, see how much your productivity will increase. We implement data limits to keep the price down for users with small teams and portfolios.
+You can try our products for free without registering. The free version limits how many projects, tasks and Pubsets you can hold, and there is no time limit — use it for as long as you like. The current limits are on the sales site.
+
+There is no software to install. We apply data limits rather than a trial period so that users with small teams and portfolios can keep the price down.
 
 Important Note: We don't install cookies on your device. Our management software products are secure web pages. Your data in stored in the browser cache, not on our servers (unless you choose to use the Pubset feature).
 
@@ -90,7 +231,7 @@ Click the Yellow Icon in the top most menu, right side, enter user name and pass
 There are scenarios where you may be running agile bars product and you drag and drop a Time bars based spreadsheet onto the canvas and you will find you may get an error about the license not being valid or correct. this may be normal And it requires you to log in again with the username and password from the desired product subscription.
 
 ### About Security and Product Limits
-Data limits are enforced by product line and subscription tier.
+Data limits are enforced by product line and subscription tier. The limits — bars (every row below the Project level: Sub-Projects, Tasks, Allocations, Milestones, Gates, Risks, Issues and Notes), projects (backlogs in Agilebars) and cloud pubsets — come from the product you purchased and are downloaded when you log in. Tier-1 subscriptions include no cloud pubsets, so the Publish icons are hidden; OpenProject sync is included with Tier-3 only.
 It calculates the number of days remaining until the license expires by comparing the current date with the expiration date store with the license. If the license is valid, it checks to determine the type of license and performs additional UI trimming based on the license type. For each product and license type, it checks if the bar count exceeds certain limits. If the limits are exceeded, it displays the appropriate user information message and re-establishes a demo license status so the user can continue with nag screens until a valid license is established.
 
 ### About Demo Data
@@ -194,6 +335,68 @@ Visible Levels, L1, L2, L3, L4 or L5 - The user can check off which levels in th
 
 Hide Completed Bar True/False - If set to true, bars in the past (before the Report Date) are hidden.
 
+### L3 / L4 / L5 Level Tick Boxes on the Main Menu
+
+Three tick boxes sit in the Main Menu, beside the timescale changer, and decide
+how far down the hierarchy the canvas draws:
+
+| Tick box | Hides when cleared |
+|---|---|
+| **L3** | Sub-Projects |
+| **L4** | Tasks, Milestones and Gates |
+| **L5** | Allocations |
+
+**L1 Portfolio and L2 Project bars are always shown** — only the three lower
+levels are optional. Clearing L5 on a large plan is usually the quickest way to
+turn a wall of allocations back into a readable portfolio.
+
+They apply to the **Timebar View, Modern View, Filters View, and the Vertical and
+Horizontal Timelines**. They do not appear on the Gantt Schedule View, which has
+its own tick boxes in its filter panel, and not in Agilebars, which has no L1,
+L3 or L5 hierarchy. They are also hidden while the Filter Menu is loaded — that
+menu already decides which rows are on screen, so the tick boxes would do
+nothing there.
+
+Your choice is saved with your settings, so it survives a page refresh and rides
+along with a backup and restore.
+
+### Bar Spacing and the "Fit" Tick Box
+
+Next to the level tick boxes are a **spacing picklist** (Small, Medium, Large)
+and a **Fit** tick box. This is the one place in the application where vertical
+bar spacing is chosen.
+
+**Spacing** means different things depending on how a view places its bars:
+
+| View | What the spacing setting does |
+|---|---|
+| Modern View, Filters View | Sets the row height. Bars always sit on even rows |
+| **Timebar View** | Nothing *until you tick Fit* — see below |
+| Vertical and Horizontal Timelines | Sets the spacing between points |
+| Gantt Schedule View, Kanban | Ignored — these lay themselves out |
+
+**Fit** is the trade-off tick box, and it only appears on the Timebar View.
+
+The Timebar View's defining feature is that you place bars wherever you like
+vertically — that freedom is what lets you fit far more work on one screen than
+a conventional Gantt chart. The cost is that a plan built that way can end up
+looking ragged.
+
+Tick **Fit** and the Timebar View lays every bar out on even rows at the spacing
+you picked, cleaning the view up instantly. You keep horizontal drag and resize,
+so you can still reschedule; what you give up is **vertical reorder** — bars are
+on their rows and cannot be dragged up or down. Clear the tick box and your
+hand-placed positions come back, because they were never discarded.
+
+Use it to tidy a plan for a screenshot or a review, and clear it when you go back
+to laying bars out by hand.
+
+Both the spacing and the Fit setting are saved with your settings and survive a
+refresh, backup and restore.
+
+The picklist hides in the two cases where there is no spacing to pick — while the
+Filter Menu is in use (it draws bars at the exact position stored on each row),
+and in Agilebars.
 
 ### Refresh the Canvas
 Quickly refresh the Canvas and bars without a full browser page reload.
@@ -241,42 +444,65 @@ Export all data stores to csv for import into spreadsheet
 ### Database Backup and Restore
 Drag and drop the spread sheets or the JSON backup file for full restore of all data
 
-### Data Management Grids and Edit Forms
-Sometimes it is necessary to edit data quickly within the application and not have to use the spreadsheet. This is where the Data Management Grids come in handy. To launch the Grids go to the reports page by clicking on the reports iPhone in the main menu. From this page click Data Management Grids to launch all pages, Which will show the data from the stores in a tab based format. Click on each tab and see all the data that’s inside the indexedDB In a tabular format for example click on tags tab and see all the tags I have been configured for your application then click on the pencil icon to launch a static edit form make your changes click save and close.
+### Editing Data Inside the Application
+Sometimes it is quicker to edit data in the application than to go out to the
+spreadsheet. Every store now has its own **tabular report** on the Report Menu,
+rather than one combined grid:
+
+| To edit | Go to |
+|---|---|
+| Bars, tasks, metadata | **Report Menu > Project > General Tabular View**, or the Gantt Report |
+| The resource pool | **Report Menu > Resource > Shared Resource Pool** |
+| Picklist values | **Report Menu > Other > Picklist Values** |
+| Form and layout configuration | **Report Menu > Other >** Fields Values, Schema Values, CoreReport Values |
+
+The schedule and metadata grids are edited **in place** — click a cell and type.
+The four configuration reports are read-only in the grid and edited on their
+form; see the *Forms, Reports and Graphs Guide* for why.
+
+> The old **Data Management Grids** screen, which put every store behind one set
+> of tabs, has been removed. Each of its tabs is now a proper report in the list
+> above.
 
 ## Data Actions Menu
-On the Admin menu, which is available by clicking the Hamburger icon in the top left of the main menu, there is a Data Actions heading with many buttons available. As shown here. The functionality is described further down in the document.
+The Admin menu — the **Hamburger icon** at the top left of the main menu — carries
+the data actions. Each one is covered in full in the *Synchronization and Data
+Control User Guide*; this is the summary.
 
-### Core Demo Data (S)
-Click to import a small demo data set.
+| Menu item | What it does |
+|---|---|
+| **Full Backup** | writes every store to one JSON file — your restore point |
+| **Export to CSV (SpreadSheet sync.)** | writes 15 CSV files, one per store, for the workbook round trip |
+| **Export to JSON** | writes 15 JSON files, one per store, for integrations |
+| **Import SpreadSheet, CSV or JSON** | opens the drop panel — drop a file, or browse for one |
+| **Bulk Manage Bars** | duplicate a bar and its children, or transfer bars to another product |
+| **Migrate Rich Text** | converts legacy rich text to the current editor format; safe to run any time |
+| **Clear Timebars & Metadata** | a clean canvas, keeping your resources, picklists and configuration |
+| **Load Demo Data** | replaces the data with a demo set for this product |
+| **Delete Database** | destroys everything; refresh afterwards to rebuild with demo data |
+| **Download Excel SS / Libre Office Calc SS** | the workbook template |
 
-### Core Demo Data (L)
-Click to import a small demo data set.
+Two things are worth knowing before you use any of them:
 
-### Create Full Backup
-Click to create a full backup of all data stores inside of one JSON text file.
+- **A Full Backup is taken automatically** before an import, a demo data load, or
+  Clear Timebars & Metadata. **Delete Database is the exception** — it does not
+  back up for you.
+- **An import replaces each store rather than merging into it.** If you have
+  edits in the application that are not yet in the spreadsheet, the application
+  **blocks the import** and shows a warning icon on the top menu. Double-click
+  that icon for the way out. This is covered properly in the
+  *Data Synchronization Backup Recovery And Retention User Guide*.
 
-### Data Import
-The best way to import your back up files or other files that are permitted is with drag and drop gestures. You can drag and drop a spreadsheet file or a CSV file on the canvas import that data. Another way to import data is from the admin panel which is available by clicking the hamburger icon in the top left of the main menu there are buttons available that allows to import the back up text files or CSV files without having to drag and drop, you can use the file picker.
+### Clearing data by hand
 
-### File Importer
-Import from spreadsheet
+You can clear individual stores from the browser's own developer tools — F12,
+Application tab, IndexedDB, right-click a store, Clear. Deleting the whole
+database there works too, but **no backup is taken first**. Refresh afterwards
+and a new database is built with demo data; drop one of your backup files on the
+import panel to get back to where you were.
 
-### Delete Database
-Deletes the browser based database and will automatically rebuild it with demo data small.
-
-### Data Export to CSV or JSON
-
-Export all thirteen data data stores as CSV file format which will create 13 files in the Downloads folder as per your browser settings. Use the tbClient Spreadsheet to automatically import these files in one click as part of Spreadsheet Sync feature.
-
-On the Admin menu, which is available by clicking the hamburger icon in the top left of the main menu, there is a Data Actions heading with many buttons available. These allow users to export all the data stores to CSV files or to individual JSON files with a single click. These files can be useful for importing to the spreadsheet or to import into your own systems as required.
-
-### Manually clearing data stores
-You may want to delete all bars that are on the screen without deleting any of the other application data such as resource list, reports, issues, documents, tags and fields. The browser has a set of tools for this. Hit F12 then choose the application tab in the browser tools and click on indexeddb, click on the Click on the thyme bar store right click then click clear you would have to do the same for the metadata store and the baseline store.
-Please note that it is possible to delete the entire database from the F 12 developer tools and if you do no back up will be taken first and when you refresh the screen or the browser a brand new database will be created with the default set of demo data. You can then drag and drop any one of your previous backup text files onto the canvas and you are right back to square one. This is an excellent feature in case something goes wrong with your computer.
-
-### Export as JSON (multi-file)
-Export all data stores to JSON format to suit your own custom business processes.
+Prefer **Clear Timebars & Metadata** on the menu for the everyday case — it backs
+up first and keeps your configuration.
 
 # Core Product Functionality
 This section provides details about the user interface that enhances your productivity and serves as the core functionality across all our products.
@@ -455,9 +681,12 @@ When a bar is dragged, the Edit Menu shows automatically, allowing you to delete
 ### Important Notes
 
 - If you want to delete a bar and keep the child bars, first move the children to another bar in the hierarchy using **drag and drop**
-- **There is no undo**, so if needed, **make a backup first**:
+- **Deleting cannot be undone**, so if needed, **make a backup first**:
   - Select **Hamburger Icon > Full Backup**
   - To restore a backup, simply **drag and drop the backup file onto the Canvas**
+- **Undo Bar Move does not cover deletion.** It puts *moved* bars back where they
+  were; it cannot bring a deleted bar back. A backup is the only way back from a
+  delete. See *Undo Bar Move* in the **Data Synchronization, Backup, Recovery and Retention Guide**
 
 ## Drop to Duplicate Bars
 Below is the result of duplicating a project. After dragging and dropping the duplicate onto the L1 bar (brown), it shows in the Filter Menu as a new project. The child bars were not duplicated. There are other ways to do this such as the SpreadSheet. More on this later.
@@ -479,11 +708,22 @@ Notice that selected bars are highlighted with green dotted lines. When done, re
 * Tip: When you get to the last bar that you plan to move, double-click it then drag.
 
 ## Change Creator Bar Names
-The names and descriptions of the six Creator bars as shown above are configurable in the Tags Store. To view and edit the Tags table click on the Reports Icon in the main menu and click the Editable Grids link as shown below. Search for the desired value and change its Short Name by clicking on the Pencil Icon to load the Editable Form as shown. Tag Purpose can be changed also (Instructions in Creator Bar popup). Do not change other values or the application will break. Please note that you can change these values in the Spreadsheet and sync it back to the App.
-Change the text then click save and Close (not shown)
+The names and descriptions of the six Creator bars are configurable, and they live
+in the Tags store.
+
+Go to **Report Menu > Other > Picklist Values**, filter the **Picklist** column to
+the relevant list, then click the edit icon on the value you want. Change its
+**Short Name** — that is the text shown on the Creator bar — and its **Purpose**,
+which is the instruction text in the Creator Bar popup. Changes save as you type.
+
+Leave the other columns alone. A value that carries a **padlock** cannot be
+renamed at all: the application compares against that exact text, and renaming it
+would break a calculation silently. Adding your own values is always safe.
+
+You can also change these in the Tags worksheet and sync back to the app.
 
 ## Metadata View
-The metadata view is available from several locations within the application such as the editable grids meta-data table and from each bar on the canvas. This view is a large collapsible report or form that allows for editing metadata based on business driven headings such as business case cost and schedule information etc.
+The metadata view is available from several locations within the application, such as the General Tabular View and from each bar on the canvas. This view is a large collapsible report or form that allows for editing metadata based on business driven headings such as business case cost and schedule information etc.
 
 ## Get Started Page
 From the main menu click on the hamburger icon to launch the admin menu. The "Getting Started" menu graphic is shown below. From there you can fire up the getting started page.
@@ -516,13 +756,24 @@ Edit the status, title, and content of a Risk or Issue by clicking on the edit i
 Use FOCD to add or remove fields in the form to customize it according to specific needs or methodologies.
 
 # Local Reports Menu
-The Reports Menu gives access a multitude of tabular reports suited to common methodologies. Also get access the Editable Grids and Static Forms to filter and edit data.
+The Reports Menu gives access to tabular reports, charts and the configuration
+tables. It is grouped into five menus: **Portfolio**, **Project**, **Task**,
+**Resource** and **Other**.
 
-## Schedule Reports
-Various reports for scheduling purposes, such as Editable Grids, All Timebars, Print WBS, Items Overdue, Milestone Horizon, and Project Status.
+## Portfolio, Project and Task Reports
+Projects by Portfolio, Drilldown from Portfolio and Portfolio Detail at portfolio
+level; the General Tabular View and Baseline Variance at project level; the Task
+Tabular Report and the Gantt Report at task level.
 
 ## Resource Reports
-Reports related to resource usage, including Resource Usage, Project Usage Simple, Project Usage w/Metadata, and Resource Listing.
+Resource Usage — the supply and demand grids and charts — and the Shared Resource
+Pool.
+
+## Other
+Print WBS, and the five configuration reports: Picklist Values, Fields Values,
+Schema Values, CoreReport Values and Config Integrity.
+
+See the *Forms, Reports and Graphs Guide* for what each one does.
 
 ## Joining tbTimebars and tbMetaData Stores
 The function in scripts/tbdatabase.js joins the tbTimebars store and the tbMetaData store, creating a new store called tbMDJoined. This combined data store is useful for reporting, dashboard code, and integration with other tools.
@@ -559,24 +810,7 @@ Shows the same set of buttons as on the Resource Allocator to show Weekly Demand
 Shows the projects which are children of the L1 (Digital Workspace - Transformation). Multiple L1 bars would be listed in the Filter Menu. This form renders data from L2 rows only in the tbTimebars store.
 
 ## Financial Tab
-This form renders data from L1 rows only. User can add and remove fields as needed. The Cost Analysis field can be edited using the Quill Editor.
-
-# Documents Features
-
-## Overview of Documents
-The document system has a similar interface as the risks and issues system, but with different data storage and creation methods. Clicking on the Documents button in the main menu opens the document list.
-
-## Create New Documents
-Clicking on the Create Documents button in the main menu allows users to create new documents.
-
-## Filter Documents
-The filter menu allows users to select a project and view the documents associated with it. In the example graphic, the Private Cloud Phase 1 project is selected, showing two filtered documents.
-
-## Edit Documents
-Users can edit document details such as status, title, and content. Clicking on the edit icon enables editing and allows users to enter data in markdown format.
-
-## Add fields to the Documents Form
-FOCD (Field-Oriented Control Design) can be used to add or remove fields in the document form, providing customization options.
+This form renders data from L1 rows only. User can add and remove fields as needed. The Cost Analysis field can be edited using the rich text editor.
 
 # Cloud Publishing
 
@@ -590,7 +824,7 @@ Code location and details about the cloud login process.
 Clicking on the Show License Button displays the license details, including the quantity of PubSets available and the expiry date.
 
 ## Create Your Pubsets
-Users need to activate PubSets themselves by clicking the activate PubSets button.
+PubSets are created automatically on cloud login and topped up to the number the license includes (none for Tier-1). They are never deleted automatically.
 
 ## Publish to Update Cloud Dashboard
 Publishing PubSets allows updating the cloud dashboard, rendering charts and reports.

@@ -1,8 +1,8 @@
 # Own the Code — Marketing Strategy & Buyers Guide
 
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/common/logos/timebars-ltd-logo-final.png)
 
-[Download PDF Version of this Guide](https://cdn.timebars.com/other/own-the-code-buyer-guide.pdf)
+[Download PDF Version of this Guide](https://www.timebars.com/pdf/own-the-code-buyer-guide.pdf)
 
 ## Executive Summary
 

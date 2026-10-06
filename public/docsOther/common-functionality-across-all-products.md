@@ -355,8 +355,8 @@ Important Note: users must avoid editing data in the app while it resides in the
 - **Backup and Recovery**: With your data in two places, the Spreadsheet and in the application can be treated like a backup of the information. For extra backup safety, importing the spreadsheet automatically creates another backup of existing app data. Users can restore this backup by dragging it back onto the Canvas, providing a safety net for data management.
 
 - **Accessibility and Customization**: The feature supports both LibreOffice Calc and Microsoft Excel formats, with downloadable templates available:
-  - [LibreOffice Calc SS File](https://cdn.timebars.com/common/tbClientAllSheetsMasterDec30.ods)
-  - [MS Office Excel File](https://cdn.timebars.com/common/tbClient2023v1.xlsm.removeMe)
+  - [LibreOffice Calc SS File](https://www.timebars.com/spreadsheets/tbClientMaster_v1.ods)
+  - [MS Office Excel File](https://www.timebars.com/spreadsheets/tbClientMaster_v1.xlsm)
   Note that the file name must begin with "tbClient" for the import to function correctly.
 
 - **Seed Data and Demo Projects**: The spreadsheets come preloaded with seed data allowing the app to function. Users can change this data such as custom picklist data and load it into the app via the Canvas to see their custom metadata in action.

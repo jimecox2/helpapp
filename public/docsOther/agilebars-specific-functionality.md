@@ -1,5 +1,5 @@
 # Agilebars-Specific Functionality
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/common/logos/timebars-ltd-logo-final.png)
 Agilebars is the sprint scheduling application in the Timebars Ltd. suite. While it shares a common scheduling engine, cloud publishing platform, spreadsheet sync, and data management capabilities with Timebars and Costbars (covered in [Common Functionality Across All Products](https://www.timebars.com/articles/common-functionality-across-all-products))
 
 
@@ -9,7 +9,7 @@ Agilebars is the sprint scheduling application in the Timebars Ltd. suite. While
   - [Table of Contents](#table-of-contents)
   - [What Makes Agilebars Different](#what-makes-agilebars-different)
 - [The Agilebars Hierarchy](#the-agilebars-hierarchy)
-  - [Projects (Sprint Backlogs)](#projects-sprint-backlogs)
+  - [Projects](#projects)
   - [Tasks (Work Items and User Stories)](#tasks-work-items-and-user-stories)
 - [Dual-Mode Canvas](#dual-mode-canvas)
   - [Timescale Mode](#timescale-mode)
@@ -40,7 +40,7 @@ Most Agile tools force a choice between a visual Kanban board and a time-phased 
 # The Agilebars Hierarchy
 -----------
 
-## Projects (Sprint Backlogs)
+## Projects
 
 In Agilebars the top-level bar is the Project — a green bar that represents a sprint backlog or sprint cycle. Every Project has a start and finish date that defines the sprint window, and all tasks within it are planned and tracked against that timeframe. You can run multiple Projects simultaneously, making it straightforward to manage parallel sprints across teams or products on a single canvas.
 

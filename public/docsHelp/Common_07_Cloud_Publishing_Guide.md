@@ -1,5 +1,13 @@
-# Cloud Publishing Guide - Common Across Products
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
+# Cloud Publishing and Bulk Operations Guide
+
+**Applies to**: Agilebars, Timebars, Costbars
+**Version**: 2.3
+**Last Updated**: 2026-09-26
+
+---
 
 ## Table of Contents
 
@@ -54,7 +62,7 @@ Published datasets are called **Pubsets**. Each pubset is a complete snapshot of
 
 ### Create an Account
 
-1. **Register**: Visit www.timebars.com/auth/new-user, provide your email address and create a secure password, then click "Register"
+1. **Register**: Visit www.timebars.com/register, provide your email address and create a secure password, then click "Register"
 2. **Verify Email**: Check your email for the verification link and click it to confirm your account
 
 ### Choose a Subscription Plan
@@ -110,9 +118,11 @@ The publishing page has six tabs:
 | **Login** | Always | Cloud authentication |
 | **Pubsets (Cards)** | After login | Card-style view of your pubsets |
 | **Pubsets** | After login | Table view with sorting and filtering |
-| **OpenProject** | Always | Sync with external OpenProject system |
-| **Bulk Update** | Always | Bulk data operations across pubsets |
-| **Re-Publish** | Always | Download, recalculate, and republish |
+| **OpenProject** | Tier-3 licenses only | Sync projects, bars and people with OpenProject (see section 11) |
+| **Bulk Update** | Always | Bulk data operations across pubsets (an Administrator works across the whole customer — see section 12) |
+| **Re-Publish** | Always | Download, recalculate, and republish (Administrator: whole customer — see section 13) |
+
+**Tier-1 licenses** include no pubsets, so the Publish icons (main menu, canvas toolbar and the dashboard **Publish!** button) are hidden and the Publishing page is not available.
 
 Click any tab button to switch. The active tab is highlighted with a blue underline.
 
@@ -126,7 +136,6 @@ The blue navigation bar at the top of the publishing page provides quick actions
 | **Recalculate All** | Runs all system calculations (hierarchy names, rollups) to ensure data accuracy before publishing |
 | **Dashboard** | Opens your Personal Cloud Dashboard in a new browser tab |
 | **Purchase** | Opens the Timebars pricing page to buy or upgrade a license |
-| **Activate** | One-time setup to create your pubset containers (Tier-2 and Tier-3 only) |
 | **Sync Users** | Admin-only: syncs resource pool data to portal user accounts |
 | **Close** (X icon) | Closes the publishing page and returns to the main application |
 
@@ -248,31 +257,44 @@ Clearing removes all data content from a pubset in the cloud while keeping the p
 
 | Tier | Products | Pubsets | Features |
 |------|----------|---------|----------|
-| **Tier-1** | ABT01, TBT01, CBT01 | 0 | Local only, no cloud publishing |
-| **Tier-2** | ABT02, TBT02, CBT02 | 2 | Cloud publishing with 2 pubsets |
-| **Tier-3** | ABT03, TBT03, CBT03 | 5–8 | Full cloud features with multiple pubsets |
+| **Tier-1** | ABT01, TBT01, CBT01 | 0 | Local only — no cloud publishing; Publish icons are hidden |
+| **Tier-2** | ABT02, TBT02, CBT02 | per product | Cloud publishing |
+| **Tier-3** | ABT03, TBT03, CBT03 | per product | Cloud publishing plus OpenProject sync |
+
+The exact numbers for each product are on the pricing page. They come from your
+purchased product and are downloaded each time you log in (gold icon, top right):
+
+| License limit | What it counts |
+|---------------|----------------|
+| **Bars** | Every row below the Project level — Sub-Projects, Tasks, Allocations, Milestones, Gates, Risks, Issues and Notes |
+| **Projects** (Backlogs in Agilebars) | L2 Project bars |
+| **Cloud Pubsets** | How many pubsets you own — missing ones are created each time you log in to the cloud |
+| **Spreadsheets** / **Training** | Shown in **Show License**; not enforced by the app |
+
+A blank limit means unlimited. When a limit is exceeded, the New Bar menu is hidden and
+publishing is disabled until you remove rows or upgrade. Log in again after an upgrade so
+the new limits are downloaded.
 
 ### Activation (One-Time Setup)
 
-Tier-2 and Tier-3 users must activate pubsets before first use:
+Pubsets are created automatically when you log in to the cloud on the Publishing page.
+Each cloud login re-reads your license and tops your pubsets up to the number it includes:
 
-1. Click **Activate** in the top navigation bar
-2. The system creates your pubset containers based on your tier
-3. One pubset is marked as active (feeds the Cloud Dashboard)
-4. Remaining pubsets are inactive (for backup or testing)
-5. Tier-1 users will see an alert that activation is not available
+1. On your first login the system creates all your pubset containers
+2. The first pubset is marked as active (feeds the Cloud Dashboard)
+3. Remaining pubsets are inactive (for backup or testing)
+4. After an upgrade, the next cloud login adds the extra pubsets (inactive)
 
-**You only need to activate once.** After activation, your PubSets are permanent until you manually clear them.
+Pubsets are never deleted automatically — after a downgrade you keep the ones you have.
+Only the person who purchased the license gets pubsets created; team members see the
+pubsets shared with them. After activation, your PubSets are permanent until you manually clear them.
 
 ### Viewing Your License
 
-Click **Show License** to see your product code, expiration date, and tier information.
+Click **Show License** to see your product code, expiration date and license limits:
 
 ```
-License Type: TBT03
-Expires: December 31, 2025
-PubSets Available: 5
-PubSets Used: 3
+TBT02,expires on: 31-Dec-2026, Bars 500, Projects 10, Pubsets 2, Spreadsheets 2, Training: Not included
 ```
 
 ---
@@ -311,29 +333,324 @@ After publishing, click the **Dashboard** button in the top nav bar, or visit ww
 
 ## 11. OpenProject Sync
 
-The OpenProject tab provides bidirectional synchronization between Timebars and OpenProject.
+The **OpenProject** tab on the Publishing page connects Timebars to an OpenProject
+instance and moves data in either direction, one project at a time. It is available on
+**Tier-3 licenses only** (ABT03, TBT03, CBT03); on other licenses the tab is hidden.
 
-### Scenario A: Timebars is Master (sync to OpenProject)
+Before anything syncs, three things have to be true: Timebars knows which instance to
+talk to, the two systems agree on what each field is called, and the project has a
+declared owner. The tab is laid out in that order — the scenario checkboxes at the top
+for day-to-day running, the **OpenProject Integration** buttons below them for the
+set-up and repair work you do less often.
 
-- **A1**: Create projects and work packages in OpenProject from Timebars data
-- **A2**: Update OpenProject when Timebars data changes
-- **A3**: Bulk create work packages in OpenProject
-- **A4**: Create OpenProject work packages after manual edits in OpenProject
+---
 
-### Scenario B: OpenProject is Master (sync from OpenProject)
+### A note on wording: projects, and everything under them
 
-- **B1**: Create Timebars projects/tasks from OpenProject (fresh start)
-- **B2**: Update Timebars when OpenProject data changes
-- **B3**: Create Timebars items for OpenProject items not yet in Timebars
-- **B4**: Create OpenProject work packages to match Timebars items
+OpenProject calls **every** scheduled row beneath a project a *work package*. Timebars
+does not — it has levels, and the level is what decides where a row goes:
 
-Each scenario has numbered steps with hover-over instructions. Follow the steps in order and check the feedback messages after each operation.
+| Timebars | Becomes, in OpenProject |
+|---|---|
+| **L2 Project** (green bar) | an OpenProject **project** |
+| **L3 Sub-Project** (orange bar) | a row of type **L3 SP/WP** |
+| **L4 Task** | **L4 Task** |
+| **L4 Task** with subtype Risk / Issue / CR | **L4 Risk** / **L4 Issue** / **L4 CR** |
+| **L4 Milestone** | **L4 Milestone** |
+| **L5 Allocation** (gold bar) | **L5 Allocation**, carrying the assignee |
+
+An OpenProject user who says "work package" almost always means what Timebars calls a
+**Sub-Project** — the L3 row, which is why its OpenProject type is named `L3 SP/WP`. The
+rest of this section says *Sub-Project*, *Task* and *Allocation* rather than *work
+package*, because those are the words on your bars.
+
+**L1 Portfolio does not travel.** OpenProject has no type for it. A sync run always
+starts at a Project and covers everything under it.
+
+---
+
+### 11.1 Point Timebars at your instance
+
+| Control | What it does |
+|---|---|
+| **OpenProject URL** | The instance every sync talks to. Type `op.yourcompany.com` — the scheme and any trailing slash are tidied for you. Saved to your settings as the admin panel row **`apOpUrl`**, so it survives a reload and a change of instance no longer needs a rebuild. Leave it empty and the build-time default is used. |
+| **Test Connection** | Reads your identity and the instance's type list. It confirms the API key works and prints the work package type ids this instance actually has. Run it first, every time; almost every "nothing happened" report starts here. |
+
+Types are matched **by name at run time, never by id** — a customer's `L5 Allocation`
+is not necessarily id 13 — so a type renamed in OpenProject admin stops resolving until
+the name matches again.
+
+---
+
+### 11.2 The four scenarios
+
+Each project has a **sync master**: the side that owns it, held in `tbMDSyncMaster`.
+The create steps set it; the update steps refuse to run against a project the other way
+round, and name the button to press instead. Changing master is a deliberate edit on the
+project, not something a run does behind you.
+
+| | Timebars is master | OpenProject is master |
+|---|---|---|
+| **Create** | **A1** — create the project and every row under it in OpenProject | **B1** — create the project and every bar under it in Timebars |
+| **Update** | **A2** — update OpenProject, creating anything missing | **B2** — update Timebars, creating anything missing |
+
+Tick the box and you are asked for the project id — a Timebars `tbID` for A1 and A2, an
+OpenProject project id for B1 and B2. Each run previews what it will do and asks once
+before writing.
+
+There is **no separate bulk-create step**. A2 and B2 create what is missing as part of
+the update, so a project that has grown since the last run does not need a different
+button. A row that has been deleted on the master side is **reported, never deleted** on
+the other — removals stay a human decision.
+
+**A2 recalculates the hierarchy and rollups before it sends**, so the numbers that reach
+OpenProject are the ones the app would show you.
+
+Every run writes its progress into the feedback list under its own checkbox, and every
+row it could not carry is named with the reason. Read those lines before assuming the
+run worked.
+
+---
+
+### 11.3 The Integration buttons
+
+| Button | Reads | Writes | When to use it |
+|---|---|---|---|
+| **Test Connection** | OpenProject | nothing | first, and whenever a run behaves oddly |
+| **Discover OP Configuration** | OpenProject | nothing — four CSVs to your Downloads folder | after any field or picklist change in OpenProject admin |
+| **Reconcile with OpenProject** | OpenProject | tbSchema, tbTags and tbResources in Timebars, plus five CSVs | straight after Discover, and after every OpenProject configuration change |
+| **Create OP Users & Groups** | tbResources | OpenProject users and groups | when setting up people, once the resource pool has emails |
+| **Create "All Users" Group** | OpenProject | an *All Users* group holding everybody | when a permission has to be granted to everyone at once |
+
+**Discover** walks the Project, Work Package and User schemas and writes nothing at all —
+it is safe to run any time.
+
+**Reconcile** is the one that closes the loop. It matches every Timebars field and every
+picklist value against OpenProject **by name**, and records the ids it finds. Those ids
+are per-instance — your `customField107` is not another customer's — so they are never
+typed by hand, and reconciling them from the live instance is the entire point of the
+button. It previews, then asks before writing, and it changes IndexedDB only. Take a
+backup first if you want a way back.
+
+Two things Reconcile deliberately does **not** do:
+
+- **It never writes to OpenProject.** OpenProject's API cannot create a custom field or a
+  picklist value, so those are added in its admin screens — Reconcile tells you which ones
+  are missing and downloads the list.
+- **It never sets Sync Yes/No.** Whether a field travels is your decision, held in the
+  workbook; an id is a fact about the instance, and Reconcile now records one for every
+  field that declares a mapping whether or not that field is switched on.
+
+---
+
+### 11.4 Where the field mapping lives
+
+The mapping is **data, not code**. Two workbook sheets own it, and two reports in the app
+show it.
+
+**The Schema sheet** (`tbSchema`) is the master field list — one row per field in the
+system. Alongside each field's label, type and purpose it carries the OpenProject columns:
+
+| Column | Meaning |
+|---|---|
+| `tbSchOpSyncYN` | **Sync Yes/No** — whether this field travels at all. Yours to set; nothing else writes it |
+| `tbSchOpTableName` | which level it maps at — Project, WP, or Users |
+| `tbSchOpFormat` | OpenProject's own type for the field, which decides the payload shape. `Formattable` is what routes a rich text field onto the markdown path |
+| `tbSchOpFieldName` | the field's **label** in OpenProject — the name its admin UI shows |
+| `tbSchOpInternalName` / `tbSchOpInternalNameWP` | the `customFieldNN` ids, at project and work package level. **Written by Reconcile, never by hand** |
+
+**The Tags sheet** (`tbTags`) does the same for every picklist value: `tbTagOpFieldName`
+and `tbTagOpInternalName` say which OpenProject field the value belongs to, and
+`tbTagOpTagName` / `tbTagOpCustomOptionID` hold the value's own name and id in OpenProject
+— again filled in by Reconcile.
+
+In the app, both are visible and partly editable:
+
+| Report | Where | What you can do |
+|---|---|---|
+| **Schema Values** | Report Menu → Other | Search and filter the whole field list; **OP Field** and **OP Internal** are shown and locked, because the picklist values join to them and a rename here would orphan them. Label, purpose, width, alignment, Validate and Mandatory are editable |
+| **Picklist Values** | Report Menu → Other | Filter to one picklist and open a value. Its **OpenProject Mapping** section lets you pick **OP Field** and **OP Internal** from the names the Schema table owns; **OP Value** and **OP Custom Option ID** are read-only, because OpenProject owns those |
+| **Config Integrity** | Report Menu → Other | The standing check across Schema, Tags, Fields and CoreReport. Run it after every spreadsheet import — the drift it finds never throws an error on its own |
+
+`Sync Yes/No`, the level and the format are **workbook columns and are not editable in the
+app**, on purpose: turning a field on or off is a configuration decision that has to
+survive the next spreadsheet import, and the workbook is what both stores are rebuilt from.
+
+> **The loop to remember.** Discover and Reconcile write to the browser's database and to
+> your Downloads folder. The workbook is what Timebars is rebuilt from on the next import.
+> Until the reconciled ids are pasted back into the Schema and Tags sheets, the next import
+> throws the reconciliation away. That is what `tbSchemaForWorkbook.csv` and
+> `tbTagsForWorkbook.csv` are for.
+
+---
+
+### 11.5 Two things that travel outside the mapping
+
+Almost everything the sync sends is a **custom field** in OpenProject, and the Schema sheet
+says where each one goes. Two project attributes are not custom fields, and so cannot be
+described in the Schema sheet at all:
+
+| In OpenProject | What it is |
+|---|---|
+| **Description** | the block of text at the top of the project overview page |
+| **Status** | the coloured chip beside the project name — On track, At risk, Off track and three more |
+
+These are OpenProject **built-ins**. The Schema sheet's internal-name columns hold
+`customFieldNN` ids, Reconcile regenerates them from what OpenProject reports about its
+*custom* fields, and a built-in appears nowhere in that walk — so a built-in name typed into
+the workbook by hand would be wiped by the next Reconcile run. Both are therefore written by
+the sync itself, and **the workbook needs no change for either**.
+
+**This is in addition to the mapping, not instead of it.** `tbMDDescription` still travels to
+the *TB Description* custom field and `tbMDHealth` still travels to *Schedule Status*, exactly
+as before. What changed is that the same two values now also fill the OpenProject built-ins,
+so a project reads correctly to somebody looking at the stock OpenProject page who has never
+heard of Timebars.
+
+**Description.** The project's `tbMDDescription` is converted to markdown and written to the
+OpenProject description. A blank description is **not** sent — an update will not wipe text
+somebody typed in OpenProject just because the Timebars field has not been filled in yet.
+
+**Status** comes from the project's **Health** (`tbMDHealth`, the *Schedule Status* picklist),
+not from Timebar Status. OpenProject's project status answers *"is this project in trouble"*
+rather than *"what stage is it at"*, which is the question Health answers too:
+
+| Timebars Health | OpenProject project status |
+|---|---|
+| On schedule | On track |
+| Early | On track |
+| Slipping | At risk |
+| Late | Off track |
+| Blocked | Off track |
+| Completed | Finished |
+| Not Assessed | Not started |
+
+The seven values above are the whole table, and it is **fixed in code**. OpenProject's six
+project statuses are a closed set it does not let an administrator add to, so unlike a work
+package status there is no id to reconcile and nothing that can drift.
+
+A Health value outside that list — one added to the Tags sheet but not to the table above —
+is reported in the run's feedback list and in its anomaly CSV. What happens then depends on
+the scenario: **A1** creates the project as *On track*, and **A2** leaves the project's
+status in OpenProject exactly as it is rather than resetting it. The same applies to a
+project whose Health is blank.
+
+**Work packages are not affected.** Their own description and status fields are untouched by
+this and continue to travel only as the custom fields the Schema sheet names. A work package
+status in OpenProject is an administrator-defined, per-instance list with numeric ids — a
+different problem from the fixed six above, and not one this table speaks for.
+
+---
+
+### 11.6 The CSV files, and what each one is for
+
+Every button and every run downloads its findings, so you are never reading a mapping
+problem off a screen. All of them land in the browser's Downloads folder.
+
+**From Discover — what OpenProject actually holds:**
+
+| File | What it answers |
+|---|---|
+| `opFields.csv` | every custom field on this instance, at every level |
+| `opCustomOptions.csv` | every picklist value on this instance |
+| `opFieldComparison.csv` | only the fields where OpenProject and `tbSchema` **disagree** |
+| `opTagComparison.csv` | only the picklist values where OpenProject and `tbTags` **disagree** |
+
+The two comparison files are the ones to open first: they are short by design, and a field
+that is not in them is a field that is already fine.
+
+**From Reconcile — what to do next:**
+
+| File | What it answers |
+|---|---|
+| `tbSchemaForWorkbook.csv` | the **whole** Schema sheet in sheet column order, ids filled in. Paste it over the sheet, below the header rows |
+| `tbTagsForWorkbook.csv` | the same for the Tags sheet |
+| `opFieldsToCreate.csv` | the fields a Timebars row names that this instance does not have. **Admin-UI work** — the API cannot create them |
+| `opRemainingWork.csv` | the picklist values still to add in OpenProject. Same — admin UI |
+| `opUnmatchedPeople.csv` | resources with no matching OpenProject user, so an assignee cannot be set |
+| `currentOPFormFieldConfigStatus.csv` | **every field each work package type must have on its OpenProject form** - where the requirement comes from, whether `tbSchema` maps it, and whether the form exposes it today. The list to configure a type's form from |
+
+The two workbook files are written **whether or not** you confirm the write into Timebars,
+because they describe what would change either way.
+
+**From a run — what did not carry:**
+
+`opSyncAnomalies_A1.csv`, `_A2.csv`, `_B1.csv`, `_B2.csv` — one row per thing worth knowing
+about that run, at three severities:
+
+| Severity | Meaning |
+|---|---|
+| **blocked** | did not sync. Something has to change before it will |
+| **guessed** | synced, but on a fallback rather than an exact match. Worth a look |
+| **note** | nothing was lost; worth knowing |
+
+A run whose anomalies are all notes is a clean run. The same lines are printed on screen as
+the run goes, so the CSV is the copy you can sort, filter and send to whoever owns the fix.
+
+---
+
+### 11.7 When a field will not sync
+
+Almost every "the field is empty in OpenProject" report is one of five things, and the
+files above name which:
+
+1. **`Sync Yes/No` is not `Yes`** on that `tbSchema` row. Nothing else is wrong; the
+   workbook has decided the field does not travel.
+2. **The field does not exist in OpenProject yet** — it is in `opFieldsToCreate.csv`. Add
+   it in OpenProject admin, then Reconcile.
+3. **The labels disagree.** Matching is by label, so `Cost Centre` against `Cost Center`
+   resolves at neither level. `opFieldComparison.csv` lists exactly these.
+4. **The field exists but is not on that type's form.** OpenProject refuses a value for a
+   field the type does not expose, so the run drops it and says so. Fixing it is
+   **Administration → Work packages → Types → *type* → Form configuration**, by hand —
+   OpenProject has no API for form configuration. A run names each such field **once**, at
+   the top, and only for fields that belong on that type; `currentOPFormFieldConfigStatus.csv`
+   from Reconcile is the full list, type by type.
+5. **A picklist value has no option id** — it is in `opRemainingWork.csv`. Add the value in
+   OpenProject admin, then Reconcile.
+
+Order of operations, whenever anything changes on either side: **change it → Discover →
+Reconcile → paste the two workbook CSVs back into the sheets → run A2 or B2.**
+
+---
+
+### 11.8 Formatted text fields
+
+43 metadata fields hold formatted text — descriptions, executive summaries, options
+analyses and the rest of the Charter and Assessment content. They are stored in Timebars in
+the editor's own format and **converted at the sync boundary**: Timebars sends markdown,
+and markdown coming back is converted for display. Nothing reaches OpenProject as raw
+markup, and no formatting has to be re-typed.
+
+Two things follow from that:
+
+- **Set those fields to *Long text* in OpenProject.** A field left as single-line *Text*
+  has its formatting flattened on purpose, because markdown syntax in a one-line box is
+  noise. Change the field's type in OpenProject admin and re-run Reconcile — it upgrades
+  itself, with no code change.
+- **A round trip loses underline and colour.** Headings, lists, bold, italic, links, quotes
+  and code survive in both directions; markdown cannot carry the other two. Everything else
+  comes back as it went.
 
 ---
 
 ## 12. Bulk Update
 
 The Bulk Update tab lets you modify data across multiple pubsets simultaneously without downloading and re-publishing each one individually.
+
+### Who You Are Working As
+
+The top of the Bulk Update and Re-Publish tabs states who is logged in and their role,
+taken from the resource pool (the person's **Primary Role** and **Customer ID** in
+tbResources, matched by the login email).
+
+| Role | What **Load Pubsets** loads |
+|------|-----------------------------|
+| **Administrator** (shown in red) | **Every** pubset for the administrator's Customer ID, whoever owns it, plus the administrator's own — so one person can bulk update and re-publish for the whole customer |
+| Anyone else | Only the pubsets you own |
+
+The **Published Since** date narrows either list. Each loaded pubset shows its owner.
+An Administrator's changes are written to each pubset in place — the owner does not change.
 
 ### Getting Started
 
@@ -460,7 +777,7 @@ The Re-Publish feature downloads pubsets from the cloud, runs the PM scheduling 
 
 1. Go to the **Re-Publish** tab
 2. Optionally set a **Published Since** date filter
-3. Click **Load Pubsets**
+3. Click **Load Pubsets** — an Administrator gets every pubset for their Customer ID (see *Who You Are Working As* in section 12)
 4. Select the pubsets you want to re-publish (checkboxes or Select All)
 5. Choose which calculation steps to run (all checked by default):
    - **Scheduling Engine** — recalculates dates, hours, costs, and percent complete for allocations
@@ -539,7 +856,7 @@ A dark terminal-style log panel shows timestamped entries as each step executes:
 1. Log in to client app (gold icon, top right)
 2. Main Menu > Publish
 3. Cloud Login (email + password)
-4. Activate PubSets (first time only)
+4. PubSets are created (or topped up) for you on each cloud login
 5. Click Publish next to blue PubSet (Dashboard PubSet)
 6. View Dashboard button or www.timebars.com/dashboard
 ```
@@ -571,7 +888,13 @@ Device A:
 | "No pubsets found" (Bulk Update) | Adjust or clear the Published Since date filter |
 | Field Name dropdown empty (Bulk Update) | Ensure local tbTags store has definitions with matching tbTagTbInternalName prefix |
 | Pubset is empty (Re-Publish) | Pubset has been cleared — publish data to it first |
+| OpenProject run does nothing | Run **Test Connection** first; check the OpenProject URL field (`apOpUrl`) |
+| A field is empty in OpenProject | Check `Sync Yes/No` on its Schema row, then `opFieldComparison.csv` for a label mismatch |
+| A picklist value will not sync | It has no option id — see `opRemainingWork.csv`, add it in OpenProject admin, then Reconcile |
+| A2 or B2 refuses to run | The project's sync master is the other side. Use the other button, or change the master on the project |
+| Reconciled ids disappear after an import | The two workbook CSVs were not pasted back into the Schema and Tags sheets |
+| Project status in OpenProject looks wrong | It comes from the project's Health, not Timebar Status — see the table in section 11.5 |
 
 ---
 
-*Cloud Publishing and Bulk Operations Guide v2.0 — Timebars Ltd.*
+*Cloud Publishing and Bulk Operations Guide v2.2 — Timebars Ltd.*

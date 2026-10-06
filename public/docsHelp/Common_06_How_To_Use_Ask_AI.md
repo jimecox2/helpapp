@@ -1,481 +1,218 @@
-# How To Use Ask AI  - Common Across Products
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
+# 🤖 How to Use Ask AI
 
 ## Table of Contents
 
-- [What This Feature Does](#what-this-feature-does)
-- [🚀 Quick Start](#-quick-start)
-- [📝 How to Write Effective Requests](#-how-to-write-effective-requests)
-- [🎯 Advanced Features](#-advanced-features)
-- [📋 What AI Automatically Generates](#-what-ai-automatically-generates)
-- [💡 Tips for Best Results](#-tips-for-best-results)
-- [🎨 Example Scenarios](#-example-scenarios)
-- [🔧 Understanding Defaults](#-understanding-defaults)
-- [📊 Content Quality Scale](#-content-quality-scale)
-- [⚡ Tips for Complex Projects](#-tips-for-complex-projects)
-- [🐛 Troubleshooting](#-troubleshooting)
-- [✨ Best Practices Summary](#-best-practices-summary)
-- [🎓 Example Progression](#-example-progression)
-- [🆘 Need Help?](#-need-help)
+1. [What "Ask AI" Is](#what-ask-ai-is)
+2. [🚀 Getting Started: the "Get Started" L1 bar](#-getting-started-the-get-started-l1-bar)
+3. [🖱️ The two things you click](#-the-two-things-you-click)
+4. [🧭 What AI Creates at Each Level](#-what-ai-creates-at-each-level)
+5. [🧩 Two kinds of staffing: Resource Plan vs. Assigning People](#-two-kinds-of-staffing-resource-plan-vs-assigning-people)
+6. [📋 While the AI Works](#-while-the-ai-works)
+7. [💡 Tips for Great Results](#-tips-for-great-results)
+8. [🆘 The Ask AI Help Assistant](#-the-ask-ai-help-assistant)
+9. [🐛 Troubleshooting](#-troubleshooting)
 
 ---
 
-## What This Feature Does
+## What "Ask AI" Is
 
-The AI Project Generator transforms your natural language descriptions into complete project structures with tasks, milestones, and risks. Simply describe what you want, and AI will create a fully-structured project ready to use in your PPM system.
+**Ask AI** is the assistant built into your product. It does two things for you:
 
----
+1. **Creates your project data for you.** Instead of building Projects, Work Packages, Tasks, Milestones and resource Allocations by hand, you describe what you want in plain English and the AI builds the bars on your timeline — at whatever level of the hierarchy you are working in.
+2. **Answers your questions.** The **Ask AI** button on the main menu opens a help chat that answers "how do I…" questions about using the app, based on the official documentation.
 
-## 🚀 Quick Start
+You do not need to know any technical field names or rules. You write the way a project manager, portfolio manager or engineer would talk, and the AI fills in the rest.
 
-### Basic Usage
-
-Just type what you want in the input box and press submit:
-
-```
-Create a project called Website Redesign
-```
-
-**Result:** AI creates:
-- 1 project named "Website Redesign"
-- 5 tasks (default)
-- 2 milestones (default)
-- 3 risks (default)
-- Rich descriptions, objectives, and benefits
+> Ask AI is powered by Google Gemini. After the AI finishes creating data, **refresh the page (press F5)** to see the new bars appear on the canvas.
 
 ---
 
-## 📝 How to Write Effective Requests
+## 🚀 Getting Started: the "Get Started" L1 bar
 
-### 1. **Simple Project Creation**
+When you open a brand-new, empty canvas in **Timebars** or **Costbars**, the app automatically places one starter bar near the top for you:
 
-**Minimal Input:**
-```
-Create a project: Mobile App Development
-```
+> **L1 Get Started here using AI, click the L1 ID below**
 
-**What AI Does:**
-- Creates project with default quantities (5 tasks, 2 milestones, 3 risks)
-- Generates meaningful task names based on the project type
-- Writes 1-3 paragraph descriptions for each section
-- Sets dates starting next month
+This is your starting point — a top-level **Portfolio (L1)** that runs from today for about six months. You don't have to create anything first; just use it to launch the AI.
+
+> **Agilebars note:** Agilebars uses a simpler two-level structure and does **not** create this starter bar. Agilebars users begin at the Project level (see the Agilebars guide).
 
 ---
 
-### 2. **Override Default Quantities**
+## 🖱️ The two things you click
 
-**Specify Your Own Numbers:**
-```
-Create a project called Cloud Migration with 10 tasks, 4 milestones, and 5 risks
-```
+Everything in Ask AI starts from a bar on the canvas:
 
-**What AI Does:**
-- Creates exactly 10 tasks, 4 milestones, 5 risks
-- Names them appropriately for a cloud migration
-- Generates detailed content
+1. **Click the bar's ID** (the little ID label/circle on the bar). This opens that bar's **status pop-up form**.
+2. On that form, click the **✨ sparkle icon** (the "Ask AI" button). This opens the **AI Create** dialog for that bar.
 
----
+The AI Create dialog always knows **which bar you launched it from** — it shows the ID, name and level at the top — so anything it creates is placed correctly underneath that bar.
 
-### 3. **Provide Context for Better Results**
-
-**Rich Description:**
-```
-Create a project to upgrade all Ubuntu servers from version 20.04 to 22.04 LTS. 
-We have 50 production servers and 30 development servers. 
-The project should include testing phases, backup procedures, and rollback plans.
-Create 8 tasks, 3 milestones, and 4 risks.
-```
-
-**What AI Does:**
-- Creates highly specific, contextual tasks like:
-  - "Backup all production server configurations"
-  - "Test upgrade on development environment"
-  - "Execute rolling upgrade on production servers"
-- Writes detailed descriptions mentioning Ubuntu versions, server counts
-- Identifies relevant risks like "Rollback complexity" or "Service downtime"
-
-**💡 Rule:** More context = more relevant, specific content
+Some levels also have **named buttons** on the status form (for example **Resource Plan** or **Create Allocations**) that run a specific action directly. These are described below.
 
 ---
 
-## 🎯 Advanced Features
+## 🧭 What AI Creates at Each Level
 
-### Project Positioning
+Think of your plan as a set of nested levels:
 
-**Control Where the Project Appears:**
+**Portfolio (L1) → Project (L2) → Work Package / Sub-Project (L3) → Task (L4) → Allocation (L5 — a person assigned to a task)**
 
-```
-Create a project called Q1 Planning placed 400 pixels from the top
-```
-
-```
-Place the new project one-third down the page
-```
-
-**Default:** Projects appear at 300 pixels from top if not specified
+You move down this ladder one step at a time. At each step you click the bar's ID, click the ✨ sparkle icon, and tell the AI what you want.
 
 ---
 
-### Date Control
+### 1️⃣ From a Portfolio (L1): create a Project
 
-**Specify Timeline:**
-```
-Create a project starting in March 2025 and finishing in August 2025
-```
+This is where most people begin, using the **Get Started** bar.
 
-```
-Create a 3-month project beginning next quarter
-```
+1. Click the **ID** of the Portfolio bar, then click the **✨ sparkle icon**.
+2. In the big text box, describe the project. You can:
+   - paste in a **Business Case** — formal (with headings) or rough — and the AI maps it into the Project Charter fields, or
+   - simply type a **project name and a short description**, plus any background you have.
+3. Optional tick-boxes:
+   - **Fill in Project Charter fields with AI** — after the project is created, the AI also enriches its Project Charter fields (value proposition, benefits, success criteria, and so on).
+   - **Create a Resource Plan** — the AI adds one **"Resource Plan"** task with **generic role placeholders** for the kinds of people the project will need (see *Resource Plan* below).
+4. Click **Create**.
 
-**Default:** Starts 1 month from today, ends ~6 months later
+**Result:** one new **Project (L2)** appears under your Portfolio as a **New** initiative, with its Project Charter fields filled from your Business Case. Anything the AI cannot map to a specific field is preserved under headings in **Management Notes** (`tbMDNotes`) so nothing is lost.
 
----
-
-### Task Details
-
-**Be Specific About Work:**
-```
-Create a product launch project with these phases:
-- Design and prototyping (2 months)
-- Development and testing (3 months)  
-- Marketing preparation (1 month)
-- Launch execution (2 weeks)
-
-Create 12 tasks and 5 milestones.
-```
+> 💡 The more you tell it — scope, goals, timeline, budget, who is involved — the more specific and useful the result.
 
 ---
 
-## 📋 What AI Automatically Generates
+### 2️⃣ From a Project (L2): create Work Packages, Tasks and Milestones
 
-For every project, AI creates:
+1. Click the **ID** of the Project bar, then the **✨ sparkle icon**.
+2. Describe how the project should be broken down (for example: *"Break this into a design phase, a build phase, and a testing phase"*). If you are not specific, the AI uses sensible project-management judgment.
+3. Optional tick-box:
+   - **Assign people to the Tasks (Human resources)** — after the Tasks are created, the AI also assigns the best-fit **real person** from your Resource Pool to each Task (see *Assigning people* below).
+4. Click **Create**.
 
-### Rich Metadata Fields
+**Result:** new **Work Packages (Sub-Projects, L3)** are created under the Project, each containing the **Tasks (L4)** and **Milestones** needed.
 
-| Field | Content | Length |
-|-------|---------|--------|
-| **Description** | Detailed overview of the work, scope, and deliverables | 1-3 paragraphs |
-| **Executive Summary** | High-level overview for stakeholders | 1-3 paragraphs |
-| **Objectives & Scope** | Goals, boundaries, and success criteria | 1-3 paragraphs |
-| **Expected Benefits** | Business value, ROI, and outcomes | 1-3 paragraphs |
-
-**More context in your input = more detailed, relevant content**
-
-### Intelligent Naming
-
-**Tasks:**
-- ✅ "Upgrade production database servers"
-- ❌ "Task 1"
-
-**Milestones:**
-- ✅ "All servers upgraded and validated"
-- ❌ "Milestone Complete"
-
-**Risks:**
-- ✅ "Legacy application compatibility issues"
-- ❌ "Risk 1"
+**Also on the Project status form:** a **Resource Plan** button. Click it any time to generate the generic-role Resource Plan on demand (handy if you didn't tick the box when the project was first created).
 
 ---
 
-## 💡 Tips for Best Results
+### 3️⃣ From a Work Package / Sub-Project (L3): create Tasks and Milestones
 
-### ✅ DO:
+1. Click the **ID** of the Work Package bar, then the **✨ sparkle icon**.
+2. Describe the work in that package.
+3. Optional tick-box:
+   - **Create Allocations for the Tasks (assign people)** — the AI assigns a real person to each new Task.
+4. Click **Create**.
 
-1. **Be specific about your domain:**
-   ```
-   Create a healthcare compliance project for HIPAA certification
-   ```
+**Result:** **Tasks (L4)** and **Milestones** are created under the Work Package (up to six tasks per package), optionally staffed with people.
 
-2. **Mention key phases or stages:**
-   ```
-   Include discovery, design, development, testing, and deployment phases
-   ```
-
-3. **State numbers if you need specific quantities:**
-   ```
-   Create 15 tasks, 6 milestones, and 8 risks
-   ```
-
-4. **Provide context about scale:**
-   ```
-   This affects 200 employees across 5 departments
-   ```
-
-5. **Mention important constraints:**
-   ```
-   Must complete before end of Q2, budget is $150K
-   ```
-
-### ❌ DON'T:
-
-1. **Be too vague:**
-   ```
-   Create a project
-   ```
-   (AI will use defaults, but content will be generic)
-
-2. **Use unclear terminology:**
-   ```
-   Make some stuff for the thing
-   ```
-
-3. **Forget to mention quantity overrides:**
-   (You'll get 5 tasks, 2 milestones, 3 risks by default)
+**Also on the Work Package status form:** a **Create Allocations** button. Click it to staff the Work Package's **existing** Tasks with people — useful when you created the tasks earlier without ticking the "assign people" box. (If the Work Package has no tasks yet, the assistant will tell you to create tasks first.)
 
 ---
 
-## 🎨 Example Scenarios
+### 4️⃣ From a Task (L4): assign people to it
 
-### Scenario 1: Software Development
+1. Click the **ID** of the Task bar, then the **✨ sparkle icon**.
+2. Describe the roles you need in plain words, for example:
+   - *"Add a developer and a tester"*
+   - *"I need a business analyst and a project manager"*
+3. Click **Create**.
 
-**Input:**
-```
-Create an API development project for our new customer portal. 
-We need to build RESTful endpoints, implement OAuth2 authentication, 
-integrate with our legacy database, and create comprehensive API documentation.
-The project should span 4 months starting in February 2025.
-Create 10 tasks, 4 milestones, and 3 risks.
-```
-
-**AI Creates:**
-- Project: "API Development - Customer Portal"
-- 10 specific tasks (e.g., "Design RESTful API architecture", "Implement OAuth2 authentication flow")
-- 4 milestones (e.g., "Authentication module complete", "All endpoints tested")
-- 3 risks (e.g., "Legacy database schema incompatibility")
-- Rich descriptions mentioning OAuth2, REST, portal integration
+**Result:** the AI finds the matching people in your Resource Pool and adds them as **Allocations (L5)** under the Task. If you ask for "a developer," it includes every matching role (for example *Senior Developer* and *Web Developer*), one allocation each. New allocations always appear neatly **below the task**, so they are easy to see.
 
 ---
 
-### Scenario 2: Infrastructure Upgrade
+## 🧩 Two kinds of staffing: Resource Plan vs. Assigning People
 
-**Input:**
-```
-Upgrade our data center network infrastructure. Replace aging switches, 
-upgrade firewall firmware, implement new monitoring tools, and migrate to 
-10Gb network backbone. 8 tasks, 3 milestones, 5 risks.
-```
+It helps to know the difference between the two ways AI adds resources:
 
-**AI Creates:**
-- Project: "Data Center Network Infrastructure Upgrade"
-- 8 tasks covering switch replacement, firmware updates, monitoring, migration
-- 3 milestones marking major completion points
-- 5 risks including downtime, compatibility, budget overruns
-- Technical descriptions with network terminology
+| | **Resource Plan** | **Assign People / Create Allocations** |
+|---|---|---|
+| **What it adds** | Generic **role placeholders** (e.g. "Project Manager", "R&D") | **Real, named people** from your Resource Pool |
+| **Answers** | *What kinds of people will this project need?* | *Who specifically will do this work?* |
+| **Where** | Portfolio "Create a Resource Plan" tick-box, or the **Resource Plan** button on a Project | "Assign people" tick-box at Project/Work Package level, the **Create Allocations** button, or the ✨ button on a Task |
+| **Used when** | Early planning, before you know exact names | Detailed planning, staffing the actual work |
 
----
+**Resource Plan** is for early estimating — it judges which roles the project needs and, if it is unsure, always includes a Project Manager and an R&D role. It never assigns specific named people.
 
-### Scenario 3: Business Process Improvement
+**Assigning People** picks the best **named person** for each task by matching the task to each person's **role and skill**, and it checks that the person is not already over-committed. It keeps people sensibly loaded and will not pile work onto someone who is already very busy. If no suitable person is free, it drops in a generic role placeholder instead, so the task is never left empty without telling you.
 
-**Input:**
-```
-Create a project to streamline our invoice approval workflow. 
-Currently takes 10 days, goal is 3 days. Involves finance, purchasing, 
-and operations departments. Need workflow mapping, system configuration, 
-training, and rollout phases. 12 tasks, 5 milestones, 4 risks.
-```
+### 🎛️ You control which roles a Resource Plan can use
 
-**AI Creates:**
-- Project: "Invoice Approval Workflow Optimization"
-- 12 tasks across mapping, configuration, training, rollout
-- 5 milestones for each major phase completion
-- 4 risks like resistance to change, system integration issues
-- Business-focused descriptions mentioning efficiency gains, stakeholders
+A Resource Plan does not see your whole Generic resource list. It only sees
+Generic resources whose **Quantity is greater than zero**.
 
----
+That gives you a simple lever. Roles that exist for reporting or org structure
+rather than for doing the work — governance boards, steering committees,
+management overhead — should be set to **Quantity 0** in the Shared Resource
+Pool. They stay in the pool and stay reportable, but the AI will never propose
+them as allocations.
 
-### Scenario 4: Marketing Campaign
+| Quantity | Effect |
+|---|---|
+| **Greater than 0** | The role is real capacity — the AI can plan with it, and it counts towards supply in the Supply and Demand grids |
+| **0** | The role is invisible to planning — never proposed, never counted as capacity |
 
-**Input:**
-```
-Q3 product launch campaign for our new SaaS platform. 
-Includes content creation, social media strategy, email campaigns, 
-webinar series, and paid advertising. 6-week timeline. 
-10 tasks, 4 milestones, 3 risks.
-```
+Two things follow from this, and they are the usual surprises:
 
-**AI Creates:**
-- Project: "Q3 SaaS Platform Launch Campaign"
-- 10 marketing-specific tasks
-- 4 milestones for campaign phases
-- 3 risks (budget overrun, low engagement, timeline delays)
-- Marketing-focused descriptions with ROI, target audience, channels
+- **The AI keeps proposing managers you did not want.** Do not rewrite the
+  prompt — set those roles to Quantity 0 and generate again
+- **A role you expected never appears.** It is almost certainly sitting at
+  Quantity 0. Give it a quantity and it becomes available
+
+Keeping the quantities honest is the resource pool manager's job, and it is the
+single highest-value thing you can do for the quality of AI resource plans.
 
 ---
 
-## 🔧 Understanding Defaults
+## 📋 While the AI Works
 
-When you don't specify certain details, AI uses these defaults:
+When you click **Create**, the dialog shows a **running progress log** — gathering context, calling the AI, creating each row — and finishes with a short **summary** of what was created (and a note of anything it adjusted or skipped). If a step has a problem, it is clearly flagged, and any work that did succeed is kept.
 
-| Element | Default Value | How to Override |
-|---------|---------------|-----------------|
-| Tasks | 5 | "Create 10 tasks" |
-| Milestones | 2 | "Create 6 milestones" |
-| Risks | 3 | "Create 8 risks" |
-| Start Date | 1 month from today | "Starting in March 2025" |
-| End Date | ~6 months from start | "Finishing in 6 months" |
-| Project Position | 300 pixels from top | "Place 400 pixels from top" |
-| Content Detail | Moderate | Provide more context for richer content |
+When it is done, **refresh the page (F5)** to see the new bars on your timeline.
 
 ---
 
-## 📊 Content Quality Scale
+## 💡 Tips for Great Results
 
-The amount of detail you provide directly affects the quality and specificity of AI-generated content:
+✅ **Do:**
+- Give the AI real context — paste a Business Case, scope notes, or a solid description.
+- Mention timelines, budgets, key phases, and who is involved when you know them.
+- Work **top-down**: create the Project first, then break it into Work Packages and Tasks, then assign people.
+- Keep a healthy **Resource Pool** (named people with roles, skills, rates and availability) so staffing has good people to choose from.
 
-### Minimal Input
-```
-Create a project: Server Upgrade
-```
-**AI Content:** Generic descriptions about server upgrades
-
----
-
-### Moderate Input
-```
-Create a project to upgrade Ubuntu servers to version 22.04
-```
-**AI Content:** Mentions Ubuntu, version numbers, typical upgrade tasks
+❌ **Avoid:**
+- One-word requests like *"make a project"* — you'll get a generic result.
+- Expecting people to be assigned if your Resource Pool is empty — add resources first.
 
 ---
 
-### Rich Input
-```
-Create a project to upgrade 80 Ubuntu servers (50 production, 30 dev) 
-from 20.04 to 22.04 LTS. Must include backup procedures, testing phases, 
-rollback plans, and monitoring setup. Timeline is 8 weeks starting April 2025.
-Create 12 tasks, 5 milestones, and 6 risks.
-```
-**AI Content:** 
-- Highly specific task names with server counts
-- Detailed descriptions mentioning versions, environments, counts
-- Risk assessment relevant to your specific scale
-- Timeline-appropriate milestone placement
+## 🆘 The Ask AI Help Assistant
 
----
+The **Ask AI** button on the main menu (and on the canvas toolbar) opens the **Help Assistant** — a chat window where you can ask questions about how to use the app, such as *"How do I create a baseline?"* or *"How do resource charts work?"*. It answers from the official product documentation for your edition (Agilebars, Timebars or Costbars).
 
-## ⚡ Tips for Complex Projects
-
-### Break Down Large Initiatives
-
-Instead of:
-```
-Create our entire digital transformation program
-```
-
-Try sequential projects:
-```
-Create Phase 1: Infrastructure Assessment and Planning project 
-with 8 tasks, 3 milestones, 4 risks
-```
-
-Then later:
-```
-Create Phase 2: Cloud Migration Execution project...
-```
-
-### Use Hierarchical Thinking
-
-AI understands project hierarchy:
-- **Portfolio** → **Project** → **Sub-Project** → **Task** → **Allocation**
-
-You can request:
-```
-Create a project with 3 sub-projects, each with 5 tasks
-```
+- Type your question and press **Ask** (or press Enter).
+- Use **Clear** to start a fresh conversation.
+- Click the **×** to close it.
 
 ---
 
 ## 🐛 Troubleshooting
 
-### "Timeout Error"
+**"I clicked Create but nothing appears on the canvas."**
+Refresh the page (F5). New bars show after a reload.
 
-**Cause:** Very complex requests might take too long
+**"No people were assigned to my tasks."**
+Your Resource Pool may have no suitable **named (Human) resources**. Add people with roles and skills, then use the **Create Allocations** button on the Work Package, or the ✨ button on a Task.
 
-**Solution:**
-- Break into smaller projects
-- Reduce task/milestone/risk counts
-- Simplify the description slightly
+**"The tasks don't quite match what I wanted."**
+Give more detail — name the phases, deliverables or roles you expect — and try again on the same bar.
 
-### "Not Enough Detail in Descriptions"
-
-**Cause:** Input too brief
-
-**Solution:**
-- Add more context about scope, stakeholders, technology
-- Mention specific phases or activities
-- Include scale information (how many, how long, how much)
-
-### "Tasks Don't Match My Needs"
-
-**Cause:** AI misunderstood domain or context
-
-**Solution:**
-- Be more explicit about the type of work
-- List key phases or activities you expect
-- Mention specific deliverables
+**"I don't see the Get Started bar."**
+It only appears on an **empty** Timebars or Costbars canvas (when there are no Portfolios yet). Agilebars does not use it. If you already have bars, just use the ✨ button on any existing bar.
 
 ---
 
-## ✨ Best Practices Summary
-
-1. **Start with project name and basic description**
-2. **Specify quantities if not using defaults** (5 tasks, 2 milestones, 3 risks)
-3. **Add context for richer, more relevant content**
-4. **Mention timeline if important**
-5. **Include stakeholders, technology, or domain details**
-6. **Be specific about phases or major activities**
-7. **State positioning if you care** (otherwise defaults to 300px)
-
----
-
-## 🎓 Example Progression
-
-See how adding detail improves results:
-
-### Level 1: Basic
-```
-Create website project
-```
-
-### Level 2: Named + Quantities
-```
-Create a Website Redesign project with 8 tasks and 3 milestones
-```
-
-### Level 3: Contextual
-```
-Create a Website Redesign project for our e-commerce site. 
-Need to update design, improve mobile experience, and add new payment options.
-8 tasks, 3 milestones, 4 risks.
-```
-
-### Level 4: Comprehensive
-```
-Create a Website Redesign project for our e-commerce platform serving 10K daily users.
-Scope includes:
-- Modern responsive design with mobile-first approach
-- Integration of Apple Pay and Google Pay
-- Performance optimization (target: <2s page load)
-- A/B testing framework setup
-- SEO improvements
-Timeline: 12 weeks starting March 2025
-Create 12 tasks, 5 milestones, and 6 risks
-Place the project 350 pixels from top
-```
-
-**The more detail you provide, the more valuable and actionable your project structure becomes!**
-
----
-
-## 🆘 Need Help?
-
-If you're not getting the results you expect:
-1. Try adding more context to your description
-2. Be explicit about numbers (tasks, milestones, risks)
-3. Mention the domain or industry for better task naming
-4. Break complex projects into phases
-5. Review the examples above for inspiration
-
----
-
-**Ready to create your first AI-generated project? Just type your request and let the AI do the heavy lifting!** 🚀
+**Ready to build your plan? Click an ID, click the ✨ sparkle, and tell the AI what you need.** 🚀

@@ -1,12 +1,14 @@
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
 # Enterprise Dashboard Guide
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
 
 The Timebars Enterprise Dashboard provides a consolidated, organisation-wide view of your project portfolio. It draws data from one or more published datasets (pubsets) — from Agilebars, Timebars, or Costbars — that are combined into a **Dashboard Source**: a single, unified snapshot that powers all reports, charts, and visualizations in the enterprise view.
 
 > **Enterprise Dashboard vs. Personal Dashboard**
 > The Enterprise Dashboard (`/dashboard`) is designed for teams and organisations that need to combine data across multiple pubsets — for example, rolling up projects from different teams, products, or time periods into one portfolio view. Role-based access control (RBAC) governs who can see which pubsets and sources.
 >
-> If you work with a single active pubset and want an instant, zero-configuration view of your own data, see the [Personal Dashboard Guide](Common_08_Cloud_Reports_And_Dashboard_Guide.md) (`/personaldashboard`).
+> If you work with a single active pubset and want an instant, zero-configuration view of your own data, see the [Personal Dashboard Guide](Common_08_Personal_Dashboard_Guide.md) (`/personaldashboard`).
 
 ---
 
@@ -325,6 +327,7 @@ Navigate to **Dashboard → Drilldown** (`/dashboard/drilldown`) to explore the 
 
 Navigate through your combined portfolio in four levels: **Portfolio → Project → Work Package → Task**. Each card displays health indicators, status, and key metrics. At the task level, tabbed sections show related risks and issues. This view covers all pubsets consolidated in the active Dashboard Source.
 
+> The [Personal Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) offers an equivalent drilldown scoped to your single active pubset.
 
 ---
 
@@ -399,8 +402,8 @@ Before the Resource Cost Charts and Resource Usage Charts can display data, the 
 - [Personal Dashboard Guide](C[ommon_08_Cloud_Reports_And_Dashboard_Guide.md](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide)) — Single-pubset dashboard with zero configuration
 
 - [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-local-reports-and-graphs-guide) — Reports available within client applications
-- [Data Structure Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-structure-user-guide) — Understanding the data model
+- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
 - [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) — Navigate the client apps
 ---
 

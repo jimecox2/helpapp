@@ -1,10 +1,12 @@
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
 # Personal Dashboard Guide
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
 
 The Timebars Personal Dashboard delivers a focused suite of interactive reports, visualizations, and data management tools for individual project managers and team leads. It connects directly and automatically to your **single active pubset** — the pubset you have marked as Active (or "connected") in your Timebars, Agilebars, or Costbars client application. No additional configuration is needed; publish your data and the Personal Dashboard reflects it immediately.
 
 > **Personal Dashboard vs. Enterprise Dashboard**
-> The Personal Dashboard (`/personaldashboard`) is designed for a single-pubset workflow: one user, one active data source, instant access. If your organisation needs to combine data from multiple pubsets across projects or teams into a shared portfolio view, see the [Enterprise Dashboard Guide](Common_10_Enterprise_Dashboard_Guide.md) (`/dashboard`).
+> The Personal Dashboard (`/personaldashboard`) is designed for a single-pubset workflow: one user, one active data source, instant access. If your organisation needs to combine data from multiple pubsets across projects or teams into a shared portfolio view, see the [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md) (`/dashboard`).
 
 ---
 
@@ -535,8 +537,8 @@ See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparti
 ## Related Help Topics
 - [Enterprise Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) — Combine multiple pubsets into shared portfolio views with RBAC
 - [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-local-reports-and-graphs-guide) — Reports available within client applications
-- [Data Structure Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-structure-user-guide) — Understanding the data model
+- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
 - [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) — Navigate the client apps
 
 ---

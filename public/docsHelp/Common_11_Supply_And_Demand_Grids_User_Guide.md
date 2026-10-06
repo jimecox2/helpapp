@@ -1,5 +1,5 @@
 # Timebars/Costbars Supply and Demand Grids User Guide
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
 
 ## Table of Contents
 
@@ -14,6 +14,7 @@
 ## Overview
 
 The Supply vs Demand grid is a strategic resource management tool that provides visibility into resource capacity planning and allocation across projects. It enables resource managers and project managers to identify capacity gaps, prevent over-allocation, and make informed decisions about resource assignments and hiring needs.
+![Supply vs. Demand Grid](../images/timebars/tb-resource-demand-grid2.png)
 
 ## Purpose and Use Cases
 
@@ -22,6 +23,8 @@ The Supply vs Demand grid is a strategic resource management tool that provides 
 **Supply** represents the available capacity of resources in your organization - the total FTE (Full-Time Equivalent) or hours that resources can work based on their employment contracts, calendars, and availability.
 
 **Demand** represents the actual resource requirements from project allocations - how much capacity is being consumed by tasks and projects that resources are assigned to.
+
+
 
 ### Why Do We Need These Grids?
 
@@ -60,9 +63,28 @@ The gap between supply and demand reveals critical resource management issues:
 
 ## The Five Summary Rows
 
-At the top of the grid, five critical rows provide aggregated metrics:
+At the top of the Resource Demand Grids, five critical rows provide aggregated metrics:
 
-### 1. Supply (FTE) Row - Blue Background
+![Supply vs. Demand Grid](../images/timebars/tb-resource-demand-grid2.png)
+
+### 1. Supply Target (FTE) (First Row)
+
+**What it shows**: Total available resource capacity across all Generic Resources
+
+**Data source**: 
+- Sourced from the `tbResources` store (resource pool)
+- Fields:??
+- Each Role has monthly FTE availability defined automatically calculated using tbResQuantity
+
+
+
+**Example**: ??
+
+**Timing considerations**: 
+
+- This allows forward planning for known hiring or departures
+
+### 2. Supply Pool (FTE) (Second Row)
 
 **What it shows**: Total available resource capacity across all resources in the pool
 
@@ -79,7 +101,11 @@ At the top of the grid, five critical rows provide aggregated metrics:
 - Resource finish dates (`tbResFinish`) are factored in - departing resources stop contributing
 - This allows forward planning for known hiring or departures
 
-### 2. Demand (FTE) Row - Green Background
+### 3. Variance (ST - SP) (Third Row)
+
+**What it shows**: ???
+
+### 4. Demand (FTE) Row - Green Background
 
 **What it shows**: Total resource requirements from all project allocations
 
@@ -96,7 +122,7 @@ At the top of the grid, five critical rows provide aggregated metrics:
 4. Monthly hours are summed for each resource
 5. Converted to FTE: `monthlyHours / (8 hours/day × 20 work days/month)`
 
-### 3. Variance (S-D) Row - Yellow Background
+### 5. Variance (S-D) Row - Yellow Background
 
 **What it shows**: The difference between Supply and Demand (Supply minus Demand)
 
@@ -109,7 +135,7 @@ At the top of the grid, five critical rows provide aggregated metrics:
 - Large negative variance (> 0.5 FTE): Serious capacity problem, need to hire or delay projects
 - Consistent positive variance: Opportunity to take on more work or reduce headcount
 
-### 4. Month Header Row - Gray Background
+### 6. Month Header Row - Gray Background
 
 **What it shows**: The calendar months for each column
 
@@ -120,7 +146,7 @@ At the top of the grid, five critical rows provide aggregated metrics:
 - Allows historical analysis by setting status date in the past
 - Enables future planning by projecting 24+ months forward
 
-### 5. Resource/Project/Role Header Row - White Background
+### 7. Resource/Project/Role Header Row - White Background
 
 **What it shows**: The first column header, which changes based on groupBy:
 - "Resource ID/Owner" when grouping by ResourceName

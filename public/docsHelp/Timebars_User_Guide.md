@@ -1,22 +1,32 @@
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
 # Timebars User Guide
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+
+> **This is the master user guide for Timebars.** It is complete for everything
+> Timebars does on its own, and is used **alongside the common guides**, which
+> cover what all three products share — the canvas and the user interface, the
+> data model and scheduling engine, configuration and picklists, spreadsheet sync
+> and data control, reports, risks and issues, cloud publishing and notifications.
+> Agilebars and Costbars each have their own master guide in the same way.
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [What Makes Timebars Different](#what-makes-timebars-different)
-- [Getting Started with Timebars](#getting-started-with-timebars)
-- [The Timebars Hierarchy](#the-timebars-hierarchy)
-- [The Scheduling Engine](#the-scheduling-engine)
-- [Resource Pool Setup](#resource-pool-setup)
-- [Resource Allocator](#resource-allocator)
-- [Resource Supply vs. Demand Analysis](#resource-supply-vs-demand-analysis)
-- [Creating Relationships and Constraints](#creating-relationships-and-constraints)
-- [Reporting](#reporting)
-- [Scheduling Tips](#scheduling-tips)
-- [References to Common Guides](#references-to-common-guides)
-- [Quick Reference](#quick-reference)
-- [Getting Help](#getting-help)
+1. [Introduction](#introduction)
+2. [What Makes Timebars Different](#what-makes-timebars-different)
+3. [Getting Started with Timebars](#getting-started-with-timebars)
+4. [⚡ Get Started Fast with Ask AI](#-get-started-fast-with-ask-ai)
+5. [The Timebars Hierarchy](#the-timebars-hierarchy)
+6. [The Scheduling Engine](#the-scheduling-engine)
+7. [Resource Pool Setup](#resource-pool-setup)
+8. [Resource Allocator](#resource-allocator)
+9. [Resource Supply vs. Demand Analysis](#resource-supply-vs-demand-analysis)
+10. [Creating Relationships and Constraints](#creating-relationships-and-constraints)
+11. [Reporting](#reporting)
+12. [Scheduling Tips](#scheduling-tips)
+13. [References to Common Guides](#references-to-common-guides)
+14. [Quick Reference](#quick-reference)
+15. [Getting Help](#getting-help)
 
 ---
 
@@ -102,6 +112,33 @@ Before creating resource-loaded schedules, familiarize yourself with:
    - Check resource utilization with Supply vs. Demand grids
    - Adjust schedules to balance resource capacity
    - Create relationships and constraints as needed
+
+---
+
+## ⚡ Get Started Fast with Ask AI
+
+Before building bars by hand, consider letting **Ask AI** create your project structure for you. It is the fastest way to go from an idea to a working, resource-loaded schedule.
+
+**You don't start from a blank page.** When your Timebars canvas is empty, the app automatically places a starter top-level bar near the top:
+
+> **L1 Get Started here using AI, click the L1 ID below**
+
+This is a ready-made **Portfolio (L1)** running from today for about six months. To begin:
+
+1. **Click the bar's ID** to open its status pop-up form.
+2. Click the **✨ sparkle icon** (the Ask AI button) on that form.
+3. **Describe your project** in plain English — paste a Business Case, or just type a name and description — and click **Create**.
+
+From there you work down the hierarchy, clicking the **✨** icon on each bar:
+
+- **Portfolio → Project (L2):** describe the project; optionally have AI fill the Project Charter and add a Resource Plan.
+- **Project → Work Packages (L3), Tasks (L4) and Milestones:** AI breaks the work down; tick **Assign people** to staff each Task with the best-fit person from your Resource Pool.
+- **Work Package → Tasks and Milestones:** with an option to assign people, plus a **Create Allocations** button to staff existing tasks.
+- **Task → People (Allocations, L5):** type the roles you need ("add a developer and a tester") and AI assigns matching people, checking they are not over-allocated.
+
+After AI finishes, **refresh the page (F5)** to see the new bars on your timeline.
+
+> 📚 For full step-by-step instructions, examples and tips, see **Common_06_How_To_Use_Ask_AI** ("How to Use Ask AI") in the Common Help Topics.
 
 ---
 
@@ -852,7 +889,7 @@ The Reports menu launches editable HTML reports that you can:
 | **Resource Usage** | Resource Allocation Supply and Demand Grids and Charts – comprehensive capacity analysis |
 | **Shared Resource Pool** | All Resources in the tbResources Store – complete list with metadata |
 
-For detailed local reporting, see **[Common Local Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-local-reports-and-graphs-guide)**.
+For detailed local reporting, see **[Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide)**.
 
 For cloud reporting, see **[Common Enterprise Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-enterprise-dashboard-guide)**.
 
@@ -879,8 +916,8 @@ Timebars shares many features with Agilebars and Costbars. For guidance on these
 ### **Core Functionality**
 
 - **[Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide)** – Canvas navigation, filters, hierarchy display, bar creator, editing bars, baseline management, view controls
-- **[Common Data Structure User Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-structure-user-guide)** – How data is organized, IndexedDB details, data hierarchy, backup/restore procedures
-- **[Common Spreadsheet Sync User Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-spreadsheet-sync-user-guide)** – 6-step sync cycle, CSV file export/import, template configuration, bidirectional data exchange
+- **[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)** – How data is organized, IndexedDB details, data hierarchy, backup/restore procedures
+- **[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)** – 6-step sync cycle, CSV file export/import, template configuration, bidirectional data exchange
 
 ### **Project Management Features**
 
@@ -888,7 +925,7 @@ Timebars shares many features with Agilebars and Costbars. For guidance on these
 
 ### **Reporting and Publishing**
 
-- **[Common Local Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-local-reports-and-graphs-guide)** – General Reports, Portfolio Reports, Project Reports, Task Reports, Resource Reports
+- **[Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide)** – General Reports, Portfolio Reports, Project Reports, Task Reports, Resource Reports
 - **[Common Cloud Reports and Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide)** – Executive Portfolio Reports, Card-Based Drilldown, Interactive dashboards with 7-dimension health tracking
 - **[Common Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide)** – Publishing to Timebars Cloud, PubSets, Re-Publish, Re-Hydrate, cross-device sync
 

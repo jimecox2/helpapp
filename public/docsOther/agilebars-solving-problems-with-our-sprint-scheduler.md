@@ -1,172 +1,147 @@
-# Agilebars - Solving Problems with our Sprint Scheduler
+# When the Sprint Report and the Project Schedule Disagree
 
+The sprint team publishes a burndown and a board full of moved cards. The
+project manager maintains a schedule with dates, durations, hours, costs and a
+milestone the business is holding them to.
 
-Agilebars is a browser-based Agile sprint management tool built on the same codebase as Timebars and Costbars. It combines a Kanban board with a time-phased scheduling canvas, spreadsheet sync for data entry, and automatic burndown chart generation.
+Both describe the same work. They rarely agree, and when they don't, the steering
+pack has to pick one — usually whichever the person assembling it trusts more.
 
----
+That is not a reporting failure. It is four gaps between the two, and each one is
+fixable.
 
-## Product Overview
+## Gap one: different units
 
-Agilebars Sprint Scheduler is the perfect companion to Timebars Resource Scheduler, extending its capabilities to manage projects using Agile sprints rather than traditional waterfall methods. It introduces a specialized scheduling engine and features like Kanban boards and burndown charts to track sprint progress. Whether you're transitioning a project from Timebars or starting fresh, Agilebars streamlines Agile workflows, enhances visibility, and eliminates common pain points for sprint teams.
+The team reports in story points and velocity. The schedule needs hours, dates
+and cost, because that is what a business case, a resource plan and a forecast
+are made of.
 
-### Target Audience
-- Product Managers
-- Product Development Teams
-- Organizations adopting Agile practices
-- Teams transitioning from Waterfall to Agile
+Nothing converts one into the other reliably, so the project manager re-estimates
+in their own units. From that moment there are two forecasts, maintained by two
+people, drifting apart at whatever rate the sprint changes.
 
----
+## Gap two: different cadence
 
-## Core Value Proposition
+A board is a picture of **now**. A project schedule is measured against a
+**report date** — the date the status was taken — which is what makes a status
+pack reproducible a month later.
 
-Use Agilebars for free, no registration required. Full product functionality with data limitations for trial. Purchase a license when you need larger quantities of backlogs and work items.
+Ask a board "where were we on 31 March" and it cannot answer. It only knows where
+the cards are today. So the historical position gets reconstructed from memory,
+or from whatever the last pack happened to say.
 
-### Why Agilebars?
-1. **Innovative Management Tools** — Gain insights into your organization's work with purpose-built agile and legacy management capabilities.
-2. **Productivity Boost** — Unique drag-and-drop interfaces and spreadsheet sync feature reduce administrative overhead.
-3. **Seamless Data Transfer** — Pre-populated spreadsheet templates synchronize perfectly with Excel and Open Office Calc for secure, clean data movement in and out of browser pages.
-4. **Visual Decision Making** — Graphical interface to visualize product backlogs, sprint data, and management information with drag-and-drop control.
-5. **Cloud Analytics** — Optional Pubset feature provides a Dashboard with pre-built graphs, line charts, pie charts, bubble charts, and tabular reports for management report sharing.
+## Gap three: different systems
 
----
+The team's tool and the PM's schedule are separate databases. Progress crosses
+that boundary by somebody typing it in, weekly, under time pressure.
 
-## Features
+Every re-entry is a chance for the two to diverge, and the person doing it is the
+single point of failure for portfolio reporting.
 
-### Scheduling & Planning
-- **Flexible Scheduling Engine** — Proprietary engine tailored for Agile sprints with configurable rules for dynamic reporting and progress tracking
-- **Dual-Mode Visualization** — Single-click switch between Kanban mode and Timebars time-phased canvas; no import/export required
-- **Kanban Board** — Lanes include Will Do, Doing, Finalizing, and Done; drag-and-drop updates progress automatically
-- **Scrum Board** — Full Scrum board functionality with one-click mode switching
-- **Giant Screen Support** — Use Kanban mode on large displays for team sprint planning and tracking
+## Gap four: percentages are opinions
 
-### Data Management
-- **Spreadsheet Synchronization** — Pre-populated templates (Excel and Open Office Calc compatible) for fast bulk data entry
-- **Drag-and-Drop Import** — Drop spreadsheet onto canvas to import data instantly
-- **No Web Forms** — Eliminates bulky form-based data entry
-- **Daily/Weekly Status Updates** — Quick updates synced with sprint progress
+Somebody is asked what percent complete their task is. They say seventy. Seventy
+against what? Against their own mental model, which differs from their
+colleague's and was optimistic the last four times.
 
-### Progress Tracking
-- **Burndown Charts** — One-click generation, automatically updated based on Kanban lane changes or timescale adjustments
-- **Earned Value-Based Calculation** — Progress is calculated, not manually set; size work items first, then progress is earned as items move through lanes
-- **Definition of Done Rules** — Built-in rules triggered by drag-and-drop (e.g., moving to "Done" = 100% complete)
-- **Baseline Management** — Unlimited one-click baselines; compare current forecast to original plan instantly
-
-### Reporting & Analytics
-- **Built-in Reports** — Super-fast reports generated from browser data
-- **Cloud Dashboard** — Optional Pubset feature with customizable graphs, pie charts, bubble charts, and tabular views
-- **Visual Sprint Representations** — Interactive graphical interface for time management and sprint control
-- **Management Report Sharing** — Publish and share insights via cloud
-
-### Integration & Security
-- **Seamless Timebars Integration** — Transfer projects from Timebars with a single click
-- **Single License** — Works across Agilebars, Timebars, and Costbars
-- **No Installation Required** — Access instantly via URL
-- **Browser-Based Storage** — Data stays local; no cloud storage risks
-- **TLS Encryption** — End-to-end encryption for all data transfers
-- **Risk and Issue Management** — Track risks and issues directly on Kanban or Scrum boards
+The number is not dishonest. It is simply not comparable to any other number in
+the sprint, so summing them produces something that looks like data.
 
 ---
 
-## Benefits
+## How the suite closes all four
 
-### Time Savings
-- Eliminate IT approval delays with instant browser access
-- Fast bulk data entry via spreadsheet sync replaces slow web forms
-- Automated progress tracking removes manual update burden
-- One-click baseline creation and comparison
-- Simple status questions ("Is it done?") replace chasing durations and actuals
+### The sprint task is the schedule task
 
-### Productivity Gains
-- Drag-and-drop interface streamlines sprint planning and updates
-- More bars visible on time-phased canvas vs. traditional Gantt charts (one row per bar)
-- Switch modes on the fly without data conversion
-- Customizable workflows adapt to unique business practices
+Agilebars shows the **Project and its Tasks** — L2 and L4 of the same hierarchy
+the project schedule uses. It is not an integration or a nightly sync. The card
+the team drags and the task the PM schedules are one record.
 
-### Visibility & Decision Making
-- Real-time sprint progress via Kanban boards and burndown charts
-- Visual backlog management enables better prioritization
-- Dashboard visualizations turn raw data into actionable information
-- Walk into meetings with confidence using clear progress displays
+That removes gap three outright. There is no boundary, so there is nothing to
+re-enter and nothing to reconcile.
 
-### Cost & Risk Reduction
-- Free trial without registration
-- Cost-effective alternative to expensive legacy tools
-- Data security—sensitive information never leaves your browser
-- Reduced administrative overhead frees team for execution
+### Progress is earned, not stated
 
-### Team Collaboration
-- Giant screen Kanban replaces messy whiteboards
-- Easy report sharing across organization
-- No nagging developers for durations—ask simple yes/no questions
+Nobody types a percentage. Each lane transition earns a fixed amount:
 
----
+| Lane | The question at standup | Earns | Records |
+|---|---|---|---|
+| Backlog | — | — | — |
+| Will Do | Committed to this sprint? | 0% | — |
+| Doing | Has it started? | 25% | actual start |
+| Finalizing | Is the build done and in review? | 75% | — |
+| Done | Is it accepted? | 100% | actual finish |
 
-## Problems Solved
+Three yes-or-no questions, and every task in the sprint is measured the same way.
+Move a card back because a defect appeared and the progress reverses correctly.
 
-| Problem | Solution |
-|---------|----------|
-| **Delays in Tool Adoption** — Waiting for IT approval slows sprint planning | No installation required; access via URL, use free or purchase with credit card |
-| **Data Security Concerns** — Cloud storage risks exposing proprietary information | Data stays in your browser; nothing leaves without explicit publish action |
-| **Slow Data Entry** — Bulky web forms waste time | Spreadsheet-based bulk import with sync templates |
-| **Limited Sprint Visibility** — No real-time progress tracking | Kanban boards and burndown charts provide instant status |
-| **Slow Reporting** — Traditional enterprise reports are sluggish | Super-fast built-in reports plus optional cloud dashboard |
-| **Dashboard Creation Overhead** — Building and sharing dashboards takes too long | Intuitive interface with cloud publishing via Pubset |
-| **Waterfall to Agile Transition** — Moving projects between methodologies is cumbersome | Single-click transfer from Timebars to Agilebars |
-| **Baseline Tracking Difficulties** — Storing and comparing baselines eats personal time | Embedded baseline management with one-click snapshots |
-| **Expensive Legacy Tools** — Microsoft and other tools are costly and clunky | Cost-effective, modern, Agile-focused alternative |
-| **Sprint Planning Overload** — Manual planning consumes too much time | Fast bulk entry and intuitive task-linking interface |
+Because that percentage lands on the shared task, it is the same percentage the
+schedule rolls up to the project and the portfolio. The team does not report
+progress to the PM. The PM is reading the team's board.
 
----
+That closes gap four, and it closes gap one for everything except sizing — see
+the honest limits below.
 
-## Technical Details
+### One report date for both
 
-### Earned Value Model
-The scheduling engine is modeled after Earned Value concepts:
-- Users must size work items upfront
-- Progress is "earned" automatically as tasks move through lanes
-- Moving an item to "Done" sets it to 100% complete
-- Time-phased data feeds burndown charts and reports automatically
+This is the part most people miss, and it is what closes gap two.
 
-### Mode Switching
-Single-click switch between Kanban and Timebars timescale canvas:
-- No import/export required
-- Data transforms instantly
-- Continuity maintained across views
+**Set the Report Date before you move cards.** The actual start and actual finish
+stamped by a lane transition use that date, not today's — so if you take
+Thursday's standup on Friday morning, Thursday is what gets recorded.
 
-### Spreadsheet Integration
-- Pre-populated templates for Excel and Open Office Calc
-- Drag-and-drop onto canvas to import
-- Bulk operations for efficient sprint setup
-- Metadata coding for flexible project views
+It is also the date the project schedule calculates against. Work ahead of it is
+forecast, work straddling it is actuals plus remaining, work behind it is
+complete. One date drives both engines.
 
----
+The consequence is the one that matters at a steering meeting: ask "where were we
+on 31 March" and the board and the schedule give the same answer, because they
+were both measured against 31 March.
 
-## Getting Started
+### The pack assembles itself
 
-### Pricing
-Monthly subscriptions for single-person licenses. Purchase 1-12 months in one credit card transaction. Technical support included.
+Task progress rolls up to the project and the portfolio automatically. Costs and
+hours roll up from the allocations on the schedule side. Publish a snapshot and
+the dashboards read it.
 
+Nobody spends Friday afternoon building the number, which means nobody can build
+it differently from last week.
 
-### Registration & Purchase
-1. Register at [timebars.com/auth/new-user](https://www.timebars.com/auth/new-user) with email and password
-2. Check email for verification link
-3. After verification, go to [Pricing Breakdown](https://www.timebars.com/sales/pricing)
-4. Purchase subscription license
-5. Log in with email/password—license downloads automatically and data limitations are removed
+## The one habit this requires
 
-### Free Trial
-Full product functionality available without registration. Data limitations apply. Try for as long as you like before purchasing.
+Set the Report Date on every day you move bars into Doing, Finalizing or Done,
+and set it to the date the progress actually happened rather than the date you
+are entering it.
 
----
+That is the whole discipline. Skip it and the actual dates drift to whenever the
+PM did the admin, which reintroduces gap two by the back door.
 
-## Product Ecosystem
+## What this does not fix
 
-Agilebars is part of the Timebars product suite:
+**Sizing is still yours.** The engine earns progress against the size you gave a
+task. If the estimates are poor, the burndown is confidently wrong. Size each
+item with the person who will do it, and keep the units consistent across the
+sprint — all hours or all points, not a mix.
 
-| Product | Purpose |
-|---------|---------|
-| **Agilebars** | Agile Sprint and Extreme Programming methodologies |
-| **Timebars** | Resource Scheduling and Traditional (Waterfall) Project Management |
-| **Costbars** | Project Pipeline Demand management, selection/kill processes, and analytics |
+**Points do not become hours by themselves.** If the business case is in money and
+the team plans in points, somebody still has to hold the conversion. What the
+suite guarantees is that both sides are describing the same tasks at the same
+dates, not that they are denominated in the same currency.
 
-All three products share the same codebase, look and feel, and work with a single license. Transfer projects between tools as your methodology requires.
+**Resource detail lives on the schedule side.** Agilebars has no allocation level,
+so who is assigned and at what rate sits at L5 in Timebars. Task progress is
+shared; resource cost is not something a sprint board carries.
+
+**Cross-team dependencies still need modelling.** A board will happily show a team
+delivering on time into an environment that is not ready. Those belong on the
+schedule as predecessors, where they are visible.
+
+## Related
+
+If the disagreement is about **capacity** rather than progress — agile teams and
+scheduled programmes competing for the same people — see
+[agile and waterfall against one resource pool](/learn/blog-agile-and-resource-management-is-there-an-conflict).
+For how the record survives the whole journey from approval to delivery, see
+[the data you lose between approval and delivery](/learn/from-business-case-to-sprint).
+For what Agilebars does in full, see
+[the product page](/learn/agilebars-what-it-does).

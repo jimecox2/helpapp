@@ -1,28 +1,29 @@
-# Risks, Issues & Change Requests User Guide - Common Across Products
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+---
+
+# Risks, Issues & Change Requests User Guide
 
 This guide explains how to track and manage Risks, Issues, and Change Requests (RIC) in Agilebars, Timebars, and Costbars applications. The RIC system helps you identify potential problems, log current issues, and manage proposed changes—all directly on your project timeline.
 
 ## Table of Contents
 
-- [Overview: What is the RIC System?](#overview-what-is-the-ric-system)
-- [Quick Start: Creating Your First RIC Item](#quick-start-creating-your-first-ric-item)
-- [Visual Indicators on the Canvas](#visual-indicators-on-the-canvas)
-- [Accessing the RIC Management Page](#accessing-the-ric-management-page)
-- [Card View: Visual Management](#card-view-visual-management)
-- [Tabular View: Data Analysis](#tabular-view-data-analysis)
-- [Search and Filter](#search-and-filter)
-- [Editing with FOCD Forms](#editing-with-focd-forms)
-- [Managing Risks](#managing-risks)
-- [Managing Issues](#managing-issues)
-- [Managing Change Requests](#managing-change-requests)
-- [Customizing Forms](#customizing-forms)
-- [Customizing Picklists](#customizing-picklists)
-- [Tips and Best Practices](#tips-and-best-practices)
-- [Troubleshooting](#troubleshooting)
-- [Data Storage](#data-storage)
-- [Related Help Topics](#related-help-topics)
-- [Summary](#summary)
+1. [Overview: What is the RIC System?](#overview-what-is-the-ric-system)
+2. [Quick Start: Creating Your First RIC Item](#quick-start-creating-your-first-ric-item)
+3. [Visual Indicators on the Canvas](#visual-indicators-on-the-canvas)
+4. [Accessing the RIC Management Page](#accessing-the-ric-management-page)
+5. [Card View: Visual Management](#card-view-visual-management)
+6. [Tabular View: Data Analysis](#tabular-view-data-analysis)
+7. [Search and Filter](#search-and-filter)
+8. [Editing with FOCD Forms](#editing-with-focd-forms)
+9. [Managing Risks](#managing-risks)
+10. [Managing Issues](#managing-issues)
+11. [Managing Change Requests](#managing-change-requests)
+12. [Customizing Forms and Picklists](#customizing-forms-and-picklists)
+13. [Tips and Best Practices](#tips-and-best-practices)
+14. [Troubleshooting](#troubleshooting)
+15. [Data Storage](#data-storage)
+16. [Related Help Topics](#related-help-topics)
+17. [Summary](#summary)
 
 ---
 
@@ -187,7 +188,7 @@ You can edit text fields directly in the cards:
 2. Click on any text field
 3. Edit the content
 4. Click outside the field to save automatically
-5. Rich text editors (Quill) available for Risk strategy/plan fields
+5. Rich text editors available for Risk strategy/plan fields
 
 **Note:** Some fields require opening the full FOCD form to edit.
 
@@ -262,7 +263,7 @@ Both Card View and Tabular View include powerful search and filter tools at the 
 
 Click **"Recalculate All"** to:
 - Refresh all calculated fields
-- Update Risk Scores based on current Probability/Impact
+- Recalculate every Risk Score from its current Probability and Impact (use this after any change to those picklists, and to clear scores left over from the old 0-100 scale)
 - Ensure data consistency across views
 - Rebuild system-generated data
 
@@ -290,14 +291,14 @@ FOCD (Field-Oriented Control Design) forms provide detailed editing of all RIC m
 - No "Save" button needed for most edits
 
 **Rich Text Editors (Risks Only):**
-Three fields use Quill rich text editors:
+Three fields use rich text editors:
 - **Risk Response Strategy**: Formatted text with bold, italic, lists
 - **Mitigation Plan**: Detailed action plans with formatting
 - **Contingency Plan**: Backup plans with formatting
 
 **Risk Score Calculator:**
 - When you change **Probability** or **Impact**, the **Score** field updates automatically
-- Formula: Score = Probability × Impact
+- Formula: Score = Probability (1-5) x Impact (1-5) = 1 to 25, higher is worse
 
 **Field Types:**
 - **Text Inputs**: Standard single-line text
@@ -334,43 +335,99 @@ Risks are potential problems that might occur in the future. Effective risk mana
 When managing a Risk, you'll work with these key fields:
 
 #### 1. **Probability** (Likelihood)
-How likely is this risk to occur?
+How likely is this risk to occur? Each value carries a weight of 1 to 5, used to
+calculate the Score:
 
-**Default Values:**
-- Very Unlikely
-- Unlikely
-- Likely
-- Very Likely
-- Certain
-- Not Assessed
+| Value | Weight |
+|---|---|
+| Very Unlikely | 1 |
+| Unlikely | 2 |
+| Likely | 3 |
+| Very Likely | 4 |
+| Certain | 5 |
+| Not Assessed | *no weight — the risk scores 0* |
 
-**Tip:** Your organization may customize these values to match your methodology.
+> **Do not rename these five values.** The weights are held in the application
+> code and matched by exact text, so a renamed value stops scoring altogether and
+> the risk silently reads Not Assessed. You may add values, but only these five
+> produce a score. See *Customizing picklists* below.
 
 ---
 
 #### 2. **Impact** (Severity)
-How severe would the consequences be if this risk occurs?
+How severe would the consequences be if this risk occurs? Consider schedule,
+budget, scope and quality. Each value carries a weight of 1 to 5:
 
-**Default Values:**
-- Very Low
-- Low
-- Medium
-- High
-- Very High
-- Not Assessed
+| Value | Weight |
+|---|---|
+| Very Low | 1 |
+| Low | 2 |
+| Medium | 3 |
+| High | 4 |
+| Very High | 5 |
+| Not Assessed | *no weight — the risk scores 0* |
 
-**Tip:** Consider impact to schedule, budget, scope, and quality.
+> The same warning applies: these five values are matched by exact text and must
+> not be renamed.
 
 ---
 
 #### 3. **Score** (Auto-Calculated)
-**Formula:** Score = Probability × Impact
 
-The system automatically calculates the Risk Score when you set Probability and Impact. This score helps prioritize which risks need the most attention.
+The Score follows the standard **5x5 probability-impact matrix** used by PMBOK,
+ISO 31000, PRINCE2 and M_o_R:
 
-**Color Coding:**
-- Scores display with color coding (e.g., green for low, red for high)
-- Your organization defines the color thresholds
+> **Score = Probability (1-5) x Impact (1-5) → 1 to 25, where higher is worse.**
+
+It is calculated for you the moment you set both axes, on every surface — the
+risk form, the cards, the tabular view and the inline grid.
+
+**Set only one axis and the score stays 0.** So does setting either to
+*Not Assessed*. A score of 0 means *not assessed*, and is deliberately outside
+the valid 1-25 range so it can never be mistaken for a real, low assessment.
+
+**The four bands:**
+
+| Band | Score | Reading |
+|---|---|---|
+| **Low** | 1-4 | green |
+| **Moderate** | 5-9 | amber |
+| **High** | 10-14 | orange |
+| **Extreme** | 15-25 | red |
+| *Not Assessed* | 0 | grey |
+
+The score displays as the number and its band together — `12 - High` — so the
+reading never depends on remembering where the boundaries fall.
+
+**Worked examples:**
+
+| Probability | Impact | Score | Band |
+|---|---|---|---|
+| Certain | Very High | 25 | Extreme |
+| Likely | High | 12 | High |
+| Unlikely | Medium | 6 | Moderate |
+| Very Unlikely | Very Low | 1 | Low |
+| Likely | *(not set)* | 0 | Not Assessed |
+
+##### The risk matrix panel
+
+The risk form carries a **5x5 heat map** showing all 25 combinations, with your
+assessed cell ringed. Probability runs down the rows worst-first and Impact
+across the columns, so it reads like any published risk heat map. Hovering a cell
+tells you its combination, score and band, and a legend underneath shows the four
+band ranges.
+
+**The panel is draggable** — move it aside if it covers a field you are working
+on.
+
+> **A note if you have used earlier versions.** The score used to run the other
+> way: it was normalised to 0-100 and inverted, so 100 meant *safest*. Most of
+> the product read it as higher-is-worse, which meant the safest risk on a card
+> rendered in the loudest red and the most dangerous one in plain small text.
+> The scale, the colours and the matrix now all run the same direction. **Scores
+> recorded under the old scale are meaningless on the new one** — reassess, or
+> run **Recalculate All**, which recalculates every score from its Probability
+> and Impact.
 
 ---
 
@@ -658,111 +715,82 @@ CRs have extensive fields to justify and analyze the proposed change:
 
 ---
 
-## Customizing Forms
+## Customizing Forms and Picklists
 
-You can customize the Risk Edit Form and Issue Edit Form to match your organization's methodology.
+The Risk and Issue forms, and every picklist behind them, are configured the same
+way as everything else in the product. The **Forms, Reports and Graphs Guide** is the
+full reference; this section covers only what is specific to Risks, Issues and CRs.
 
-### Show/Hide Fields
+> Earlier versions of this guide routed you through *Reports > Data Management
+> Grids*. **That screen no longer exists.** Configuration now lives on five
+> reports under **Report Menu > Other**.
 
-Not all fields are relevant to every organization:
+### Show, hide, move and add fields
 
-**To Hide a Field:**
-1. Navigate to **Reports > Data Management Grids**
-2. Click **Fields** tab
-3. Find the field (search by name, e.g., "Contingency Plan")
-4. Click **Edit** (pencil icon)
-5. Change **dfShowYN** to "No"
-6. Click Save
+**Report Menu > Other > Fields Values.** Filter the **Form** column to `dfRisk` or
+`dfIssue` and you have every field on that form, one per row.
 
-**To Show a Field:**
-- Follow same steps but set **dfShowYN** to "Yes"
+| To do this | Do this |
+|---|---|
+| Hide a field | open it on the form and set **Show** to `No` |
+| Show it again | set **Show** back to `Yes` |
+| Reposition or resize | edit **Top**, **Left** and **Width** directly in the grid |
+| Add a field | filter to the form first, click **Add**, then pick the field name |
+| Remove a field | delete its row |
 
-### Move and Resize Fields
+The layout columns are the only cells in that report you edit in the grid rather
+than on the form — because laying out a form means comparing one field's numbers
+against its neighbours'.
 
-Arrange fields to match your workflow:
+**Or move fields by hand.** Open a Risk or Issue form, click the
+**Move/Resize Fields** button, drag the fields where you want them, and click
+**Stop** to save. Easier than typing coordinates for small adjustments.
 
-1. Open any FOCD form (Risk or Issue)
-2. Click **"Move/Resize Fields"** button
-3. **To Move**: Click and drag field to new position
-4. **To Resize**: Click field edge and drag to resize width
-5. Click **"Stop"** button to save layout
-6. Layout saves permanently for your user/organization
+### Which picklists drive Risks, Issues and CRs
 
-**Tip:** Arrange most important fields at the top for quick access.
+**Report Menu > Other > Picklist Values.** Filter to the picklist, open a value,
+edit it.
 
-### Add Custom Fields
+| Picklist | Field | Notes |
+|---|---|---|
+| **Risk Probability** | `tbMDProbability` | **Do not rename the five scoring values** — see below |
+| **Risk Impact** | `tbMDImpact` | **Do not rename the five scoring values** |
+| **Risk Category** | `tbMDCategory` | free to customise; add your own |
+| **Issue Category** | `tbMDCategory` | free to customise |
+| **CR Category** | `tbMDCategory` | free to customise |
+| **Mitigation Status** | `tbMDMitigationStatus` | free to customise, with one exception: **`Escalated`** is read by the health rules |
+| **Escalation Level** | `tbMDEscalationLevel` | **`Executives`, `Directors`, `Project Office`** are read by the health rules |
+| **Timebar Status** | `tbMDStatus` | **`Closed`** and **`Rejected`** are what make an item stop counting |
+| **Approval State** | `tbMDState` | the workflow states |
+| **Timebar Priority** | `tbMDPriority` | free to customise |
+| **RandIStage**, **RandIState**, **RandIStatus** | R&I workflow | free to customise |
 
-Advanced users can add new fields:
+> **Values in bold are locked.** They carry a padlock in Picklist Values and
+> cannot be renamed there, because the application compares against that exact
+> text. You may always **add** your own values to any of these lists.
 
-1. Navigate to **Reports > Data Management Grids > Fields**
-2. Click **Add New** (or import via spreadsheet)
-3. Set these properties:
-   - **dfName**: Field database name (e.g., "tbMDCustomField")
-   - **dfFormName**: "dfRisk" or "dfIssue"
-   - **dfType**: NoPicklist, WithPicklist, TextArea, Editor, Band
-   - **dfShowYN**: "Yes"
-   - **dfCoordLeft**: X position (pixels)
-   - **dfCoordTop**: Y position (pixels)
-   - **dfWidth**: Width (pixels)
-4. Save
-5. Field appears in form
+### Why the locked values matter here specifically
 
----
+Risks, Issues and Change Requests do not just describe themselves — they drive
+their parent project's **Scope, Risk and Issue health indicators**. Those rules
+read your items by exact value:
 
-## Customizing Picklists
+- An item stops counting toward health once its Status is **`Closed`** or
+  **`Rejected`**.
+- An open item escalated to **`Executives`** or **`Directors`**, or a risk whose
+  Mitigation Status is **`Escalated`**, turns the parent's indicator **Red**.
+- An open item escalated to **`Project Office`**, or three or more open items,
+  turns it **Yellow**.
 
-Tailor dropdown values to match your organization's terminology.
+Rename one of those values and the health rules stop seeing your escalations —
+without any error. The *Forms, Reports and Graphs Guide* covers the full rule set.
 
-### How to Edit Picklist Values
+### People fields come from the Resource Pool
 
-1. Navigate to **Reports > Data Management Grids**
-2. Click **Tags** tab
-3. Search for the picklist name (e.g., "Probability")
-4. Click **Edit** (pencil icon) on each value
-5. Change the **Short Name** (display text)
-6. Save
-
-### Risk-Related Picklists
-
-**Probability:**
-- Default: Very Unlikely, Unlikely, Likely, Very Likely, Certain, Not Assessed
-- Customize to your scale: (e.g., 0-20%, 21-40%, 41-60%, 61-80%, 81-100%)
-
-**Impact:**
-- Default: Very Low, Low, Medium, High, Very High, Not Assessed
-- Customize to your scale or dollar ranges
-
-**Category (Risks):**
-- Default: Strategic, Financial, Operational, Technical, Organizational
-- Add custom categories (e.g., Regulatory, Environmental)
-
-**Mitigation Status:**
-- Default: Identified, Assessed, Mitigation Planned, In Progress, Mitigated, Under Review, Accepted, Transferred, Escalated, Closed, Deferred
-- Customize to your process stages
-
-### Issue-Related Picklists
-
-**Category (Issues):**
-- Default: Product, Financial, Operational, Technical, Schedule
-- Add custom categories for your domain
-
-### Common Picklists (All Types)
-
-**Escalation Level:**
-- Default: Executives, Directors, Project Office, Not Assessed
-- Customize to your org structure
-
-**Status:**
-- Default: New, In progress, Closed, On Hold, Rejected
-- Add custom: Concerned, Critical (for visual indicators)
-
-**State (Workflow):**
-- Default: Spawned, Awaiting Input, Requested Approval, Awaiting Approval, Approved, Awaiting Review
-- Customize to your approval workflow
-
-**Priority:**
-- Default: Immediate, High, Normal, Low, Not Assessed
-- Customize importance levels
+**Contact / Requestor**, and the other person-named fields on these forms, no
+longer read a picklist of typed names. They read the **live Resource Pool** — the
+`Human` rows in Resources. To change who can be picked, maintain the resource
+pool, not the Tags table.
 
 ---
 
@@ -833,26 +861,34 @@ Tailor dropdown values to match your organization's terminology.
 
 ### Risk Score Not Calculating
 
-**Problem:** Score field shows 0 or doesn't update
+**Cause:** One axis is missing, or a value has been renamed.
 
 **Solution:**
-1. Ensure you're using the **FOCD form** (not inline editing)
-2. Set both **Probability** AND **Impact** fields
-3. Values must be numeric (e.g., 1-5 scale)
-4. Click "Recalculate All" on RIC page
+1. Set **both** Probability **and** Impact — one alone always scores 0.
+2. Check neither is set to **Not Assessed**, which also scores 0.
+3. If both are set and the score is still 0, the picklist value has been renamed.
+   The five scoring values in each list are matched by exact text: `Very Unlikely`,
+   `Unlikely`, `Likely`, `Very Likely`, `Certain` and `Very Low`, `Low`, `Medium`,
+   `High`, `Very High`. Restore the original spelling in **Picklist Values**.
+4. Run **Recalculate All** to recalculate every score in the database.
 
----
+**Cause:** The score looks wrong rather than absent — a trivial risk showing red,
+or a severe one showing green.
+
+**Solution:** The row is holding a score from the old 0-100 scale, where 100 meant
+safest. Run **Recalculate All**; every score is recalculated from its Probability
+and Impact on the current 1-25 scale.
 
 ### Fields Missing in Form
 
 **Problem:** Expected fields don't appear in Risk or Issue form
 
 **Solution:**
-1. Go to **Reports > Data Management Grids > Fields**
-2. Search for field name
-3. Check **dfShowYN** = "Yes"
-4. Verify **dfFormName** = "dfRisk" or "dfIssue"
-5. Refresh application after changes
+1. Go to **Report Menu > Other > Fields Values**
+2. Filter **Form** to `dfRisk` or `dfIssue` and find the field
+3. Open it on the form and check **Show** is `Yes`
+4. If the field has no row on that form at all, **Add** one and pick the field name
+5. Refresh the application after changes
 
 ---
 
@@ -926,9 +962,9 @@ RIC items can be exported/imported via spreadsheet:
 ## Related Help Topics
 
 - [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Creating and editing bars
-- [Data Structure Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-structure-user-guide) - Understanding data stores
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-local-reports-and-graphs-guide) - Risk and Issue reports
-- [FOCD Forms Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-focd-forms-user-guide) - Form customization
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data stores, backup, import and export
+- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - Risk and Issue reports
+- [Configurable Data Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - Forms, picklists and the status/health rules
 
 ---
 
@@ -941,9 +977,9 @@ RIC items can be exported/imported via spreadsheet:
 3. **Visual Indicators**: R, I, CR prefixes appear automatically; turn red for Concerned/Critical status
 4. **Two Views**: Card View (visual) and Tabular View (analytical)
 5. **Powerful Search**: Free-text search plus multiple picklist filters
-6. **FOCD Forms**: Detailed editing with auto-save and rich text editors
-7. **Risk Management**: Assess Probability/Impact, calculate Score, plan Mitigation
-8. **Customizable**: Show/hide fields, move/resize layout, customize picklists
+6. **FOCD Forms**: Detailed editing with auto-save, rich text editors and the risk matrix panel
+7. **Risk Management**: Assess Probability and Impact; the Score is the 5x5 matrix product, 1-25, higher is worse
+8. **Customizable**: Show/hide fields, move/resize layout, customise picklists - all from Report Menu > Other
 9. **Track Workflows**: Use Status and State fields to track approval and resolution
 10. **Regular Reviews**: Update items frequently; use visual indicators for urgency
 

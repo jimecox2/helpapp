@@ -1,5 +1,5 @@
 # Timebars-Specific Functionality
-![Timebars Logo](https://cdn.timebars.com/common/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/common/logos/timebars-ltd-logo-final.png)
 Timebars is the resource scheduling and traditional project management application in the Timebars Ltd. suite. While it shares a common platform with Agilebars and Costbars — including the canvas, spreadsheet sync, cloud publishing, and data management features covered in [Common Functionality Across All Products](https://www.timebars.com/articles/common-functionality-across-all-products)
 
 

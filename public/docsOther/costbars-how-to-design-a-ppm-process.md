@@ -43,7 +43,7 @@ After establishing your governance structure, you can follow the Costbars PPM pr
 ### Steps to run through the Costbars PPM Process
 When ready to begin using the PPM process in Costbars, see the [Product Help Section](https://www.timebars.com/costbars).
 
-![PPM Process](https://cdn.timebars.com/costbars/costbars-process-diagram.png)
+![PPM Process](/images/costbars/costbars-process-diagram.png)
 
 1. **Prioritize Projects (SV Score)**: Calculate Strategic Priority based on your Strategic Alignment Values and Order of Importance. SV Score ranges from 0-100, where 100 indicates perfect alignment with operational strategy.  
 

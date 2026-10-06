@@ -1,111 +1,132 @@
 
 # Timebars Ltd. Help Files
 
+Every file in /docsHelp is current. Superseded documents were deleted, not archived —
+their content lives inside the guide that absorbed it, and the full history is in git.
+
 ## Complete Reference Guides
 
 - Agilebars Complete Reference Guide
 - Timebars Complete Reference Guide
-- Costbars Complete Reference Guide V1
+- Costbars Complete Reference Guide
 
 ## Common Help Files
 
 - Getting Started
-- Innovations By Timebars Ltd
-- How To Use Ask AI
-- Product Design Strategy
 - User Interface Guide
-- Data Structure User Guide
-- Picklists And Tagging Help
-- Spreadsheet Sync User Guide
-- FOCD Forms User Guide
-- Supply And Demand Grids User Guide
-- Risks Issues Change Requests User Guide
-- Local Reports And Graphs Guide
+- Data Model and Scheduling Engine Guide
+- Data Synchronization, Backup, Recovery and Retention User Guide
+- Forms, Reports and Graphs Guide
+- Risks, Issues and Change Requests User Guide
+- How To Use Ask AI
 - Cloud Publishing Guide
 - Personal Dashboard Guide
 - Enterprise Dashboard Guide
-- Text Notifications
-- Products Installation For On Prem
+- Text Notifications User Guide
+- Supply And Demand Grids User Guide
+- Customer Ownership Installation Options
 
 ## Product Help Files
 
-- Agilebars Kanban Primer
+Each product has ONE master user guide. It is complete for that product on its own
+and is read alongside the Common Help Files. The former per-topic product documents
+- the Kanban Primer, and the four Costbars PPM documents - are now sections inside
+their master guide.
+
 - Agilebars User Guide
 - Timebars User Guide
-- Costbars PPM Portfolio Status And Balancing Report
-- Costbars PPM Project Assessment Tool
-- Costbars PPM Scoring Guide 5 Step Process
 - Costbars User Guide
-- Costbars Writing A Business Case
+
+---
+
+# WHAT CHANGED, AND WHERE IT WENT
+
+Documents that no longer exist, and the guide that absorbed each one. Use this when an
+older note or an older complete guide refers to something not in the list above.
+
+| Deleted document | Where its content is now |
+|---|---|
+| Innovations By Timebars Ltd | User Interface Guide — opening chapter, "Why These Products Work the Way They Do" |
+| Product Design Strategy | the same chapter — the design-goals table and the roadmap note |
+| timebars-data-schema (docsOther) | Data Model guide (field rules, mandatory fields, typing, coordinates, the Risk/Issue/CR convention); Sync guide (sheet layout, pre-import checks) |
+| Configurable Data User Guide | Forms, Reports and Graphs Guide — Part B, plus Appendix A. Its "Values the code depends on" and "Status and health automation" went to the Data Model guide |
+| MetaData Fields Detail Report | **Not replaced by a document.** Field definitions are live in the app: Report Menu → Other → Schema Values, which carries each field's purpose, picklist, type and sheet, and is searchable and filterable |
+| Spreadsheet Sync / Data Management / Data Structure | Data Synchronization, Backup, Recovery and Retention User Guide |
+| FOCD Forms / Picklists and Tagging / Configurable Items / Picklist Values Locked By Code | Forms, Reports and Graphs Guide — Part B |
+| Kanban Primer | Agilebars User Guide |
+| The four Costbars PPM documents | Costbars User Guide |
+| Data Migration Assistance | Getting Started — folded in as its data-migration chapter |
+
+Two guides were renamed. Older references to *Local Reports and Graphs Guide* mean
+**Forms, Reports and Graphs Guide**; references to *Synchronization and Data Control
+User Guide* mean **Data Synchronization, Backup, Recovery and Retention User Guide**.
+
+**Generated content:** Appendix A of the Forms, Reports and Graphs Guide (the A–Z
+picklist reference) is produced from live data by `tools/buildPicklistReference.py`.
+Run the generator rather than editing that appendix by hand.
+
+---
 
 # HOW TO MAKE THE COMPLETE GUIDES
 
-Do a pull of tbrunp, and look at /docsHelp folder and all the help files in there and help me write 3 new complete reference guides, as follows, to reflect proper help file content.
-Agilebars_Complete_Reference_Guide_28Apr2026.md
-Timebars_Complete_Reference_Guide_28Apr2026.md
-Costbars_Complete_Reference_Guide_28Apr2026.md
+Do a pull of tbrunp, look at the /docsHelp folder and all the help files in there, and
+write the three complete reference guides below from the content listed for each.
 
-The file docsHelp/a1 TOC, is the table of contents categorized as to how the help files are structured. The Product Help Files (unique help for the product), Common Help Files make up help information common across the 3 products.
+This file is the table of contents, categorised by how the help files are structured:
+Product Help Files are unique to one product; Common Help Files apply across all three.
 
-I laid out how to make each of these new files by listing below the content to be merged to generate the complete documents.
+Work one guide at a time so each can be approved before the next is started. Start with
+Agilebars.
 
-Please make a plan to complete all the work in this session so we can do one at a time, i can approve and then we can do the next two, start with Agilebars.
+NOT compiled into the complete guides (deployment and sales material, not product help):
+Customer Ownership Installation Options, Getting Started.
 
+ALSO NOT compiled: the User Interface Guide's opening chapter, "Why These Products Work
+the Way They Do". The rest of that guide IS compiled. The chapter is positioning and
+sales material and sits under a single `##` heading, so it lifts out cleanly.
 
-# Agilebars Complete Reference guide
+## Agilebars Complete Reference Guide
+
+**Agilebars does not use the Supply And Demand Grids or Text Notifications.** Both are
+omitted here deliberately; they remain in the Timebars and Costbars guides.
+
 Agilebars User Guide
-Agilebars Kanban Primer
+User Interface Guide *(minus the opening chapter)*
+Data Model and Scheduling Engine Guide
+Data Synchronization, Backup, Recovery and Retention User Guide
+Forms, Reports and Graphs Guide
+Risks, Issues and Change Requests User Guide
 How To Use Ask AI
-User Interface Guide
-Data Structure User Guide
-Picklists And Tagging Help
-Spreadsheet Sync User Guide
-FOCD Forms User Guide
-Supply And Demand Grids User Guide
-Risks Issues Change Requests User Guide
-Local Reports And Graphs Guide
 Cloud Publishing Guide
 Personal Dashboard Guide
 Enterprise Dashboard Guide
-Text Notifications
-Products Installation For On Prem
 
+## Timebars Complete Reference Guide
 
-# Timebars Complete Reference guide
 Timebars User Guide
+User Interface Guide *(minus the opening chapter)*
+Data Model and Scheduling Engine Guide
+Data Synchronization, Backup, Recovery and Retention User Guide
+Forms, Reports and Graphs Guide
+Risks, Issues and Change Requests User Guide
 How To Use Ask AI
-User Interface Guide
-Data Structure User Guide
-Picklists And Tagging Help
-Spreadsheet Sync User Guide
-FOCD Forms User Guide
 Supply And Demand Grids User Guide
-Risks Issues Change Requests User Guide
-Local Reports And Graphs Guide
 Cloud Publishing Guide
 Personal Dashboard Guide
 Enterprise Dashboard Guide
-Text Notifications
-Products Installation For On Prem
+Text Notifications User Guide
 
+## Costbars Complete Reference Guide
 
-# Costbars Complete Reference guide
 Costbars User Guide
-Costbars PPM Project Assessment Tool
-Costbars PPM Scoring Guide 5 Step Process
+User Interface Guide *(minus the opening chapter)*
+Data Model and Scheduling Engine Guide
+Data Synchronization, Backup, Recovery and Retention User Guide
+Forms, Reports and Graphs Guide
+Risks, Issues and Change Requests User Guide
 How To Use Ask AI
-User Interface Guide
-Data Structure User Guide
-Picklists And Tagging Help
-Spreadsheet Sync User Guide
-FOCD Forms User Guide
 Supply And Demand Grids User Guide
-Risks Issues Change Requests User Guide
-Local Reports And Graphs Guide
 Cloud Publishing Guide
 Personal Dashboard Guide
 Enterprise Dashboard Guide
-Text Notifications
-Products Installation For On Prem
-Costbars PPM Portfolio Status And Balancing Report
-Costbars Writing A Business Case
+Text Notifications User Guide
