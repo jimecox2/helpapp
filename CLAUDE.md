@@ -579,3 +579,35 @@ grep -r "useLocalAI" --include="*.jsx" --include="*.js"
 
 **Last Updated**: 2025-11-20
 **Maintained By**: Development Team
+
+---
+
+## AI routes (`/api/ai/*`) — replaces the Cloudflare Workers
+
+Six route handlers ported verbatim from the Timebars Ltd. Cloudflare Workers. Request and response JSON
+are unchanged, so the app (tbrunp) only needed a base-URL change.
+
+| Route | Replaces worker |
+|---|---|
+| `/api/ai/create-project` | `timebars-gemini-create-project` |
+| `/api/ai/create-wbs` | `timebars-gemini-create-wbs` |
+| `/api/ai/staff-tasks` | `timebars-gemini-staff-tasks` |
+| `/api/ai/resource-plan` | `timebars-gemini-resource-plan` |
+| `/api/ai/bcase` | `timebars-gemini-bcase` |
+| `/api/ai/help` | `timebars-help-assistant` |
+
+- Model stays `gemini-2.5-flash`. `GEMINI_API_KEY` is read from `process.env` on the server only
+  (`.env.local` next to the compose file, `chmod 600`, never committed, never a `NEXT_PUBLIC_` name).
+- `lib/ai/guard.js` runs first on every route: body size cap, per-IP rate limit, Strapi login check
+  (`Authorization: Bearer <JWT>` verified against `STRAPI_URL`/users/me; `AI_REQUIRE_LOGIN=false` turns it off).
+- The app's nginx proxies `/ai/` to `http://tbhelpapp:3010/api/ai/` over the shared Docker network `tbhelp`
+  (no CORS needed; `AI_ALLOWED_ORIGINS` only if a browser calls this service directly).
+- Test: `npm run build && npm run test:ai` (Gemini and Strapi are stubbed, no key needed).
+- Deploy: `./deploy.sh` on each box (tag in `.env`, secrets in `.env.local`). Build and push: `./deploy-push-to-hub-secure.sh`.
+
+## Copies of other repos' files — do not edit here
+
+- `public/docsHelp/` are copies of the help files maintained in the **tbrunp** repo (`docsHelp/`).
+- `public/docsOther/` are copies of the files maintained in the **tbwww** repo (`docsOther/`).
+
+The owner copies them over periodically. Never change them in this repo, whatever the task.

@@ -1,19 +1,25 @@
-# Production — help.timebars.com
+# Production — help.timebars.com and the AI routes (/api/ai/*) for the Timebars apps.
 # Image is pre-built and pushed to Docker Hub; no build step here.
-# Deploy: docker compose pull && docker compose up -d
+# Deploy: ./deploy.sh   (pulls the tag you give, writes it to .env, restarts)
+#
+# The app containers (tbrun, tbrun-offline) reach this one by name over the shared Docker network
+# `tbhelp`: their nginx proxies /ai/ to http://tbhelpapp:3010/api/ai/. deploy.sh creates the
+# network if it is missing.
 
 services:
   tbhelpapp:
-    image: jimecox807/tbhelpapp:latest
+    image: jimecox807/tbhelpapp:${HELPAPP_TAG:-latest}
     container_name: tbhelpapp
     ports:
-      - "3010:3010"          # host:container — app runs on 3010 internally
+      - "3010:3010"          # help.timebars.com through the tunnel; remove once it uses the network
     environment:
       NODE_ENV: production
     env_file:
-      - .env.local           # must contain GEMINI_API_KEY
+      - .env.local           # GEMINI_API_KEY, STRAPI_URL ... (see .env.example)
     extra_hosts:
-      - "ollama-server:192.168.1.9"   # resolves ollama-server inside the container
+      - "ollama-server:192.168.1.9"   # Timebars Ltd. LAN only: resolves ollama-server for /api/chat
+    networks:
+      - tbhelp
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3010 > /dev/null 2>&1 || exit 1"]
@@ -21,3 +27,7 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s     # give Next.js time to boot before first check
+
+networks:
+  tbhelp:
+    external: true          # shared with tbrun / tbrun-offline; created by deploy.sh

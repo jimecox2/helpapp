@@ -1,22 +1,16 @@
 #!/bin/bash
-# deploy-push-to-hub-secure.sh
-
-# Load .env if DOCKER_PAT not already set
-if [ -z "$DOCKER_PAT" ] && [ -f .env ]; then
-  set -a
-  source .env
-  set +a
-fi
+# Build the tbhelpapp image and push it to Docker Hub.
+#
+# Uses the Docker login already saved on this machine. Log in once with:
+#   docker login -u jimecox807
+# and paste your PAT at the prompt. Never put the PAT in .env or in this repo.
 
 read -p "Tag (press Enter for 'latest'): " tag
 tag=${tag:-latest}
 
-if [ -z "$DOCKER_PAT" ]; then
-  read -sp "Docker PAT: " DOCKER_PAT
-  echo
+docker build -t jimecox807/tbhelpapp:$tag . || exit 1
+
+if ! docker push jimecox807/tbhelpapp:$tag; then
+  echo "Push failed. If it was an auth error, run: docker login -u jimecox807"
+  exit 1
 fi
-
-echo "$DOCKER_PAT" | docker login -u jimecox807 --password-stdin
-
-docker build -t jimecox807/tbhelpapp:$tag .
-docker push jimecox807/tbhelpapp:$tag
