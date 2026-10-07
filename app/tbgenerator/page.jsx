@@ -3,13 +3,13 @@ import Link from 'next/link'
 import TbGeneratorPanel from '@/components/TbGeneratorPanel'
 
 export const metadata = {
-  title: 'TB Generator | Timebars',
+  title: 'AI Generator',
   description: 'Generate Timebars data from customer documents — powered by AI.',
 }
 
 export default function TbGeneratorPage() {
   return (
-    <main className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
       <div className="flex items-center justify-between gap-5 mb-8 flex-wrap">
         <div className="flex items-center gap-5">
           <Image
@@ -29,6 +29,6 @@ export default function TbGeneratorPage() {
         </Link>
       </div>
       <TbGeneratorPanel />
-    </main>
+    </div>
   )
 }

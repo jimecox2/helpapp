@@ -611,3 +611,26 @@ are unchanged, so the app (tbrunp) only needed a base-URL change.
 - `public/docsOther/` are copies of the files maintained in the **tbwww** repo (`docsOther/`).
 
 The owner copies them over periodically. Never change them in this repo, whatever the task.
+
+## Timebars Cloud (cloud.timebars.com) — moved from tbwww
+
+helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration and accounts.
+
+| Route | What | Login |
+|---|---|---|
+| `/` | Public home page about Timebars Cloud | no |
+| `/help` | Ask AI help assistant, ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`, `lib/help/helpDocs.js`) | yes |
+| `/aitemp` | The original helpapp help panel (doc picker, Gemini/Ollama), to be enhanced later | yes |
+| `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
+| `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
+| `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
+| `/tbgenerator` | AI Generator | yes |
+
+- `middleware.js`: `help.`, `dashboard.`, `pubsets.<domain>` 308 to `/help`, `/dashboard`, `/pubsets` on
+  `cloud.<domain>`; every page except `/`, `/auth/*` and static files needs a login. API routes check their own login.
+- Auth: `app/auth/auth.js` (NextAuth v5, same Strapi as tbwww). **Own session**, not shared with www: cookie
+  names start `tbcloud.`. Register / password reset / profile / orders link to `NEXT_PUBLIC_WWW_URL`.
+- The Strapi full-access token is `STRAPI_ADMIN_TOKEN`, server only. Writes that need it are server actions
+  (`app/dashboard/_actions/sources.js`, `app/admin/users/_actions.js`) that check the caller's role in Strapi first.
+  Never import it into a client component and never give it a `NEXT_PUBLIC_` name.
+- Public URLs are baked in at build time from `.env.production` / `.env.development` (committed, public values only).

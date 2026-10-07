@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "paths": {
+      "@/auth/*": ["./app/auth/*"],
+      "@/crud/*": ["./lib/crud/*"],
       "@/*": ["./*"]
     }
   }

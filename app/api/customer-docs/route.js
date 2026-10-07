@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { auth } from '@/auth/auth'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -35,6 +36,9 @@ async function collectDocs(dir, relBase = '') {
 }
 
 export async function GET() {
+  // Signed-in Timebars Cloud users only (these call Gemini / read customer files).
+  if (!(await auth())) return NextResponse.json({ success: false, error: 'Please sign in.' }, { status: 401 })
+
   try {
     const entries = await fs.readdir(CUSTOMERS_DIR, { withFileTypes: true })
     const customers = []

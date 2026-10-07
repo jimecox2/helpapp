@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { auth } from '@/auth/auth'
 import { getModelById, OLLAMA_HOST } from '@/config/ai'
 
 function buildSystemPrompt(productCode) {
@@ -117,6 +118,9 @@ async function callOllama(systemPrompt, userQuestion, docsContext, model) {
 }
 
 export async function POST(request) {
+  // Signed-in Timebars Cloud users only (these call Gemini / read customer files).
+  if (!(await auth())) return NextResponse.json({ success: false, error: 'Please sign in.' }, { status: 401 })
+
   try {
     const { userQuestion, productCode, docsContext, modelId } = await request.json()
 
