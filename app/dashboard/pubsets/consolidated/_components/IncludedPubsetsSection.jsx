@@ -183,7 +183,9 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
         geographic_region: geographic_region || null,
         isActive: true,
         published_date: new Date().toISOString(),
-        uid: pubsets.map(p => p.id).join('-'), // Hyphen-separated pubset IDs
+        // Hyphen-separated pubset IDs plus the save time. uid is unique in Strapi, so the IDs alone
+        // blocked saving the same set of pubsets a second time.
+        uid: `${pubsets.map(p => p.id).join('-')}-${Date.now()}`,
       }
 
       console.log('Saving dashboard source:', {
