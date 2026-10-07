@@ -6,6 +6,7 @@
 // checks the caller's session and role first.
 
 import { auth } from '@/auth/auth'
+import { strapiErrorMessage } from '@/lib/strapiError'
 import {
   getOneDashboardSource,
   updateDashboardSource,
@@ -86,8 +87,9 @@ async function safely(fn) {
   try {
     return { data: await fn() }
   } catch (e) {
-    console.error('dashboard source action:', e.message)
-    return { error: e.message || 'Something went wrong' }
+    const message = strapiErrorMessage(e)
+    console.error('dashboard source action:', message)
+    return { error: message }
   }
 }
 

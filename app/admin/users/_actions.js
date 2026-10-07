@@ -5,6 +5,7 @@
 // Roles only for now: no accounts are created here and customer_id is never changed.
 
 import { auth } from '@/auth/auth'
+import { strapiErrorMessage } from '@/lib/strapiError'
 import { API_URL } from '@/config/site'
 import { getUserByEmail } from '@/lib/crud/coreCrud'
 import { isAdminRole } from '@/lib/auth/roles'
@@ -24,7 +25,10 @@ async function strapi(path, init = {}) {
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${adminToken()}`, ...(init.headers || {}) },
     cache: 'no-store',
   })
-  if (!res.ok) throw new Error(`Strapi ${res.status} on ${path}`)
+  if (!res.ok) {
+    const body = await res.json().catch(() => null)
+    throw new Error(`Strapi ${res.status} on ${path.split('?')[0]}${body?.error?.message ? `: ${body.error.message}` : ''}`)
+  }
   return res.json()
 }
 
@@ -105,8 +109,9 @@ async function safely(fn) {
   try {
     return { data: await fn() }
   } catch (e) {
-    console.error('rbac:', e.message)
-    return { error: e.message || 'Something went wrong' }
+    const message = strapiErrorMessage(e)
+    console.error('rbac:', message)
+    return { error: message }
   }
 }
 
