@@ -138,7 +138,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     newUser: `${WWW_URL}/auth/new-user`, // registration lives on www
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
 
   callbacks: {
 

@@ -14,6 +14,13 @@ if grep -q '^GEMINI_API_KEY=CHANGE_ME' .env.local || ! grep -q '^GEMINI_API_KEY=
   echo "GEMINI_API_KEY is not set in .env.local."
   exit 1
 fi
+# Sign-in (Timebars Cloud) needs both, or the Sign In button lands on https://0.0.0.0:3010/auth/error?error=Configuration
+for v in NEXTAUTH_SECRET NEXTAUTH_URL; do
+  if grep -q "^$v=CHANGE_ME" .env.local || ! grep -q "^$v=." .env.local; then
+    echo "$v is not set in .env.local (NEXTAUTH_SECRET: openssl rand -base64 32; NEXTAUTH_URL: the address users open, e.g. https://cloud.timebars.com)."
+    exit 1
+  fi
+done
 
 current=$(grep -s '^HELPAPP_TAG=' .env | cut -d= -f2)
 [ -n "$current" ] && echo "Currently deployed: $current"
