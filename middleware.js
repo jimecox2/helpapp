@@ -63,5 +63,5 @@ export async function middleware(req) {
 
 export const config = {
   // Everything except Next's own static files and files with an extension in /public.
-  matcher: ['/((?!_next/static|_next/image|.*\\.[a-zA-Z0-9]+$).*)', '/customers/:path*'],
+  matcher: ['/((?!_next/static|_next/image|.*\\.[a-zA-Z0-9]+$).*)', '/projectArtifacts/:path*'],
 }

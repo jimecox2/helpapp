@@ -625,7 +625,7 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
 | `/personaldashboard/*` | Personal Dashboard, moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |
 | `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
-| `/tbgenerator` | AI Generator | yes |
+| `/tbgenerator` | AI Generator: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download) | yes |
 
 - `middleware.js`: `help.`, `dashboard.`, `pubsets.<domain>` 308 to `/help`, `/dashboard`, `/pubsets` on
   `cloud.<domain>`; every page except `/`, `/auth/*` and static files needs a login. API routes check their own login.

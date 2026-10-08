@@ -1,10 +1,9 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import TbGeneratorPanel from '@/components/TbGeneratorPanel'
 
 export const metadata = {
   title: 'AI Generator',
-  description: 'Generate Timebars data from customer documents — powered by AI.',
+  description: 'Generate Timebars data from pasted project documents, powered by AI.',
 }
 
 export default function TbGeneratorPage() {
@@ -24,9 +23,6 @@ export default function TbGeneratorPage() {
             TB Generator
           </h1>
         </div>
-        <Link href="/" className="text-sm text-tbBlue hover:underline font-medium">
-          ← Back to Help Assistant
-        </Link>
       </div>
       <TbGeneratorPanel />
     </div>

@@ -1,65 +1,50 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Wand2, FolderOpen, FileText, AlertCircle, Loader2, Download } from 'lucide-react'
+import { Wand2, FolderOpen, FileText, AlertCircle, Download } from 'lucide-react'
 
-// Only these document types can be sent to Gemini for now
-const SUPPORTED_EXTS = ['.md', '.csv']
+// ─── Sample documents (public/projectArtifacts) ───────────────────────────────
+// Examples of the kinds of documents the AI can read. Users download them to
+// see the format, then paste their own text into the box below.
 
-// ─── Doc Picker ───────────────────────────────────────────────────────────────
+const ARTIFACTS_BASE = '/projectArtifacts'
 
-function DocCheckbox({ docPath, label, disabled, selectedPaths, onToggle }) {
-  if (disabled) {
-    return (
-      <label className="flex items-start gap-2 text-xs text-gray-400 dark:text-gray-600 cursor-not-allowed" title="Only .md and .csv files are supported for now">
-        <input type="checkbox" checked={false} disabled className="mt-0.5 w-3.5 h-3.5 flex-shrink-0" readOnly />
-        <span className="leading-tight line-through decoration-gray-300 dark:decoration-gray-700">{label}</span>
-      </label>
-    )
-  }
-  return (
-    <label className="flex items-start gap-2 text-xs text-gray-700 dark:text-gray-300 cursor-pointer hover:text-gray-900 dark:hover:text-white group">
-      <input
-        type="checkbox"
-        checked={selectedPaths.includes(docPath)}
-        onChange={() => onToggle(docPath)}
-        className="mt-0.5 w-3.5 h-3.5 accent-tbBlue cursor-pointer flex-shrink-0"
-      />
-      <span className="group-hover:text-tbBlue transition-colors leading-tight">{label}</span>
-    </label>
-  )
-}
+const ARTIFACT_GROUPS = [
+  {
+    title: 'Project Management',
+    files: ['Business_Case.md', 'Contract.md', 'Proposal.md', 'Project_Charter.md', 'Risk_Register.md'],
+  },
+  {
+    title: 'Business Management',
+    files: ['Cost_Estimate.xlsx', 'Scope_Of_Supply_Summary.md', 'Cost_Estimate_Schedule.csv', 'Equipment_Description.md'],
+  },
+]
 
-function CustomerSection({ customer, selectedPaths, onToggle, onSectionSelect }) {
-  const allPaths = customer.docs.filter(d => SUPPORTED_EXTS.includes(d.ext)).map(d => d.path)
+function ArtifactSection({ group }) {
   return (
     <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-lg p-3">
-      <div className="flex items-center justify-between mb-2">
-        <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-          <FolderOpen className="w-3.5 h-3.5" />
-          {customer.name}
-        </span>
-        <span className="flex gap-2">
-          <button onClick={() => onSectionSelect(allPaths, true)}  className="text-xs text-tbBlue hover:underline font-medium">All</button>
-          <button onClick={() => onSectionSelect(allPaths, false)} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline">None</button>
-        </span>
-      </div>
-      <div className="space-y-2">
-        {customer.docs.map(doc => (
-          <DocCheckbox
-            key={doc.path}
-            docPath={doc.path}
-            label={doc.relPath}
-            disabled={!SUPPORTED_EXTS.includes(doc.ext)}
-            selectedPaths={selectedPaths}
-            onToggle={onToggle}
-          />
+      <span className="flex items-center gap-1.5 mb-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        <FolderOpen className="w-3.5 h-3.5" />
+        {group.title}
+      </span>
+      <ul className="space-y-2">
+        {group.files.map(file => (
+          <li key={file}>
+            <a
+              href={`${ARTIFACTS_BASE}/${encodeURIComponent(file)}`}
+              download
+              className="flex items-start gap-2 text-xs text-tbBlue hover:underline leading-tight"
+            >
+              <FileText className="w-3.5 h-3.5 flex-shrink-0" />
+              {file}
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }
@@ -67,9 +52,6 @@ function CustomerSection({ customer, selectedPaths, onToggle, onSectionSelect })
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function TbGeneratorPanel() {
-  const [customers,     setCustomers]     = useState(null)   // null = loading
-  const [loadError,     setLoadError]     = useState(null)
-  const [selectedPaths, setSelectedPaths] = useState([])
   const [promptValue,   setPromptValue]   = useState('')
   const [isGenerating,  setIsGenerating]  = useState(false)
   const [statusMessage, setStatusMessage] = useState(null)
@@ -77,58 +59,9 @@ export default function TbGeneratorPanel() {
 
   const textareaRef = useRef(null)
 
-  // Load the customer document tree from the server
-  useEffect(() => {
-    let cancelled = false
-    async function load() {
-      try {
-        const res = await fetch('/api/customer-docs')
-        if (!res.ok) throw new Error(`HTTP ${res.status}`)
-        const data = await res.json()
-        if (!data.success) throw new Error(data.error || 'Failed to load documents')
-        if (!cancelled) setCustomers(data.customers)
-      } catch (error) {
-        if (!cancelled) setLoadError(error.message || 'Failed to load customer documents')
-      }
-    }
-    load()
-    return () => { cancelled = true }
-  }, [])
-
-  const totalDocs = customers ? customers.reduce((n, c) => n + c.docs.length, 0) : 0
-
-  // Selection rules: max three items — one CSV of tasks + one charter/business
-  // case + one risk file ("risk" must be in the file name)
-  const isRiskFile = p => /risk/i.test(p.split('/').pop())
-  const csvCount   = selectedPaths.filter(p => p.toLowerCase().endsWith('.csv')).length
-  const mdPaths    = selectedPaths.filter(p => p.toLowerCase().endsWith('.md'))
-  const riskCount  = mdPaths.filter(isRiskFile).length
-  const plainMd    = mdPaths.length - riskCount
-  let selectionError = null
-  if (selectedPaths.length > 3)  selectionError = 'Select at most three items — one CSV of tasks, one charter/business case, and one risk file.'
-  else if (csvCount > 1)         selectionError = 'Only one CSV file can be selected.'
-  else if (riskCount > 1)        selectionError = 'Only one risk file can be selected.'
-  else if (plainMd > 1)          selectionError = 'Only one charter/business-case document can be selected — a second doc must have "risk" in its file name.'
-
-  function handleToggle(docPath) {
-    setSelectedPaths(prev =>
-      prev.includes(docPath) ? prev.filter(p => p !== docPath) : [...prev, docPath]
-    )
-  }
-
-  // onSectionSelect(paths, add) — add=true adds those paths, add=false removes them
-  function handleSectionSelect(paths, add) {
-    if (add) {
-      setSelectedPaths(prev => [...new Set([...prev, ...paths])])
-    } else {
-      const remove = new Set(paths)
-      setSelectedPaths(prev => prev.filter(p => !remove.has(p)))
-    }
-  }
-
   async function handleGenerate() {
     const prompt = promptValue.trim()
-    if (!prompt || isGenerating || selectedPaths.length === 0 || selectionError) return
+    if (!prompt || isGenerating) return
 
     setIsGenerating(true)
     setStatusMessage(null)
@@ -139,7 +72,7 @@ export default function TbGeneratorPanel() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ docPaths: selectedPaths, userPrompt: prompt }),
+        body: JSON.stringify({ userPrompt: prompt }),
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok || !data.success) throw new Error(data.error || `HTTP ${res.status}`)
@@ -199,10 +132,10 @@ export default function TbGeneratorPanel() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-                TB Generator — Customer Data Generation
+                TB Generator — Timebars Data Generation
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Select customer documents, add a prompt, and generate Timebars data
+                Paste the text of a charter, business case, risk register, task list or cost estimate into the box, say what you want, and the AI builds a Timebars file you can download and import into the app. Download the sample documents below to see what works well.
               </p>
             </div>
           </div>
@@ -214,75 +147,11 @@ export default function TbGeneratorPanel() {
 
       <CardContent className="p-0">
 
-        {/* ── Doc Picker ── */}
+        {/* ── Sample documents ── */}
         <div className="px-6 pt-5 pb-4 border-b border-gray-100 dark:border-gray-800">
-          {customers === null && !loadError && (
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 py-4">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Loading customer documents…
-            </div>
-          )}
-
-          {loadError && (
-            <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 py-4">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              {loadError}
-            </div>
-          )}
-
-          {customers !== null && !loadError && (
-            <div className="space-y-5">
-              {/* Summary row */}
-              <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-500 dark:text-gray-400">
-                  <FileText className="w-3.5 h-3.5 inline mr-1" />
-                  <span className="font-semibold text-gray-700 dark:text-gray-300">{selectedPaths.length}</span> of {totalDocs} docs selected
-                  <span className="ml-1 text-gray-400">(max 3: one CSV + one charter/business case + one risk file)</span>
-                  {selectedPaths.length === 0 && (
-                    <span className="ml-1 text-red-500 font-medium">— select at least one</span>
-                  )}
-                  {selectionError && (
-                    <span className="ml-1 text-red-500 font-medium">— {selectionError}</span>
-                  )}
-                </span>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => handleSectionSelect(
-                      customers.flatMap(c => c.docs.filter(d => SUPPORTED_EXTS.includes(d.ext)).map(d => d.path)),
-                      true
-                    )}
-                    className="text-xs text-tbBlue hover:underline font-medium"
-                  >
-                    Select all
-                  </button>
-                  <button
-                    onClick={() => setSelectedPaths([])}
-                    className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline"
-                  >
-                    Clear all
-                  </button>
-                </div>
-              </div>
-
-              {customers.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  No customer folders found under <code>/public/customers</code>.
-                </p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {customers.map(customer => (
-                    <CustomerSection
-                      key={customer.name}
-                      customer={customer}
-                      selectedPaths={selectedPaths}
-                      onToggle={handleToggle}
-                      onSectionSelect={handleSectionSelect}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {ARTIFACT_GROUPS.map(group => <ArtifactSection key={group.title} group={group} />)}
+          </div>
         </div>
 
         {/* ── Status / error area ── */}
@@ -335,17 +204,17 @@ export default function TbGeneratorPanel() {
             value={promptValue}
             onChange={e => setPromptValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Describe the Timebars data you want generated from the selected documents…&#10;Example: Generate a phased work package schedule from the project charter."
-            rows={3}
+            placeholder="Paste your document text here and say what you want generated…&#10;Example: Generate a phased work package schedule from this project charter."
+            rows={6}
             disabled={isGenerating}
-            className="resize-none border-gray-400 dark:border-gray-500 focus-visible:ring-tbBlue"
+            className="min-h-[160px] resize-none border-gray-400 dark:border-gray-500 focus-visible:ring-tbBlue"
             aria-label="Generation prompt input"
           />
 
           <div className="flex items-center justify-between gap-2 flex-wrap">
             <Button
               onClick={handleGenerate}
-              disabled={isGenerating || !promptValue.trim() || selectedPaths.length === 0 || !!selectionError}
+              disabled={isGenerating || !promptValue.trim()}
               className="bg-tbBlue hover:bg-blue-800 text-white"
             >
               <Wand2 className="w-4 h-4 mr-2" />
@@ -353,7 +222,7 @@ export default function TbGeneratorPanel() {
             </Button>
 
             <span className="text-xs text-gray-400 dark:text-gray-500">
-              {selectedPaths.length} doc{selectedPaths.length !== 1 ? 's' : ''} · Enter to generate
+              Enter to generate · Shift+Enter for a new line
             </span>
           </div>
         </div>
