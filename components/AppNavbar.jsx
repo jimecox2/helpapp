@@ -34,9 +34,25 @@ const NAV = [
   { label: 'AI Help (beta)', href: '/aitemp' },
 ]
 
+// Links back to www.timebars.com (same list as its Assistance menu). Shown signed in or out.
+const ASSISTANCE = {
+  label: 'Assistance',
+  children: [
+    { label: 'timebars.com Home', path: '/' },
+    { label: 'Get a License', path: '/sales/pricing' },
+    { label: 'Quick Start', path: '/sales/quick-start' },
+    { label: 'FAQ by Topic', path: '/knowledgebase/faq' },
+    { label: 'Help Articles', path: '/knowledgebase/helparticles' },
+    { label: 'Knowledgebase', path: '/knowledgebase' },
+    { label: 'About Us', path: '/sales/about-us' },
+    { label: 'Contact Us', path: '/sales/contact-us' },
+    { label: 'Terms of Service', path: '/sales/terms-of-service' },
+  ],
+}
+
 const isActive = (pathname, href) => (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`))
 
-function Dropdown({ item, pathname, onNavigate }) {
+function Dropdown({ item, pathname, onNavigate, align = 'left' }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -54,9 +70,10 @@ function Dropdown({ item, pathname, onNavigate }) {
         {item.label} <ChevronDown className={cn('h-4 w-4 transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
-        <div className="absolute left-0 z-50 mt-1 w-60 rounded-md bg-white py-1 shadow-lg">
+        <div className={cn('absolute z-50 mt-1 w-60 rounded-md bg-white py-1 shadow-lg', align === 'right' ? 'right-0' : 'left-0')}>
           {item.children.map(c => (
             <Link
+              prefetch={c.external ? false : undefined}
               key={c.href}
               href={c.href}
               onClick={() => { setOpen(false); onNavigate?.() }}
@@ -86,6 +103,8 @@ export default function AppNavbar() {
     : NAV.slice(0, 1)
 
   const closeAll = () => { setMobileOpen(false); setProfileOpen(false) }
+
+  const assistance = { ...ASSISTANCE, children: ASSISTANCE.children.map(c => ({ ...c, href: `${WWW_URL}${c.path === '/' ? '' : c.path}`, external: true })) }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-red-500 bg-gray-800">
@@ -123,9 +142,9 @@ export default function AppNavbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <a href={WWW_URL} className="hidden whitespace-nowrap rounded-md px-3 py-2 text-sm text-gray-300 hover:text-white 2xl:inline">
-              timebars.com
-            </a>
+            <div className="hidden sm:block">
+              <Dropdown item={assistance} pathname={pathname} align="right" />
+            </div>
             {signedIn ? (
               <div className="relative">
                 <button
@@ -141,6 +160,7 @@ export default function AppNavbar() {
                     <p className="truncate border-b px-4 py-2 text-xs text-gray-500">{session.user?.email}</p>
                     <a href={`${WWW_URL}/auth/yourprofile`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
                     <a href={`${WWW_URL}/sales/myorders`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders &amp; License</a>
+                    <a href={`${WWW_URL}/auth/password-forgot`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reset Password</a>
                     <button
                       onClick={() => signOut({ callbackUrl: '/' })}
                       className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
@@ -173,7 +193,10 @@ export default function AppNavbar() {
               {item.label}
             </Link>
           ))}
-          <a href={WWW_URL} className="block rounded-md px-3 py-2 text-base text-gray-300 hover:bg-gray-900">timebars.com</a>
+          <p className="mt-2 border-t border-gray-700 px-3 pb-1 pt-3 text-xs uppercase tracking-wide text-gray-400">Assistance</p>
+          {assistance.children.map(c => (
+            <a key={c.href} href={c.href} className="block rounded-md px-3 py-2 text-base text-gray-300 hover:bg-gray-900">{c.label}</a>
+          ))}
         </div>
       )}
     </nav>

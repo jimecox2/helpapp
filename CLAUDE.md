@@ -633,4 +633,6 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 - The Strapi full-access token is `STRAPI_ADMIN_TOKEN`, server only. Writes that need it are server actions
   (`app/dashboard/_actions/sources.js`, `app/admin/users/_actions.js`) that check the caller's role in Strapi first.
   Never import it into a client component and never give it a `NEXT_PUBLIC_` name.
-- Public URLs are baked in at build time from `.env.production` / `.env.development` (committed, public values only).
+- Public URLs: built-in defaults from `.env.production` / `.env.development` (committed, public values only); each
+  server can override them at run time with `CLOUD_API_URL`, `CLOUD_WWW_URL`, `NEXTAUTH_URL` (`config/site.js`).
+- Nav: the Assistance menu links back to www (pricing, FAQ, help articles, contact). Notification cron: `send-notification.sh`.
