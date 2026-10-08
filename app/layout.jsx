@@ -3,7 +3,11 @@ import 'react-toastify/dist/ReactToastify.css'
 import './globals.css'
 import { AuthProvider } from '@/auth/components/AuthProvider'
 import AppNavbar from '@/components/AppNavbar'
-import { FRONTEND_URL } from '@/config/site'
+import Script from 'next/script'
+import { FRONTEND_URL, BROWSER_CONFIG } from '@/config/site'
+
+// Addresses come from the server's environment at run time (config/site.js), so no page is built ahead.
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   metadataBase: new URL(FRONTEND_URL),
@@ -32,6 +36,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Per-server addresses for browser code; runs before any app code (config/site.js). */}
+        <Script id="tb-cloud-config" strategy="beforeInteractive">
+          {`window.__TB_CLOUD__=${JSON.stringify(BROWSER_CONFIG).replace(/</g, '\\u003c')}`}
+        </Script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
