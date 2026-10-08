@@ -63,79 +63,46 @@ async function deleteImpl(id) {
   return { ok: true }
 }
 
-// One dashboard source per set of pubsets, so reports never count the same data twice.
-// The set is stored in the unique Strapi field `uid` as hyphen-separated pubset IDs ("21" or "21-22").
-// Older sources may list the IDs in any order, so sets are compared, not strings.
-const setKey = ids =>
-  [...new Set((ids || []).map(id => String(id).trim()).filter(Boolean))]
-    .sort((a, b) => Number(a) - Number(b) || a.localeCompare(b))
-    .join('-')
-
-const uidToKey = uid => setKey(String(uid || '').split('-'))
-
-// The caller's customer's sources (light fields only), plus any source whose uid is exactly this set.
-async function findSourceForSet(caller, key) {
-  const fields = ['uid', 'name', 'owner', 'Customer_id', 'published_date', 'updatedAt']
-    .map((f, i) => `fields[${i}]=${f}`).join('&')
-  const filters = [
-    `filters[$or][0][Customer_id][$eq]=${encodeURIComponent(caller.customerId)}`,
-    `filters[$or][1][uid][$eq]=${encodeURIComponent(key)}`,
-  ].join('&')
-  const res = await fetch(`${API_URL}/dashboard-sources?${fields}&${filters}&pagination[pageSize]=1000`, {
+// A source already saved for this set of pubsets. `uid` (hyphen-separated pubset IDs) is unique in
+// Strapi: one source per set, so reports never count the same data twice.
+async function findSourceByUid(uid) {
+  const fields = ['name', 'owner', 'Customer_id', 'published_date', 'updatedAt'].map((f, i) => `fields[${i}]=${f}`).join('&')
+  const res = await fetch(`${API_URL}/dashboard-sources?filters[uid][$eq]=${encodeURIComponent(uid)}&${fields}`, {
     headers: { Authorization: `Bearer ${adminToken()}` },
     cache: 'no-store',
   })
   if (!res.ok) throw new Error(`Strapi ${res.status} while checking for an existing source`)
-  const { data = [] } = await res.json()
-  const hit = data.find(item => uidToKey(item.attributes?.uid) === key)
+  const hit = (await res.json()).data?.[0]
   if (!hit) return null
   const a = hit.attributes
-  return {
-    id: hit.id,
-    name: a.name,
-    owner: a.owner,
-    Customer_id: a.Customer_id,
-    savedAt: a.published_date || a.updatedAt,
-  }
+  return { id: hit.id, name: a.name, owner: a.owner, Customer_id: a.Customer_id, savedAt: a.published_date || a.updatedAt }
 }
 
-// What the page shows before saving: the existing source for this set, and whether the caller may replace it.
-async function findExistingImpl(pubsetIds) {
-  const caller = await getCaller()
-  const key = setKey(pubsetIds)
-  if (!key) throw new Error('No pubsets selected')
-  const existing = await findSourceForSet(caller, key)
-  if (!existing) return { existing: null }
-  return { existing: { ...existing, canOverwrite: canDelete(caller, existing) } }
-}
-
-// Saves a consolidated source. With no replaceId, a source that already exists for the same set is
-// returned as { conflict } and nothing is written. With replaceId, that source is overwritten in place
-// (same id, owner, sharing and active flag), so dashboards pointing at it keep working.
+// Saves a consolidated source. Owner and Customer_id are set from the caller, not the request.
+// If these pubsets are already saved, nothing is written and { conflict } is returned so the user can
+// choose; calling again with replaceId = that source's id overwrites it in place (same id, owner,
+// sharing and active flag), so dashboards pointing at it keep working.
 async function saveImpl(data, replaceId = null) {
   const caller = await getCaller()
   if (!isManagerRole(caller.role)) throw new Error('Only an Administrator, Project Manager or Executive can create dashboard sources')
   if (!caller.customerId) throw new Error('Your account has no customer id')
+  const uid = String(data?.uid || '').trim()
+  if (!uid) throw new Error('No pubsets selected')
 
-  const key = uidToKey(data?.uid)
-  if (!key) throw new Error('No pubsets selected')
-  const existing = await findSourceForSet(caller, key)
-
+  const existing = await findSourceByUid(uid)
   let id
   if (existing) {
     const canOverwrite = canDelete(caller, existing)
     if (String(existing.id) !== String(replaceId ?? '')) return { conflict: { ...existing, canOverwrite } }
-    if (!canOverwrite) throw new Error('You do not have permission to overwrite this source')
-    // Keep who owns it, who it is shared with, whether it is active, and its uid.
+    if (!canOverwrite) throw new Error('Only the owner of this source or an Administrator can overwrite it')
     // eslint-disable-next-line no-unused-vars
-    const { owner, Customer_id, uid, isActive, grant_tm_access_to, ...rest } = data
+    const { owner, Customer_id, uid: _uid, isActive, grant_tm_access_to, ...rest } = data
     await updateDashboardSource(existing.id, rest, adminToken())
     id = existing.id
-    console.log('dashboard source overwritten', { id, by: caller.email, uid: key })
+    console.log('dashboard source overwritten', { id, by: caller.email, uid })
   } else {
-    if (replaceId) throw new Error('The source you chose to overwrite no longer exists. Save again to create a new one.')
     const saved = await createDashboardSource(
-      { ...data, uid: key, owner: caller.email, Customer_id: String(caller.customerId) },
+      { ...data, uid, owner: caller.email, Customer_id: String(caller.customerId) },
       adminToken(),
     )
     id = saved.id
@@ -169,10 +136,6 @@ export async function deleteDashboardSourceAction(id) {
   return safely(() => deleteImpl(id))
 }
 
-export async function findDashboardSourceForPubsetsAction(pubsetIds) {
-  return safely(() => findExistingImpl(pubsetIds))
-}
-
-export async function saveDashboardSourceAction(data, replaceId = null) {
+export async function createDashboardSourceAction(data, replaceId = null) {
   return safely(() => saveImpl(data, replaceId))
 }

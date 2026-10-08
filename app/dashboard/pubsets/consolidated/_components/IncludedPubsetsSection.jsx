@@ -2,13 +2,21 @@
 
 import { useState, useEffect } from 'react'
 import { ChevronDown, ChevronRight, Save, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useSession } from 'next-auth/react'
 import { getUserByEmail, getUserRole } from '@/lib/crud/coreCrud'
 import { buildInflightRollup } from '@/lib/crud/inflightRollup'
-import { findDashboardSourceForPubsetsAction, saveDashboardSourceAction } from '@/app/dashboard/_actions/sources'
+import { createDashboardSourceAction } from '@/app/dashboard/_actions/sources'
 import { isManagerRole } from '@/lib/auth/roles'
 
 /**
@@ -19,9 +27,8 @@ import { isManagerRole } from '@/lib/auth/roles'
  */
 const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const [showDialog, setShowDialog] = useState(false) // the save panel on the page (not a popup)
-  const [isCheckingExisting, setIsCheckingExisting] = useState(false)
-  const [existingSource, setExistingSource] = useState(null) // source already saved for this set of pubsets
+  const [showDialog, setShowDialog] = useState(false)
+  const [existingSource, setExistingSource] = useState(null) // set when these pubsets are already saved
   const [dashboardName, setDashboardName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState(null) // 'success' | 'error' | null
@@ -83,34 +90,15 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
     return `${productLabel} — ${namesStr} [${idsStr}] — ${dateStr} ${timeStr}`
   }
 
-  // An overwrite keeps the existing source's name unless the user edits it.
-  const showConflict = (existing) => {
-    setExistingSource(existing)
-    if (existing.name) setDashboardName(existing.name)
-  }
-
-  // Opens the save panel and checks whether these pubsets already have a source:
-  // one source per set of pubsets, so the same data is never counted twice in reports.
-  const handleSaveAsDashboardSource = async () => {
+  const handleSaveAsDashboardSource = () => {
     setShowDialog(true)
+    setExistingSource(null)
     setSaveStatus(null)
     setErrorMessage('')
-    setExistingSource(null)
     setDashboardName(generateSourceName())
-    setIsCheckingExisting(true)
-    try {
-      const result = await findDashboardSourceForPubsetsAction(pubsets.map(p => p.id))
-      if (result.error) throw new Error(result.error)
-      if (result.data.existing) showConflict(result.data.existing)
-    } catch (error) {
-      setSaveStatus('error')
-      setErrorMessage(error.message || 'Could not check for an existing dashboard source')
-    } finally {
-      setIsCheckingExisting(false)
-    }
   }
 
-  // replaceId: the id of the existing source to overwrite, or null to create a new one.
+  // replaceId: id of the already-saved source to overwrite, or null for a normal save.
   const handleSave = async (replaceId = null) => {
     if (!session?.jwt || !session?.user?.email) {
       setErrorMessage('Authentication required. Please sign in again.')
@@ -224,11 +212,11 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
       // Save directly to Strapi using CRUD function
       // Saved on the server: owner and Customer_id come from the session, and Allocation rows are
       // preprocessed into tbrescalcs2 in the same call.
-      const result = await saveDashboardSourceAction(dashboardSourceData, replaceId)
+      const result = await createDashboardSourceAction(dashboardSourceData, replaceId)
       if (result.error) throw new Error(result.error)
       if (result.data.conflict) {
-        // Someone saved a source for these pubsets since the panel opened: show the choice instead.
-        showConflict(result.data.conflict)
+        // Already saved: show who has it and ask whether to overwrite. Nothing was written.
+        setExistingSource(result.data.conflict)
         return
       }
       const { preprocess } = result.data
@@ -258,117 +246,6 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
     setErrorMessage('')
   }
 
-  const busy = isSaving || saveStatus === 'success'
-  const pubsetLabel = pubsets.map(p => `${p.name || 'Unnamed'} (ID ${p.id})`).join(', ')
-  const formatDate = (value) => {
-    if (!value) return 'an unknown date'
-    const d = new Date(value)
-    return isNaN(d) ? String(value) : d.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-  }
-
-  // The save step, shown in the page where the button was. No popup.
-  const renderSavePanel = () => (
-    <section className="rounded-lg border-2 border-blue-300 bg-white p-5 shadow-sm" aria-labelledby="save-source-title">
-      <h2 id="save-source-title" className="text-lg font-bold text-gray-900">Save As Dashboard Source</h2>
-      <p className="mt-1 text-sm text-gray-600">
-        {pubsets.length === 1 ? 'Pubset' : `${pubsets.length} pubsets`}: <span className="font-medium text-gray-800">{pubsetLabel}</span>
-        {' '}· {consolidatedData?.length || 0} items (all hierarchy levels)
-      </p>
-
-      {isCheckingExisting ? (
-        <div className="mt-4 flex items-center gap-2 text-gray-600">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <span>Checking whether {pubsets.length === 1 ? 'this pubset already has' : 'these pubsets already have'} a dashboard source...</span>
-        </div>
-      ) : (
-        <>
-          {existingSource && saveStatus !== 'success' && (
-            <div className="mt-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-amber-950">
-              <p className="flex items-center gap-2 font-semibold">
-                <AlertCircle className="h-5 w-5 shrink-0" />
-                {pubsets.length === 1 ? 'This pubset is already saved as a dashboard source' : 'This set of pubsets is already saved as a dashboard source'}
-              </p>
-              <p className="mt-2 text-sm">
-                <span className="font-medium">{pubsetLabel}</span> {pubsets.length === 1 ? 'is' : 'are'} already in
-                {' '}&ldquo;<span className="font-medium">{existingSource.name || 'Unnamed source'}</span>&rdquo;,
-                owned by {existingSource.owner || 'an unknown user'}, last saved {formatDate(existingSource.savedAt)}.
-              </p>
-              <p className="mt-2 text-sm">
-                Each pubset, or set of pubsets, can have only one dashboard source so that reports never count the same data twice.
-              </p>
-              {existingSource.canOverwrite ? (
-                <p className="mt-2 text-sm">
-                  <span className="font-medium">Overwrite</span> replaces that source&rsquo;s data with the data on this page.
-                  It keeps its owner and sharing, so the dashboards and reports that use it show the new data.
-                </p>
-              ) : (
-                <p className="mt-2 text-sm font-medium">
-                  Only its owner ({existingSource.owner || 'unknown'}) or an Administrator can overwrite it.
-                </p>
-              )}
-            </div>
-          )}
-
-          {(!existingSource || existingSource.canOverwrite) && saveStatus !== 'success' && (
-            <div className="mt-4 grid gap-2">
-              <Label htmlFor="dashboard-name">Dashboard Source Name</Label>
-              <Input
-                id="dashboard-name"
-                value={dashboardName}
-                onChange={(e) => setDashboardName(e.target.value)}
-                placeholder="Enter a name for this dashboard source"
-                disabled={busy}
-              />
-              <p className="text-xs text-gray-500">
-                {existingSource
-                  ? 'The existing name is kept unless you change it.'
-                  : 'System-proposed name, edit to customize. Format: Product — Pubset Names [IDs] — Date Time'}
-              </p>
-            </div>
-          )}
-        </>
-      )}
-
-      {saveStatus === 'success' && (
-        <div className="mt-4 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-3 text-green-800">
-          <CheckCircle className="h-5 w-5" />
-          <span>{existingSource ? 'Dashboard source overwritten.' : 'Dashboard source saved.'} Opening the dashboard...</span>
-        </div>
-      )}
-
-      {saveStatus === 'error' && (
-        <div className="mt-4 flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-red-800">
-          <XCircle className="h-5 w-5 shrink-0" />
-          <div>
-            <p className="font-medium">Failed to save</p>
-            {errorMessage && <p className="text-sm">{errorMessage}</p>}
-          </div>
-        </div>
-      )}
-
-      {!isCheckingExisting && saveStatus !== 'success' && (
-        <div className="mt-5 flex flex-wrap gap-3">
-          {existingSource ? (
-            existingSource.canOverwrite && (
-              <Button onClick={() => handleSave(existingSource.id)} disabled={busy} className="bg-amber-600 hover:bg-amber-700">
-                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-                {isSaving ? 'Overwriting...' : 'Overwrite existing source'}
-              </Button>
-            )
-          ) : (
-            <Button onClick={() => handleSave()} disabled={busy}>
-              {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              {isSaving ? 'Saving...' : 'Save'}
-            </Button>
-          )}
-          <Button variant="outline" onClick={handleCancel} disabled={isSaving}>
-            {existingSource && !existingSource.canOverwrite ? 'Close' : 'Cancel'}
-          </Button>
-        </div>
-      )}
-    </section>
-  )
-
   return (
     <>
       {/* Prominent Save Button Section */}
@@ -378,8 +255,6 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
             <Loader2 className="w-5 h-5 animate-spin" />
             <span>Checking permissions...</span>
           </div>
-        ) : canCreateDashboardSource() && showDialog ? (
-          renderSavePanel()
         ) : canCreateDashboardSource() ? (
           <button
             onClick={handleSaveAsDashboardSource}
@@ -468,6 +343,125 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
       )}
       </div>
 
+      {/* Save Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Save As Dashboard Source</DialogTitle>
+            <DialogDescription>
+              Create a new dashboard source from {pubsets.length} selected pubset{pubsets.length !== 1 ? 's' : ''} containing {consolidatedData?.length || 0} items.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="dashboard-name">Dashboard Source Name</Label>
+              <Input
+                id="dashboard-name"
+                value={dashboardName}
+                onChange={(e) => setDashboardName(e.target.value)}
+                placeholder="Enter a name for this dashboard source"
+                disabled={isSaving || saveStatus === 'preprocessing' || saveStatus === 'success'}
+              />
+              <p className="text-xs text-gray-500">
+                System-proposed name — edit to customize. Format: Product — Pubset Names [IDs] — Date Time
+              </p>
+            </div>
+
+            {/* Already saved: ask whether to overwrite */}
+            {existingSource && saveStatus !== 'success' && (
+              <div className="p-3 bg-amber-50 border border-amber-300 rounded-lg text-amber-950 text-sm space-y-2">
+                <p className="flex items-center gap-2 font-semibold">
+                  <AlertCircle className="w-5 h-5 shrink-0" />
+                  Already saved
+                </p>
+                <p>
+                  {pubsets.length === 1 ? 'This pubset is' : 'These pubsets are'} already saved as
+                  {' '}&ldquo;<span className="font-medium">{existingSource.name || 'Unnamed source'}</span>&rdquo;
+                  {existingSource.owner ? `, owned by ${existingSource.owner}` : ''}
+                  {existingSource.savedAt ? `, last saved ${new Date(existingSource.savedAt).toLocaleString()}` : ''}.
+                  {' '}Only one dashboard source is allowed per set of pubsets.
+                </p>
+                {existingSource.canOverwrite ? (
+                  <p className="font-medium">Overwrite it with this data? Dashboards and reports that use it will show the new data.</p>
+                ) : (
+                  <p className="font-medium">Only its owner or an Administrator can overwrite it.</p>
+                )}
+              </div>
+            )}
+
+            {/* Status messages */}
+            {saveStatus === 'preprocessing' && (
+              <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Source saved. Auto-preprocessing resource allocation data...</span>
+              </div>
+            )}
+
+            {saveStatus === 'success' && (
+              <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg text-green-800">
+                <CheckCircle className="w-5 h-5" />
+                <span>Dashboard source saved successfully!</span>
+              </div>
+            )}
+
+            {saveStatus === 'error' && (
+              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-800">
+                <XCircle className="w-5 h-5" />
+                <div>
+                  <p className="font-medium">Failed to save</p>
+                  {errorMessage && <p className="text-sm">{errorMessage}</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Pubset details */}
+            <div className="text-sm text-gray-600 space-y-1">
+              <p><strong>Source Pubsets:</strong> {pubsets.map(p => p.name).join(', ')}</p>
+              <p><strong>Total Items:</strong> {consolidatedData?.length || 0} (all hierarchy levels)</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+              disabled={isSaving || saveStatus === 'preprocessing' || saveStatus === 'success'}
+            >
+              {existingSource ? (existingSource.canOverwrite ? 'No, keep it' : 'Close') : 'Cancel'}
+            </Button>
+            {(!existingSource || existingSource.canOverwrite) && (
+              <Button
+                onClick={() => handleSave(existingSource?.id ?? null)}
+                disabled={isSaving || saveStatus === 'preprocessing' || saveStatus === 'success'}
+                className={existingSource ? 'bg-amber-600 hover:bg-amber-700' : undefined}
+              >
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {existingSource ? 'Overwriting...' : 'Saving...'}
+                  </>
+                ) : saveStatus === 'preprocessing' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : saveStatus === 'success' ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Saved
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    {existingSource ? 'Yes, overwrite' : 'Save'}
+                  </>
+                )}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
