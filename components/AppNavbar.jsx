@@ -20,6 +20,7 @@ const NAV = [
   { label: 'Help', href: '/help' },
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Pubsets', href: '/pubsets' },
+  { label: 'Personal Dashboard', href: '/personaldashboard' },
   { label: 'AI Generator', href: '/tbgenerator' },
   {
     label: 'Notifications',

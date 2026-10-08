@@ -623,6 +623,7 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/aitemp` | The original helpapp help panel (doc picker, Gemini/Ollama), to be enhanced later | yes |
 | `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
+| `/personaldashboard/*` | Personal Dashboard, moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |
 | `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
 | `/tbgenerator` | AI Generator | yes |
 
