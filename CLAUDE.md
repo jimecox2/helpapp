@@ -426,51 +426,19 @@ GEMINI_API_KEY=your_production_gemini_key
 
 If using Ollama on the production server, update `OLLAMA_HOST` in `/config/ai.js` to point to the correct internal address.
 
-### Dockerfile (create if not present)
+### Dockerfile
 
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-EXPOSE 3002
-CMD ["npm", "start"]
-```
+`Dockerfile` in the repo: `node:22-alpine`, Next.js standalone output, port 3010, non-root user.
 
-### docker-compose.yml (example)
+### Deployment (same pattern as every Timebars container)
 
-```yaml
-version: '3.8'
-services:
-  helpapp:
-    container_name: helpapp
-    image: jimecox807/helpapp:latest
-    ports:
-      - "3002:3002"
-    env_file:
-      - .env.local
-    restart: unless-stopped
-```
-
-### Deployment Process
-
-```bash
-# 1. Build and verify locally
-npm run build
-
-# 2. Build Docker image
-docker build -t helpapp:latest .
-
-# 3. Tag and push to Docker Hub
-docker tag helpapp:latest jimecox807/helpapp:latest
-docker push jimecox807/helpapp:latest
-
-# 4. On server: pull and start
-docker pull jimecox807/helpapp:latest
-docker compose up -d
-```
+- Build and push: `./deploy-push-to-hub-secure.sh` → `jimecox807/tbhelpapp:<date tag>` (e.g. `2026.10.12`)
+  and `:latest`, using the saved `docker login`. `.dockerignore` keeps every `.env*` out of the image.
+- Server files (`docker-compose.yml`, `.env.example`, `deploy.sh`) live in the **tbown** package,
+  `docker/tbhelp/` → `~/docker/tbhelp` on each box. `.env.local` (chmod 600) holds secrets and this box's
+  addresses; `.env` holds only `HELPAPP_TAG=`. Change a value: edit `.env.local`, then
+  `docker compose up -d --force-recreate`. No rebuild.
+- Container `tbhelpapp`, port `127.0.0.1:3010`, Docker network `tbnet` (shared by every Timebars container).
 
 ### Pre-Deployment Checklist
 
@@ -600,10 +568,10 @@ are unchanged, so the app (tbrunp) only needed a base-URL change.
   (`.env.local` next to the compose file, `chmod 600`, never committed, never a `NEXT_PUBLIC_` name).
 - `lib/ai/guard.js` runs first on every route: body size cap, per-IP rate limit, Strapi login check
   (`Authorization: Bearer <JWT>` verified against `STRAPI_URL`/users/me; `AI_REQUIRE_LOGIN=false` turns it off).
-- The app's nginx proxies `/ai/` to `http://tbhelpapp:3010/api/ai/` over the shared Docker network `tbhelp`
+- The app's nginx proxies `/ai/` to `http://tbhelpapp:3010/api/ai/` over the shared Docker network `tbnet`
   (no CORS needed; `AI_ALLOWED_ORIGINS` only if a browser calls this service directly).
 - Test: `npm run build && npm run test:ai` (Gemini and Strapi are stubbed, no key needed).
-- Deploy: `./deploy.sh` on each box (tag in `.env`, secrets in `.env.local`). Build and push: `./deploy-push-to-hub-secure.sh`.
+- Deploy: tbown `docker/tbhelp/deploy.sh` on each box (tag in `.env`, secrets in `.env.local`). Build and push: `./deploy-push-to-hub-secure.sh`.
 
 ## Copies of other repos' files — do not edit here
 
@@ -630,10 +598,11 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 - `middleware.js`: `help.`, `dashboard.`, `pubsets.<domain>` 308 to `/help`, `/dashboard`, `/pubsets` on
   `cloud.<domain>`; every page except `/`, `/auth/*` and static files needs a login. API routes check their own login.
 - Auth: `app/auth/auth.js` (NextAuth v5, same Strapi as tbwww). **Own session**, not shared with www: cookie
-  names start `tbcloud.`. Register / password reset / profile / orders link to `NEXT_PUBLIC_WWW_URL`.
+  names start `tbcloud.`. Register / password reset / profile / orders link to `WWW_URL` (`config/site.js`).
 - The Strapi full-access token is `STRAPI_ADMIN_TOKEN`, server only. Writes that need it are server actions
   (`app/dashboard/_actions/sources.js`, `app/admin/users/_actions.js`) that check the caller's role in Strapi first.
   Never import it into a client component and never give it a `NEXT_PUBLIC_` name.
-- Public URLs: built-in defaults from `.env.production` / `.env.development` (committed, public values only); each
-  server can override them at run time with `CLOUD_API_URL`, `CLOUD_WWW_URL`, `NEXTAUTH_URL` (`config/site.js`).
+- Public URLs: `config/site.js` (same names as tbwww). Defaults in code are Timebars Ltd.'s addresses; each server
+  sets its own at run time in `.env.local` (`CLOUD_API_URL`, `CLOUD_WWW_URL`, `NEXTAUTH_URL`, `RUN_URL_AB/TB/CB`).
+  Only `.env.example` and `.env.local` exist — no `NEXT_PUBLIC_` values, nothing built into the image.
 - Nav: the Assistance menu links back to www (pricing, FAQ, help articles, contact). Notification cron: `send-notification.sh`.

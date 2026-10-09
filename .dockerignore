@@ -1,7 +1,7 @@
 node_modules
 .next
 .git
-.env
-.env*.local
-.envdev*
 npm-debug.log*
+# Never build a value into the image: every setting is read at run time from the server's .env.local
+.env
+.env.*

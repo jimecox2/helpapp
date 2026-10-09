@@ -1,10 +1,9 @@
 // config/site.js — public addresses only (they reach the browser), so never add a token, key or password.
 //
-// One image for every server: each address can be set per server at run time in .env.local
-// (CLOUD_API_URL, CLOUD_API_URL_GQL, CLOUD_WWW_URL, CLOUD_FRONTEND_URL or NEXTAUTH_URL). The server
-// reads them from process.env; the root layout hands the same values to the browser as
-// window.__TB_CLOUD__ before any app code runs (RuntimeConfigScript). Unset = the values built into
-// the image from .env.production (Timebars Ltd.'s own addresses).
+// One image for every server: each value is read at run time from the server's .env.local
+// (see .env.example). The server reads process.env; the root layout hands the same values to the
+// browser as window.__TB_CLOUD__ before any app code runs. Unset = Timebars Ltd.'s own addresses.
+// Same names as tbwww's config/site.js.
 
 const isServer = typeof window === 'undefined'
 
@@ -14,6 +13,9 @@ const runtime = isServer
       apiUrlGql: process.env.CLOUD_API_URL_GQL,
       frontendUrl: process.env.CLOUD_FRONTEND_URL || process.env.NEXTAUTH_URL,
       wwwUrl: process.env.CLOUD_WWW_URL,
+      runUrlAb: process.env.RUN_URL_AB,
+      runUrlTb: process.env.RUN_URL_TB,
+      runUrlCb: process.env.RUN_URL_CB,
     }
   : window.__TB_CLOUD__ || {}
 
@@ -21,30 +23,29 @@ const pick = (value, fallback) =>
   typeof value === 'string' && value.trim() ? value.trim().replace(/\/+$/, '') : fallback
 
 // Strapi REST API, e.g. https://be2.timebars.com/api
-export const API_URL = pick(runtime.apiUrl, process.env.NEXT_PUBLIC_API_URL)
+export const API_URL = pick(runtime.apiUrl, 'https://be2.timebars.com/api')
 
-// Strapi's own address without /api (uploaded images), e.g. https://be2.timebars.com. When only
-// CLOUD_API_URL is set, it is that address with /api taken off.
-export const API_URL_GQL = pick(
-  runtime.apiUrlGql || (runtime.apiUrl ? runtime.apiUrl.trim().replace(/\/+$/, '').replace(/\/api$/, '') : ''),
-  process.env.NEXT_PUBLIC_API_URL_GQL,
-)
+// Strapi's own address without /api (uploaded images). Defaults to API_URL with /api taken off.
+export const API_URL_GQL = pick(runtime.apiUrlGql, API_URL.replace(/\/api$/, ''))
 
 // This app's own public address, e.g. https://cloud.timebars.com
-export const FRONTEND_URL = pick(runtime.frontendUrl, process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://cloud.timebars.com')
-
-export const RUN_URL_AB = process.env.NEXT_PUBLIC_RUN_URL_AB
-
-export const RUN_URL_TB = process.env.NEXT_PUBLIC_RUN_URL_TB
-
-export const RUN_URL_CB = process.env.NEXT_PUBLIC_RUN_URL_CB
+export const FRONTEND_URL = pick(runtime.frontendUrl, 'https://cloud.timebars.com')
 
 // The marketing / accounts site: register, profile, orders and password reset live there.
-export const WWW_URL = pick(runtime.wwwUrl, process.env.NEXT_PUBLIC_WWW_URL || 'https://www.timebars.com')
+export const WWW_URL = pick(runtime.wwwUrl, 'https://www.timebars.com')
 
-export const GOOGLE_ANAL_ID = process.env.NEXT_PUBLIC_GOOGLE_ANAL_ID
-
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
+// The three apps
+export const RUN_URL_AB = pick(runtime.runUrlAb, 'https://ab.timebars.com')
+export const RUN_URL_TB = pick(runtime.runUrlTb, 'https://tb.timebars.com')
+export const RUN_URL_CB = pick(runtime.runUrlCb, 'https://cb.timebars.com')
 
 // What the root layout sends to the browser (server only).
-export const BROWSER_CONFIG = { apiUrl: API_URL, apiUrlGql: API_URL_GQL, frontendUrl: FRONTEND_URL, wwwUrl: WWW_URL }
+export const BROWSER_CONFIG = {
+  apiUrl: API_URL,
+  apiUrlGql: API_URL_GQL,
+  frontendUrl: FRONTEND_URL,
+  wwwUrl: WWW_URL,
+  runUrlAb: RUN_URL_AB,
+  runUrlTb: RUN_URL_TB,
+  runUrlCb: RUN_URL_CB,
+}
