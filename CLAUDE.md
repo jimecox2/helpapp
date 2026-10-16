@@ -582,6 +582,20 @@ are unchanged, so the app (tbrunp) only needed a base-URL change.
 
 The owner copies them over periodically. Never change them in this repo, whatever the task.
 
+### Manual doc sync checklist (owner copies by hand)
+
+Two batches, each with one master. Mirror the whole folder so renamed or deleted files go too
+(`rsync -a --delete`), then commit in each target repo:
+
+| Batch | Master | Copy to |
+|---|---|---|
+| Help files | tbrunp `docsHelp/` | tbwww `public/docsHelp/`, helpapp `public/docsHelp/` |
+| Marketing / other | tbwww `public/docsOther/` | helpapp `public/docsOther/` (tbrunp `docsOther/` as needed) |
+
+After a help file is added, renamed or deleted, update the Ask AI registries in the same change:
+tbrunp `scripts/ai/helpDocsLoader.js`, helpapp `lib/help/helpDocs.js` and `components/HelpChatPanel.jsx`.
+Leave out `*_Complete_Reference_Guide.md` (duplicates of the other guides).
+
 ## Timebars Cloud (cloud.timebars.com) — moved from tbwww
 
 helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration and accounts.
