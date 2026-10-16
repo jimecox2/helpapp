@@ -1,5 +1,5 @@
-// Ported verbatim from the Cloudflare Worker `timebars-gemini-staff-tasks` (tbrunp, scripts/ai).
-// Same request and response JSON; only the entry point, key source and CORS changed.
+// AI route /api/ai/staff-tasks: the Timebars app (tbrunp) calls it at /ai/staff-tasks (scripts/ai/aiAuth.js).
+// The request and response JSON are shared with the app: change them on both sides together.
 import { corsHeaders, optionsResponse, guard } from '@/lib/ai/guard'
 
 export const dynamic = 'force-dynamic'
