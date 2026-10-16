@@ -85,7 +85,7 @@ export default function TbGeneratorPanel() {
     } catch (error) {
       let text = '❌ '
       if (error.message?.includes('GEMINI_API_KEY')) {
-        text += 'Cloud AI is not configured. Check your GEMINI_API_KEY in .env.local.'
+        text += 'Cloud AI is not configured. Check GEMINI_API_KEY in the server\'s secrets.env (local dev: .env.local).'
       } else if (error.message?.includes('429')) {
         text += 'Rate limit reached — please wait a minute and try again.'
       } else {

@@ -436,10 +436,12 @@ If using Ollama on the production server, update `OLLAMA_HOST` in `/config/ai.js
 
 - Build and push: `./deploy-push-to-hub-secure.sh` → `jimecox807/tbhelpapp:<date tag>` (e.g. `2026.10.12`)
   and `:latest`, using the saved `docker login`. `.dockerignore` keeps every `.env*` out of the image.
-- Server files (`docker-compose.yml`, `.env.example`, `deploy.sh`) live in the **tbown** package,
-  `docker/tbhelp/` → `~/docker/tbhelp` on each box. `.env.local` (chmod 600) holds secrets and this box's
-  addresses; `.env` holds only `HELPAPP_TAG=`. Change a value: edit `.env.local`, then
-  `docker compose up -d --force-recreate`. No rebuild.
+- Server files live in the **tbown** package (V2: `templates/tbhelp/`). `scripts/apply.sh` on the dev box
+  writes `$TB/tbhelp/.env.local` (addresses, `STRAPI_URL=http://tbbe:1337/api`) from `tbapps.conf`; keys
+  (`GEMINI_API_KEY` …) go in `$TB/secrets.env` on the server and `03-make-passwords.sh` copies them to
+  `tbhelp/.secrets.env` (chmod 600). `.env` holds only `HELPAPP_TAG=`. Deploy: `cd $TB && ./deploy-all.sh`
+  or `./deploy.sh` in `$TB/tbhelp`. No rebuild for a setting. Guide: tbown `DEPLOY_TB_SYSTEM_CONTAINER_OPTION_V2.md`.
+  (V1 servers: `~/docker/tbhelp`, secrets and addresses in `.env.local`.)
 - Container `tbhelpapp`, port `127.0.0.1:3010`, Docker network `tbnet` (shared by every Timebars container).
 
 ### Pre-Deployment Checklist
@@ -573,7 +575,7 @@ are unchanged, so the app (tbrunp) only needed a base-URL change.
 - The app's nginx proxies `/ai/` to `http://tbhelpapp:3010/api/ai/` over the shared Docker network `tbnet`
   (no CORS needed; `AI_ALLOWED_ORIGINS` only if a browser calls this service directly).
 - Test: `npm run build && npm run test:ai` (Gemini and Strapi are stubbed, no key needed).
-- Deploy: tbown `docker/tbhelp/deploy.sh` on each box (tag in `.env`, secrets in `.env.local`). Build and push: `./deploy-push-to-hub-secure.sh`.
+- Deploy: tbown V2 package, `cd $TB && ./deploy-all.sh` (tag in `.env`, keys in `.secrets.env`, settings in `.env.local`). Build and push: `./deploy-push-to-hub-secure.sh`.
 
 ## Copies of other repos' files — do not edit here
 
