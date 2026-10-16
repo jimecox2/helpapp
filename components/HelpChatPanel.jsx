@@ -90,13 +90,6 @@ const HELP_DOCS = {
     path: '/docsHelp/Agilebars_User_Guide.md',
     priority: 1,
   },
-  'kanban-primer.md': {
-    title: 'Kanban Primer',
-    category: 'Agilebars',
-    products: ['AB'],
-    path: '/docsHelp/Agilebars_Kanban_Primer.md',
-    priority: 2,
-  },
   'other-agilebars-product-features.md': {
     title: 'Product Features',
     category: 'Agilebars',
@@ -140,34 +133,6 @@ const HELP_DOCS = {
     products: ['CB'],
     path: '/docsHelp/Costbars_User_Guide.md',
     priority: 1,
-  },
-  'writing-business-case.md': {
-    title: 'Writing a Business Case',
-    category: 'Costbars',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_Writing_A_Business_Case.md',
-    priority: 2,
-  },
-  'ppm-portfolio-status-balancing.md': {
-    title: 'PPM Portfolio Status & Balancing',
-    category: 'Costbars',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_PPM_Portfolio_Status_And_Balancing_Report.md',
-    priority: 3,
-  },
-  'ppm-project-assessment.md': {
-    title: 'PPM Project Assessment Tool',
-    category: 'Costbars',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_PPM_Project_Assessment_Tool.md',
-    priority: 4,
-  },
-  'ppm-scoring-guide.md': {
-    title: 'PPM Scoring Guide (5 Steps)',
-    category: 'Costbars',
-    products: ['CB'],
-    path: '/docsHelp/Costbars_PPM_Scoring_Guide_5_Step_Process.md',
-    priority: 5,
   },
   'other-costbars-product-features.md': {
     title: 'Product Features',
@@ -241,40 +206,12 @@ const HELP_DOCS = {
     path: '/docsHelp/Common_01_Getting_Started.md',
     priority: 1,
   },
-  'innovations.md': {
-    title: 'Innovations by Timebars Ltd',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_01_Innovations_By_Timebars_Ltd.md',
-    priority: 2,
-  },
-  'product-design-strategy.md': {
-    title: 'Product Design Strategy',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_01_Product_Design_Strategy.md',
-    priority: 3,
-  },
   'user-interface-guide.md': {
     title: 'User Interface Guide',
     category: 'Common Help Files',
     products: ['TB', 'AB', 'CB'],
     path: '/docsHelp/Common_02_User_Interface_Guide.md',
     priority: 4,
-  },
-  'configurable-features.md': {
-    title: 'Configurable Features',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Configurable_Features_User_Guide.md',
-    priority: 5,
-  },
-  'data-management.md': {
-    title: 'Data Management',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Data_Management_User_Guide.md',
-    priority: 6,
   },
   'data-model-scheduling.md': {
     title: 'Data Model & Scheduling Engine',
@@ -283,47 +220,19 @@ const HELP_DOCS = {
     path: '/docsHelp/Common_03_Data_Model_and_Scheduling_Engine_Guide.md',
     priority: 7,
   },
-  'data-structure.md': {
-    title: 'Data Structure',
+  'data-sync-backup-recovery.md': {
+    title: 'Data Synchronization, Backup, Recovery and Retention',
     category: 'Common Help Files',
     products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Data_Structure_User_Guide.md',
-    priority: 8,
+    path: '/docsHelp/Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md',
+    priority: 4,
   },
-  'metadata-fields.md': {
-    title: 'MetaData Fields',
+  'forms-reports-graphs.md': {
+    title: 'Forms, Reports and Graphs',
     category: 'Common Help Files',
     products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_MetaData_Fields_Detail_Report.md',
-    priority: 9,
-  },
-  'picklists-tagging.md': {
-    title: 'Picklists & Tagging',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Picklists_And_Tagging_Help.md',
-    priority: 10,
-  },
-  'spreadsheet-sync.md': {
-    title: 'Spreadsheet Sync',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_03_Spreadsheet_Sync_User_Guide.md',
-    priority: 11,
-  },
-  'focd-forms.md': {
-    title: 'FOCD Forms',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_04_FOCD_Forms_User_Guide.md',
-    priority: 12,
-  },
-  'local-reports-graphs.md': {
-    title: 'Local Reports & Graphs',
-    category: 'Common Help Files',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_05_Local_Reports_And_Graphs_Guide.md',
-    priority: 13,
+    path: '/docsHelp/Common_05_Forms_Reports_And_Graphs_Guide.md',
+    priority: 5,
   },
   'risks-issues-change-requests.md': {
     title: 'Risks, Issues & Change Requests',
@@ -364,7 +273,7 @@ const HELP_DOCS = {
     title: 'Text Notifications',
     category: 'Common Help Files',
     products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_10_Text_Notifications.md',
+    path: '/docsHelp/Common_10_Text_Notifications_User_Guide.md',
     priority: 19,
   },
   'supply-demand-grids.md': {
@@ -376,32 +285,25 @@ const HELP_DOCS = {
   },
 
   // ── Advanced ───────────────────────────────────────────────────────────────
-  'text-notifications-technical.md': {
-    title: 'Text Notifications — Technical Details',
+  'customer-ownership-installation.md': {
+    title: 'Customer Ownership and Installation Options',
     category: 'Advanced',
     products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_10_Text_Notifications_Technical_Details.md',
-    priority: 1,
-  },
-  'customer-installation-options.md': {
-    title: 'Customer Installation Options',
-    category: 'Advanced',
-    products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_12_Customer_Installation_Options.md',
+    path: '/docsHelp/Common_12_Customer_Ownership_Installation_Options.md',
     priority: 2,
   },
-  'data-migration.md': {
-    title: 'Data Migration Assistance',
+  'offline-mode-security.md': {
+    title: 'Offline Mode and Security',
     category: 'Advanced',
     products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_12_Data_Migration_Assistance.md',
+    path: '/docsHelp/Common_13_Offline_Mode_And_Security.md',
     priority: 3,
   },
-  'on-prem-installation.md': {
-    title: 'On-Premises Installation',
+  'administrators-guide.md': {
+    title: 'Administrators Guide',
     category: 'Advanced',
     products: ['TB', 'AB', 'CB'],
-    path: '/docsHelp/Common_12_Products_Installation_For_On_Prem.md',
+    path: '/docsHelp/Administrators_Guide.md',
     priority: 4,
   },
 

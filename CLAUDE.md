@@ -57,7 +57,7 @@ Next.js 14 App (Port 3002)
      │
      ├── HelpChatPanel.jsx          → All UI logic: product tabs, doc picker, chat
      │
-     └── /public/docsHelp/*.md      → 35 static markdown documentation files
+     └── /public/docsHelp/*.md      → static markdown help files (copied from tbrunp)
               │
               ├── Fetched client-side on demand (per-doc cache, 1-hour TTL)
               └── Sent as context in POST body to /api/chat
@@ -124,7 +124,7 @@ helpapp/
 ├── lib/
 │   └── utils.js                  # cn() helper only
 ├── public/
-│   └── docsHelp/                 # 35 markdown documentation files
+│   └── docsHelp/                 # help files, copied from tbrunp docsHelp/
 │       ├── Timebars_User_Guide.md
 │       ├── Agilebars_User_Guide.md
 │       ├── Costbars_User_Guide.md
@@ -278,7 +278,9 @@ All documentation lives in `/public/docsHelp/` as markdown files. These are serv
 
 ### Documentation Registry
 
-The `HELP_DOCS` object in `HelpChatPanel.jsx` is the registry of all 35 docs. Each entry defines:
+The `HELP_DOCS` object in `HelpChatPanel.jsx` (the `/aitemp` panel) is its registry of help (`/docsHelp/`) and
+marketing (`/docsOther/`) docs. Every path must exist under `public/`; the `*_Complete_Reference_Guide.md`
+files are left out because they repeat the other guides. `/help` uses `lib/help/helpDocs.js` instead. Each entry defines:
 
 ```javascript
 {
