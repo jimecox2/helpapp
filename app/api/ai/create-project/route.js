@@ -16,7 +16,7 @@ export async function POST(request) {
 
   try {
     if (!process.env.GEMINI_API_KEY) {
-      throw new Error("GEMINI_API_KEY is not set on the server (.env.local).");
+      throw new Error("GEMINI_API_KEY is not set on the server (paste it into $TB/secrets.env, then run 03-make-passwords.sh and deploy-all.sh; local dev: .env.local).");
     }
 
     let userAsk = "";
