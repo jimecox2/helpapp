@@ -1,5 +1,5 @@
-// Ported verbatim from the Cloudflare Worker `timebars-help-assistant` (tbrunp, deploy/workers).
-// Same request and response JSON; only the entry point, key source and CORS changed.
+// AI route /api/ai/help: the Timebars app (tbrunp) calls it at /ai/help (scripts/ai/aiAuth.js).
+// The request and response JSON are shared with the app: change them on both sides together.
 import { corsHeaders, optionsResponse, guard } from '@/lib/ai/guard'
 
 export const dynamic = 'force-dynamic'
@@ -48,7 +48,7 @@ export async function POST(request) {
     if (!process.env.GEMINI_API_KEY) {
       return jsonResponse({
         error: 'GEMINI_API_KEY environment variable not set on the server.',
-        instructions: 'Add GEMINI_API_KEY to the .env.local file next to the compose file and restart the container.',
+        instructions: 'Paste GEMINI_API_KEY into $TB/secrets.env on the server, then run bash $TB/scripts/03-make-passwords.sh && cd $TB && ./deploy-all.sh (local dev: .env.local, then restart npm run dev).',
       }, 500);
     }
 

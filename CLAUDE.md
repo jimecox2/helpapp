@@ -436,10 +436,10 @@ If using Ollama on the production server, update `OLLAMA_HOST` in `/config/ai.js
 
 - Build and push: `./deploy-push-to-hub-secure.sh` → `jimecox807/tbhelpapp:<date tag>` (e.g. `2026.10.12`)
   and `:latest`, using the saved `docker login`. `.dockerignore` keeps every `.env*` out of the image.
-- Server files (`docker-compose.yml`, `.env.example`, `deploy.sh`) live in the **tbown** package,
-  `docker/tbhelp/` → `~/docker/tbhelp` on each box. `.env.local` (chmod 600) holds secrets and this box's
-  addresses; `.env` holds only `HELPAPP_TAG=`. Change a value: edit `.env.local`, then
-  `docker compose up -d --force-recreate`. No rebuild.
+- Server files (`docker-compose.yml`, `deploy.sh`) live in the **tbown** package (`templates/tbhelp/` →
+  `$TB/tbhelp` on each server). `.env.local` holds this environment's addresses (written by tbown's `apply`),
+  `.secrets.env` the keys and passwords (`03-make-passwords.sh`), `.env` only `HELPAPP_TAG=`. Change a value
+  through tbown (`apply --force <ENV>` or `secrets.env`), then `./deploy-all.sh`. No rebuild.
 - Container `tbhelpapp`, port `127.0.0.1:3010`, Docker network `tbnet` (shared by every Timebars container).
 
 ### Pre-Deployment Checklist
@@ -552,28 +552,20 @@ grep -r "useLocalAI" --include="*.jsx" --include="*.js"
 
 ---
 
-## AI routes (`/api/ai/*`) — replaces the Cloudflare Workers
+## AI routes (`/api/ai/*`)
 
-Six route handlers ported verbatim from the Timebars Ltd. Cloudflare Workers. Request and response JSON
-are unchanged, so the app (tbrunp) only needed a base-URL change.
+Six route handlers called by the app (tbrunp, `scripts/ai/`): `create-project`, `create-wbs`, `staff-tasks`,
+`resource-plan`, `bcase`, `help`. Request and response JSON are shared with the app: do not change them on one
+side only.
 
-| Route | Replaces worker |
-|---|---|
-| `/api/ai/create-project` | `timebars-gemini-create-project` |
-| `/api/ai/create-wbs` | `timebars-gemini-create-wbs` |
-| `/api/ai/staff-tasks` | `timebars-gemini-staff-tasks` |
-| `/api/ai/resource-plan` | `timebars-gemini-resource-plan` |
-| `/api/ai/bcase` | `timebars-gemini-bcase` |
-| `/api/ai/help` | `timebars-help-assistant` |
-
-- Model stays `gemini-2.5-flash`. `GEMINI_API_KEY` is read from `process.env` on the server only
-  (`.env.local` next to the compose file, `chmod 600`, never committed, never a `NEXT_PUBLIC_` name).
+- Model `gemini-2.5-flash`. `GEMINI_API_KEY` is read from `process.env` on the server only
+  (the tbown package's `secrets.env` → `.secrets.env`, `chmod 600`, never committed, never a `NEXT_PUBLIC_` name).
 - `lib/ai/guard.js` runs first on every route: body size cap, per-IP rate limit, Strapi login check
   (`Authorization: Bearer <JWT>` verified against `STRAPI_URL`/users/me; `AI_REQUIRE_LOGIN=false` turns it off).
 - The app's nginx proxies `/ai/` to `http://tbhelpapp:3010/api/ai/` over the shared Docker network `tbnet`
   (no CORS needed; `AI_ALLOWED_ORIGINS` only if a browser calls this service directly).
 - Test: `npm run build && npm run test:ai` (Gemini and Strapi are stubbed, no key needed).
-- Deploy: tbown `docker/tbhelp/deploy.sh` on each box (tag in `.env`, secrets in `.env.local`). Build and push: `./deploy-push-to-hub-secure.sh`.
+- Deploy: tbown package, `$TB/tbhelp/deploy.sh` or `$TB/deploy-all.sh` on each server (tag in `.env`, keys in `.secrets.env`). Build and push: `./deploy-push-to-hub-secure.sh`.
 
 ## Copies of other repos' files — do not edit here
 

@@ -964,7 +964,7 @@ export default function HelpChatPanel() {
       if (error.message?.includes('429')) {
         errorText += 'Rate limit reached — please wait a minute and try again.'
       } else if (error.message?.includes('GEMINI_API_KEY')) {
-        errorText += 'Cloud AI is not configured. Check your GEMINI_API_KEY in .env.local.'
+        errorText += 'Cloud AI is not configured. Check GEMINI_API_KEY in the server\'s secrets.env (local dev: .env.local).'
       } else if (error.message?.includes('timed out')) {
         errorText += `${activeModel.label} took too long. Try a cloud model or select fewer docs.`
       } else if (error.message?.includes('ECONNREFUSED') || error.message?.includes('fetch failed') || error.message?.includes('Failed to fetch')) {

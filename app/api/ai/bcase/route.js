@@ -1,5 +1,5 @@
-// Ported verbatim from the Cloudflare Worker `timebars-gemini-bcase` (tbrunp, scripts/ai).
-// Same request and response JSON; only the entry point, key source and CORS changed.
+// AI route /api/ai/bcase: the Timebars app (tbrunp) calls it at /ai/bcase (scripts/ai/aiAuth.js).
+// The request and response JSON are shared with the app: change them on both sides together.
 import { corsHeaders, optionsResponse, guard } from '@/lib/ai/guard'
 
 export const dynamic = 'force-dynamic'
@@ -17,7 +17,7 @@ export async function POST(request) {
   let dynamicPrompt = '';
   try {
     if (!process.env.GEMINI_API_KEY) {
-      throw new Error("GEMINI_API_KEY is not set on the server (.env.local).");
+      throw new Error("GEMINI_API_KEY is not set on the server (paste it into $TB/secrets.env, then run 03-make-passwords.sh and deploy-all.sh; local dev: .env.local).");
     }
 
     // Parse the incoming request body
