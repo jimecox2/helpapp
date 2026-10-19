@@ -104,6 +104,15 @@ await t('path traversal refused', async () => {
   assert.equal(r.status, 400)
 })
 
+await t('help host serves PDFs itself, maps guides under /help', async () => {
+  const get = (host, path) => fetch(base + path, { headers: { 'X-Forwarded-Host': host }, redirect: 'manual' })
+  const loc = async (host, path) => (await get(host, path)).headers.get('location')
+  // HELP_URL/pdf/... links (tbwww, Strapi content): files skip the middleware and are served as they are
+  assert.equal((await get('helps.timebars.com', '/pdf/Timebars_Complete_Reference_Guide.pdf')).status, 200)
+  assert.equal(await loc('help.timebars.com', '/common-01-getting-started'), 'https://cloud.timebars.com/help/common-01-getting-started')
+  assert.equal(await loc('help.timebars.com', '/?product=AB'), 'https://cloud.timebars.com/help?product=AB')
+})
+
 process.kill(-app.pid)
 strapi.s.close()
 console.log(failed ? `\n${failed} failed` : '\nall passed')
