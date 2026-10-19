@@ -3,8 +3,8 @@
 For the people who deploy, host and look after the Timebars Ltd. apps (Agilebars, Timebars,
 Costbars). End users do not need this guide.
 
-> **This file is public.** Everything in `docsHelp/` is copied into the web image and can be read
-> at `/docsHelp/…`. Never add IP addresses, tokens, passwords or API keys here. Keep those in your
+> **This file is public.** Everything in `docsHelp/` (helpapp, the master of the help files) is served by
+> Timebars Cloud and can be read at `/docsHelp/…`. Never add IP addresses, tokens, passwords or API keys here. Keep those in your
 > password manager and on the servers only.
 
 Last updated: 16 October 2026.
@@ -109,6 +109,7 @@ replaces the built-in Timebars Ltd. values:
 | `apiUrl` | `API_URL` (their Strapi) | `https://be2.example.com/api` |
 | `wwwUrl` | `WWW_URL` (their website / dashboards) | `https://www.example.com` |
 | `cloudUrl` | `CLOUD_URL` (their Timebars Cloud: Enterprise Dashboard, notifications, AI help) | `https://cloud.example.com` |
+| `helpUrl` | `HELP_URL` (their help library: guide links, spreadsheet downloads) | `https://help.example.com` |
 | `opUrl` | `OP_URL` (their OpenProject; a user's Publishing-page setting still wins) | `https://op.example.com` |
 | `aiBaseUrl` | `AI_BASE_URL` (where the AI routes are; default `/ai`, which the app's own nginx proxies to helpapp, section 19.5) | `/ai` |
 | `sites` | extra rows for `SITES` (same shape; listed first, so they win) | `{ "host": "pm.example.com", "product": "TB", "offline": true }` |
@@ -234,7 +235,7 @@ Follow the `tbown` deployment guide (`DEPLOY_TB_SYSTEM_CONTAINER_OPTION_V2.md`).
 environments are installed exactly as a customer's. Every environment (DEV, STAGING, PROD, TRAINING)
 has its own server. In short:
 
-1. **Dev box:** clone `tbown`, fill in `tbapps.conf` (one section per environment, six names each) and
+1. **Dev box:** clone `tbown`, fill in `tbapps.conf` (one section per environment, six names each; the help name is made from the Cloud name) and
    run `bash scripts/apply.sh`. It makes one package per environment in `envs/<ENV>`, with every address
    already in place.
 2. **Server:** a patched Ubuntu server with an admin user and SSH key login.
@@ -262,9 +263,11 @@ Run the scripts as your admin user, not with `sudo` (except `01-install-docker.s
 
 ## 6. Proxy, HTTPS and DNS
 
-Each environment has six names: the three app names (Agilebars, Timebars, Costbars), the Strapi
-backend, the website and Timebars Cloud. They are set once in `tbapps.conf`, and `apply` writes every
-setting and route from them.
+Each environment has seven names: the three app names (Agilebars, Timebars, Costbars), the Strapi
+backend, the website, Timebars Cloud and its help library. Six are set in `tbapps.conf`; the help name
+(`HELP_HOST`) is made from the Cloud name (`cloud.<domain>` -> `help.<domain>`) unless you type it. `apply`
+writes every setting and route from them. The help name redirects to Cloud's `/help`, so it must share the
+Cloud name's domain.
 
 **Our proxy (`PROXY=caddy`).** The `tbproxy` container (Caddy) answers every name over HTTPS and
 passes it to the container by name over `tbnet`:
@@ -275,6 +278,7 @@ passes it to the container by name over `tbnet`:
 | backend (`be2.<domain>`) | `http://tbbe:1337` |
 | website (`www.<domain>`) | `http://tbwwwp:3001` |
 | Timebars Cloud (`cloud.<domain>`) | `http://tbhelpapp:3010` |
+| help library (`help.<domain>`) | `http://tbhelpapp:3010` |
 
 - `TLS=letsencrypt`: public names, ports 80 and 443 open to the internet. Caddy gets and renews free
   Let's Encrypt certificates on its own.
@@ -566,9 +570,10 @@ docker build -t jimecox807/tbrun:test .
 npm install
 ENABLE_SW=true npx parcel build index.html --no-source-maps
 ENABLE_SW=true node scripts/offline/build-sw.mjs dist
-cp -r docsHelp dist/docsHelp                  # help documents, as the Dockerfile does
 ```
 The result is `dist/`: `index.html`, the bundled JS/CSS/fonts/images and the generated `sw.js`.
+The help files are not in it: Ask AI reads `/docsHelp/` and `/ai/` from Timebars Cloud, so that web server
+proxies both to helpapp as `deploy/nginx/ai-proxy.conf` does.
 The build prints `build-sw: ENABLE_SW=true -> wrote the real sw.js … (offline mode ON)`.
 
 Whichever web server serves `dist/` must:
@@ -600,9 +605,9 @@ is the procedure for building a package, carrying it across the air gap and inst
 |---|---|
 | Planning, bars, drag and drop, Kanban, reports, risks/issues, forms, picklists | **Login and licences** (Strapi) — see 16.6 |
 | Spreadsheet sync and backups (files stay on their network) | **Cloud publishing, Personal / Enterprise dashboards** (Strapi + tbwww) |
-| Help documents (served from the image, `docsHelp/`) | **Ask AI** (helpapp container + Gemini) — needs the internet for Gemini, and a login (Strapi); leave unused, or Option C can connect a local model (16.8) |
+| Help library and help documents (the helpapp container, `/docsHelp/` proxied by the app) | **Ask AI** (helpapp container + Gemini) — needs the internet for Gemini, and a login (Strapi); leave unused, or Option C can connect a local model (16.8) |
 | Offline reload (service worker) on the customer's HTTPS address | **OpenProject sync** — works only against an OpenProject on their LAN (set its URL on the Publishing page, section 11) |
-| | Links to the sales site and the spreadsheet downloads on www.timebars.com — hand the spreadsheet masters over as files instead |
+| | Links to the sales site on www.timebars.com (the spreadsheet downloads come from their own help library, `helpUrl`) |
 
 ### 16.2 Prepare a customer build
 
@@ -633,7 +638,7 @@ mkdir tbrun-<customer>-v1 && cd tbrun-<customer>-v1
 docker save timebars/tbrun:<customer>-v1 | gzip > tbrun-<customer>-v1.tar.gz
 cp <tbown>/templates/tbrun/docker-compose.yml .   # set TBRUN_TAG=<customer>-v1 in .env, image name to timebars/tbrun
 cp <their runtime-config.json> .
-cp ../docsHelp/Administrators_Guide.md ../docsHelp/Common_13_Offline_Mode_And_Security.md .
+cp <helpapp>/public/docsHelp/Administrators_Guide.md <helpapp>/public/docsHelp/Common_13_Offline_Mode_And_Security.md .
 # spreadsheet masters and any demo backup the customer should have:
 #   cp <spreadsheet masters> .
 sha256sum * > SHA256SUMS
@@ -899,10 +904,10 @@ Repositories (owner account `jimecox2`):
 
 | Repo | Visibility | Contents |
 |---|---|---|
-| `tbrunp` | private | the app (AB / TB / CB), app deploy scripts, help docs (the AI client code is `scripts/ai/`; the AI server is `helpapp`) |
+| `tbrunp` | private | the app (AB / TB / CB), app deploy scripts (the AI client code is `scripts/ai/`; the AI server is `helpapp`) |
 | `tbwww` | public | Next.js sales site, sign-up, Stripe, notifications, dashboards |
 | `tbbe` | public | Strapi backend |
-| `helpapp` | public | Next.js AI service (`/api/ai/*`, section 19.5) and the help app |
+| `helpapp` | public | Timebars Cloud: AI service (`/api/ai/*`, section 19.5), the help library and the help files (master) |
 | `nwi-ghub` | optional | sample customer portal |
 
 Steps:
