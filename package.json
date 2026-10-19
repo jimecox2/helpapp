@@ -10,7 +10,8 @@
     "test:ai": "node tests/ai-contract.mjs",
     "prebuild": "npm run check:help",
     "check:help": "node --no-warnings tools/checkHelpLinks.mjs",
-    "toc": "node --no-warnings tools/buildHelpToc.mjs"
+    "toc": "node --no-warnings tools/buildHelpToc.mjs",
+    "test:help": "node --no-warnings tests/help-sync.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.12",

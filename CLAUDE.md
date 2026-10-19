@@ -608,6 +608,7 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
 | `/personaldashboard/*` | Personal Dashboard, moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |
 | `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
+| `/update-help` | Push `public/docsHelp` into Strapi help-articles: Create / Update per guide, Update All (existing articles only), checkbox to also update title, description, tags and SEO (`app/update-help/`, `/api/help-sync`, `lib/help/strapiSync.js`). Strapi Administrator whose email is in `HELP_EDITORS` | yes |
 | `/tbgenerator` | AI Generator: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download) | yes |
 
 - `middleware.js`: `help.`, `dashboard.`, `pubsets.<domain>` 308 to `/help`, `/dashboard`, `/pubsets` on
@@ -620,6 +621,11 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   (`app/dashboard/_actions/sources.js`, `app/admin/users/_actions.js`) that check the caller's role in Strapi first.
   Never import it into a client component and never give it a `NEXT_PUBLIC_` name.
 - Public URLs: `config/site.js` (same names as tbwww). Defaults in code are Timebars Ltd.'s addresses; each server
-  sets its own at run time in `.env.local` (`CLOUD_API_URL`, `CLOUD_WWW_URL`, `NEXTAUTH_URL`, `RUN_URL_AB/TB/CB`).
+  sets its own at run time in `.env.local` (`CLOUD_API_URL`, `CLOUD_WWW_URL`, `CLOUD_HELP_URL`, `NEXTAUTH_URL`, `RUN_URL_AB/TB/CB`).
+  `CLOUD_HELP_URL` (`HELP_URL`) is the help host the guide links point at when `/update-help` writes them into Strapi:
+  `https://help.timebars.com` in production, `https://helps.timebars.com` in staging.
   Only `.env.example` and `.env.local` exist — no `NEXT_PUBLIC_` values, nothing built into the image.
+- Help editors: `lib/help/editors.js` `checkHelpEditor()` lets a user through only when the email is in `HELP_EDITORS`
+  (comma list in `.env.local`) **and** the Strapi users row has `primary_role` Administrator. No email is hardcoded
+  anywhere; tbwww `/update-articles` uses the same rule. Test: `npm run build && npm run test:help` (Strapi stubbed).
 - Nav: Home and Help show signed out; the Assistance menu links back to www (pricing, FAQ, knowledgebase, contact). Notification cron: `send-notification.sh`.

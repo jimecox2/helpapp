@@ -13,6 +13,7 @@ const runtime = isServer
       apiUrlGql: process.env.CLOUD_API_URL_GQL,
       frontendUrl: process.env.CLOUD_FRONTEND_URL || process.env.NEXTAUTH_URL,
       wwwUrl: process.env.CLOUD_WWW_URL,
+      helpUrl: process.env.CLOUD_HELP_URL,
       runUrlAb: process.env.RUN_URL_AB,
       runUrlTb: process.env.RUN_URL_TB,
       runUrlCb: process.env.RUN_URL_CB,
@@ -34,6 +35,10 @@ export const FRONTEND_URL = pick(runtime.frontendUrl, 'https://cloud.timebars.co
 // The marketing / accounts site: register, profile, orders and password reset live there.
 export const WWW_URL = pick(runtime.wwwUrl, 'https://www.timebars.com')
 
+// The public help address: help.timebars.com in production, helps.timebars.com on staging. Absolute help
+// links that leave this site (help-articles pushed to Strapi by /update-help) start with it.
+export const HELP_URL = pick(runtime.helpUrl, 'https://help.timebars.com')
+
 // The three apps
 export const RUN_URL_AB = pick(runtime.runUrlAb, 'https://ab.timebars.com')
 export const RUN_URL_TB = pick(runtime.runUrlTb, 'https://tb.timebars.com')
@@ -45,6 +50,7 @@ export const BROWSER_CONFIG = {
   apiUrlGql: API_URL_GQL,
   frontendUrl: FRONTEND_URL,
   wwwUrl: WWW_URL,
+  helpUrl: HELP_URL,
   runUrlAb: RUN_URL_AB,
   runUrlTb: RUN_URL_TB,
   runUrlCb: RUN_URL_CB,
