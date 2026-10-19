@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Timebars User Guide
@@ -84,7 +84,7 @@ Timebars extends the core platform with specialized resource scheduling and trad
 
 Before creating resource-loaded schedules, familiarize yourself with:
 
-- **[User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide)** – Canvas navigation, filters, bar creator, editing, and general interface usage
+- **[User Interface Guide](Common_02_User_Interface_Guide.md)** – Canvas navigation, filters, bar creator, editing, and general interface usage
 - **Timebars Presentation** – Review the [comprehensive presentation](https://www.timebars.com/timebars/presentation) and [functional benefits](https://www.timebars.com/timebars) articles
 
 
@@ -889,9 +889,9 @@ The Reports menu launches editable HTML reports that you can:
 | **Resource Usage** | Resource Allocation Supply and Demand Grids and Charts – comprehensive capacity analysis |
 | **Shared Resource Pool** | All Resources in the tbResources Store – complete list with metadata |
 
-For detailed local reporting, see **[Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide)**.
+For detailed local reporting, see **[Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md)**.
 
-For cloud reporting, see **[Common Enterprise Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-enterprise-dashboard-guide)**.
+For cloud reporting, see **[Common Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md)**.
 
 ---
 
@@ -915,19 +915,19 @@ Timebars shares many features with Agilebars and Costbars. For guidance on these
 
 ### **Core Functionality**
 
-- **[Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide)** – Canvas navigation, filters, hierarchy display, bar creator, editing bars, baseline management, view controls
-- **[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)** – How data is organized, IndexedDB details, data hierarchy, backup/restore procedures
-- **[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)** – 6-step sync cycle, CSV file export/import, template configuration, bidirectional data exchange
+- **[Common User Interface Guide](Common_02_User_Interface_Guide.md)** – Canvas navigation, filters, hierarchy display, bar creator, editing bars, baseline management, view controls
+- **[Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md)** – How data is organized, IndexedDB details, data hierarchy, backup/restore procedures
+- **[Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md)** – 6-step sync cycle, CSV file export/import, template configuration, bidirectional data exchange
 
 ### **Project Management Features**
 
-- **[Common Risks Issues Change Requests User Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-risks-issues-change-requests-user-guide)** – Creating and managing RIC items, visual indicators, card/tabular views, progress workflows
+- **[Common Risks Issues Change Requests User Guide](Common_05_Risks_Issues_Change_Requests_User_Guide.md)** – Creating and managing RIC items, visual indicators, card/tabular views, progress workflows
 
 ### **Reporting and Publishing**
 
-- **[Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide)** – General Reports, Portfolio Reports, Project Reports, Task Reports, Resource Reports
-- **[Common Cloud Reports and Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide)** – Executive Portfolio Reports, Card-Based Drilldown, Interactive dashboards with 7-dimension health tracking
-- **[Common Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide)** – Publishing to Timebars Cloud, PubSets, Re-Publish, Re-Hydrate, cross-device sync
+- **[Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md)** – General Reports, Portfolio Reports, Project Reports, Task Reports, Resource Reports
+- **[Common Cloud Reports and Dashboard Guide](Common_08_Personal_Dashboard_Guide.md)** – Executive Portfolio Reports, Card-Based Drilldown, Interactive dashboards with 7-dimension health tracking
+- **[Common Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md)** – Publishing to Timebars Cloud, PubSets, Re-Publish, Re-Hydrate, cross-device sync
 
 ---
 

@@ -1,41 +1,116 @@
-
 # Timebars Ltd. Help Files
 
-Every file in /docsHelp is current. Superseded documents were deleted, not archived —
-their content lives inside the guide that absorbed it, and the full history is in git.
+Generated from lib/help/helpDocs.js by `npm run toc` - do not edit by hand.
 
-## Complete Reference Guides
+helpapp (tbhelp) is the master of the help files: public/docsHelp/. Every file listed is
+current. Superseded documents were deleted, not archived; the full history is in git.
+The library at /help shows the same lists, one tab per product.
 
-- Agilebars Complete Reference Guide
-- Timebars Complete Reference Guide
-- Costbars Complete Reference Guide
+## Timebars (TB)
 
-## Common Help Files
+### Product Guide
 
-- Getting Started
-- User Interface Guide
-- Data Model and Scheduling Engine Guide
-- Data Synchronization, Backup, Recovery and Retention User Guide
-- Forms, Reports and Graphs Guide
-- Risks, Issues and Change Requests User Guide
-- How To Use Ask AI
-- Cloud Publishing Guide
-- Personal Dashboard Guide
-- Enterprise Dashboard Guide
-- Text Notifications User Guide
-- Supply And Demand Grids User Guide
-- Customer Ownership Installation Options
+- Timebars User Guide - `Timebars_User_Guide.md`
 
-## Product Help Files
+### Common Guides
 
-Each product has ONE master user guide. It is complete for that product on its own
-and is read alongside the Common Help Files. The former per-topic product documents
-- the Kanban Primer, and the four Costbars PPM documents - are now sections inside
-their master guide.
+- Getting Started, including Data Migration - `Common_01_Getting_Started.md`
+- User Interface Guide - `Common_02_User_Interface_Guide.md`
+- Data Model and Scheduling Engine Guide - `Common_03_Data_Model_and_Scheduling_Engine_Guide.md`
+- Data Synchronization, Backup, Recovery and Retention Guide - `Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md`
+- Forms, Reports and Graphs Guide - `Common_05_Forms_Reports_And_Graphs_Guide.md`
+- Risks, Issues and Change Requests User Guide - `Common_05_Risks_Issues_Change_Requests_User_Guide.md`
+- How to Use Ask AI - `Common_06_How_To_Use_Ask_AI.md`
+- Supply and Demand Grids User Guide - `Common_11_Supply_And_Demand_Grids_User_Guide.md`
 
-- Agilebars User Guide
-- Timebars User Guide
-- Costbars User Guide
+### Cloud
+
+- Cloud Publishing Guide - `Common_07_Cloud_Publishing_Guide.md`
+- Personal Dashboard Guide - `Common_08_Personal_Dashboard_Guide.md`
+- Enterprise Dashboard Guide - `Common_09_Enterprise_Dashboard_Guide.md`
+- Text Notifications User Guide - `Common_10_Text_Notifications_User_Guide.md`
+
+### Installation and Administration
+
+- Administrators Guide (hosting, deployment, containers, secrets, air-gapped installs) - `Administrators_Guide.md`
+- Customer Ownership and Installation Options - `Common_12_Customer_Ownership_Installation_Options.md`
+- Offline Mode and Security - `Common_13_Offline_Mode_And_Security.md`
+
+### Downloads
+
+- Timebars Complete Reference Guide (PDF) - `/pdf/Timebars_Complete_Reference_Guide.pdf`
+- Client Master Spreadsheet (Excel) - `/spreadsheets/tbClientMaster_v1.xlsm`
+- Client Master Spreadsheet (LibreOffice Calc) - `/spreadsheets/tbClientMaster_v1.ods`
+
+## Agilebars (AB)
+
+### Product Guide
+
+- Agilebars User Guide - `Agilebars_User_Guide.md`
+
+### Common Guides
+
+- Getting Started, including Data Migration - `Common_01_Getting_Started.md`
+- User Interface Guide - `Common_02_User_Interface_Guide.md`
+- Data Model and Scheduling Engine Guide - `Common_03_Data_Model_and_Scheduling_Engine_Guide.md`
+- Data Synchronization, Backup, Recovery and Retention Guide - `Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md`
+- Forms, Reports and Graphs Guide - `Common_05_Forms_Reports_And_Graphs_Guide.md`
+- Risks, Issues and Change Requests User Guide - `Common_05_Risks_Issues_Change_Requests_User_Guide.md`
+- How to Use Ask AI - `Common_06_How_To_Use_Ask_AI.md`
+
+### Cloud
+
+- Cloud Publishing Guide - `Common_07_Cloud_Publishing_Guide.md`
+- Personal Dashboard Guide - `Common_08_Personal_Dashboard_Guide.md`
+- Enterprise Dashboard Guide - `Common_09_Enterprise_Dashboard_Guide.md`
+
+### Installation and Administration
+
+- Administrators Guide (hosting, deployment, containers, secrets, air-gapped installs) - `Administrators_Guide.md`
+- Customer Ownership and Installation Options - `Common_12_Customer_Ownership_Installation_Options.md`
+- Offline Mode and Security - `Common_13_Offline_Mode_And_Security.md`
+
+### Downloads
+
+- Agilebars Complete Reference Guide (PDF) - `/pdf/Agilebars_Complete_Reference_Guide.pdf`
+- Client Master Spreadsheet (Excel) - `/spreadsheets/tbClientMaster_v1.xlsm`
+- Client Master Spreadsheet (LibreOffice Calc) - `/spreadsheets/tbClientMaster_v1.ods`
+
+## Costbars (CB)
+
+### Product Guide
+
+- Costbars User Guide - `Costbars_User_Guide.md`
+
+### Common Guides
+
+- Getting Started, including Data Migration - `Common_01_Getting_Started.md`
+- User Interface Guide - `Common_02_User_Interface_Guide.md`
+- Data Model and Scheduling Engine Guide - `Common_03_Data_Model_and_Scheduling_Engine_Guide.md`
+- Data Synchronization, Backup, Recovery and Retention Guide - `Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md`
+- Forms, Reports and Graphs Guide - `Common_05_Forms_Reports_And_Graphs_Guide.md`
+- Risks, Issues and Change Requests User Guide - `Common_05_Risks_Issues_Change_Requests_User_Guide.md`
+- How to Use Ask AI - `Common_06_How_To_Use_Ask_AI.md`
+- Supply and Demand Grids User Guide - `Common_11_Supply_And_Demand_Grids_User_Guide.md`
+
+### Cloud
+
+- Cloud Publishing Guide - `Common_07_Cloud_Publishing_Guide.md`
+- Personal Dashboard Guide - `Common_08_Personal_Dashboard_Guide.md`
+- Enterprise Dashboard Guide - `Common_09_Enterprise_Dashboard_Guide.md`
+- Text Notifications User Guide - `Common_10_Text_Notifications_User_Guide.md`
+
+### Installation and Administration
+
+- Administrators Guide (hosting, deployment, containers, secrets, air-gapped installs) - `Administrators_Guide.md`
+- Customer Ownership and Installation Options - `Common_12_Customer_Ownership_Installation_Options.md`
+- Offline Mode and Security - `Common_13_Offline_Mode_And_Security.md`
+
+### Downloads
+
+- Costbars Complete Reference Guide (PDF) - `/pdf/Costbars_Complete_Reference_Guide.pdf`
+- Client Master Spreadsheet (Excel) - `/spreadsheets/tbClientMaster_v1.xlsm`
+- Client Master Spreadsheet (LibreOffice Calc) - `/spreadsheets/tbClientMaster_v1.ods`
 
 ---
 
@@ -61,72 +136,14 @@ Two guides were renamed. Older references to *Local Reports and Graphs Guide* me
 **Forms, Reports and Graphs Guide**; references to *Synchronization and Data Control
 User Guide* mean **Data Synchronization, Backup, Recovery and Retention User Guide**.
 
-**Generated content:** Appendix A of the Forms, Reports and Graphs Guide (the A–Z
-picklist reference) is produced from live data by `tools/buildPicklistReference.py`.
-Run the generator rather than editing that appendix by hand.
-
 ---
 
-# HOW TO MAKE THE COMPLETE GUIDES
+# HOW THE COMPLETE REFERENCE GUIDES ARE MADE
 
-Do a pull of tbrunp, look at the /docsHelp folder and all the help files in there, and
-write the three complete reference guides below from the content listed for each.
+Run `python3 tools/buildCompleteGuides.py` in this repo. It compiles the three
+*_Complete_Reference_Guide.md files from the guides above; its RECIPES list says which guides go
+into each. The PDFs in public/pdf/ are then made from them by hand and are what /help offers.
 
-This file is the table of contents, categorised by how the help files are structured:
-Product Help Files are unique to one product; Common Help Files apply across all three.
-
-Work one guide at a time so each can be approved before the next is started. Start with
-Agilebars.
-
-NOT compiled into the complete guides (deployment and sales material, not product help):
-Customer Ownership Installation Options, Getting Started.
-
-ALSO NOT compiled: the User Interface Guide's opening chapter, "Why These Products Work
-the Way They Do". The rest of that guide IS compiled. The chapter is positioning and
-sales material and sits under a single `##` heading, so it lifts out cleanly.
-
-## Agilebars Complete Reference Guide
-
-**Agilebars does not use the Supply And Demand Grids or Text Notifications.** Both are
-omitted here deliberately; they remain in the Timebars and Costbars guides.
-
-Agilebars User Guide
-User Interface Guide *(minus the opening chapter)*
-Data Model and Scheduling Engine Guide
-Data Synchronization, Backup, Recovery and Retention User Guide
-Forms, Reports and Graphs Guide
-Risks, Issues and Change Requests User Guide
-How To Use Ask AI
-Cloud Publishing Guide
-Personal Dashboard Guide
-Enterprise Dashboard Guide
-
-## Timebars Complete Reference Guide
-
-Timebars User Guide
-User Interface Guide *(minus the opening chapter)*
-Data Model and Scheduling Engine Guide
-Data Synchronization, Backup, Recovery and Retention User Guide
-Forms, Reports and Graphs Guide
-Risks, Issues and Change Requests User Guide
-How To Use Ask AI
-Supply And Demand Grids User Guide
-Cloud Publishing Guide
-Personal Dashboard Guide
-Enterprise Dashboard Guide
-Text Notifications User Guide
-
-## Costbars Complete Reference Guide
-
-Costbars User Guide
-User Interface Guide *(minus the opening chapter)*
-Data Model and Scheduling Engine Guide
-Data Synchronization, Backup, Recovery and Retention User Guide
-Forms, Reports and Graphs Guide
-Risks, Issues and Change Requests User Guide
-How To Use Ask AI
-Supply And Demand Grids User Guide
-Cloud Publishing Guide
-Personal Dashboard Guide
-Enterprise Dashboard Guide
-Text Notifications User Guide
+**Generated content:** Appendix A of the Forms, Reports and Graphs Guide (the A-Z picklist
+reference) is produced from live app data by tbrunp `tools/buildPicklistReference.py`; paste its
+output into the guide rather than editing that appendix by hand.

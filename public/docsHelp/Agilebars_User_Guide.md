@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Agilebars User Guide
@@ -65,7 +65,7 @@ Agilebars is specifically designed for **Agile Scrum sprint management** with th
 
 Before diving into Agilebars, we recommend:
 
-1. **Read Common Help**: Review the [Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) for basics like:
+1. **Read Common Help**: Review the [Common User Interface Guide](Common_02_User_Interface_Guide.md) for basics like:
    - How to create bars using Bar Creator
    - How to delete and duplicate bars
    - How to use filters and search
@@ -958,19 +958,19 @@ Agilebars does the rest of the calculations based on internal rules.
 For features shared across Agilebars, Timebars, and Costbars, refer to these comprehensive guides:
 
 ### Core Functionality
-- [Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Bar Creator, Canvas, Shortcuts, Tools
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data hierarchy, IndexedDB, backups
+- [Common User Interface Guide](Common_02_User_Interface_Guide.md) - Bar Creator, Canvas, Shortcuts, Tools
+- [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md) - Data hierarchy, IndexedDB, backups
 
 ### Data Management
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Bulk data import/export
-- [Common Risks Issues Change Requests User Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-risks-issues-change-requests-user-guide) - RIC management
+- [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md) - Bulk data import/export
+- [Common Risks Issues Change Requests User Guide](Common_05_Risks_Issues_Change_Requests_User_Guide.md) - RIC management
 
 ### Reporting
-- [Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - In-app reports
-- [Common Cloud Reports and Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) - Cloud dashboard
+- [Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md) - In-app reports
+- [Common Cloud Reports and Dashboard Guide](Common_08_Personal_Dashboard_Guide.md) - Cloud dashboard
 
 ### Cloud Features
-- [Common Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publishing to Timebars Cloud
+- [Common Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) - Publishing to Timebars Cloud
 
 ---
 

@@ -1,5 +1,5 @@
 # Timebars/Costbars Supply and Demand Grids User Guide
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 
 ## Table of Contents
 
@@ -14,7 +14,7 @@
 ## Overview
 
 The Supply vs Demand grid is a strategic resource management tool that provides visibility into resource capacity planning and allocation across projects. It enables resource managers and project managers to identify capacity gaps, prevent over-allocation, and make informed decisions about resource assignments and hiring needs.
-![Supply vs. Demand Grid](../images/timebars/tb-resource-demand-grid2.png)
+![Supply vs. Demand Grid](/images/help/tb-resource-demand-grid2.png)
 
 ## Purpose and Use Cases
 
@@ -65,7 +65,7 @@ The gap between supply and demand reveals critical resource management issues:
 
 At the top of the Resource Demand Grids, five critical rows provide aggregated metrics:
 
-![Supply vs. Demand Grid](../images/timebars/tb-resource-demand-grid2.png)
+![Supply vs. Demand Grid](/images/help/tb-resource-demand-grid2.png)
 
 ### 1. Supply Target (FTE) (First Row)
 

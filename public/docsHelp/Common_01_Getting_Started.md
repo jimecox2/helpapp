@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Welcome!
@@ -68,7 +68,7 @@ actually involves before you start.
 
 This part of the guide is **general** — the shape of the work, the paths available, and
 the tools that help. For precise, store-by-store and field-by-field detail, read the
-**[Data Model and Scheduling Engine Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-model-and-scheduling-engine-guide)**,
+**[Data Model and Scheduling Engine Guide](Common_03_Data_Model_and_Scheduling_Engine_Guide.md)**,
 and use the **Schema Values** report inside the application
 (**Report Menu → Other → Schema Values**) for the definitive list of every field.
 
@@ -193,7 +193,7 @@ how to get it in.
 **What this part does not cover:**
 
 - Day-to-day use of the sync feature once you are live — see the
-  [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)
+  [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md)
 - The definition of every field — that is the **Schema Values** report inside the
   application (**Report Menu → Other**), which carries each field's purpose, picklist,
   data type and sheet, and is searchable and filterable
@@ -273,7 +273,7 @@ in the application afterwards.
 | `tbResources` | Resources | The resource pool — people and generic roles |
 
 The field rules for all five are in the
-[Data Model and Scheduling Engine Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-model-and-scheduling-engine-guide);
+[Data Model and Scheduling Engine Guide](Common_03_Data_Model_and_Scheduling_Engine_Guide.md);
 the field *list* is the Schema Values report.
 
 ---
@@ -469,7 +469,7 @@ faster than writing an export query.
 > **Some values are locked** — the code compares against that exact text, so renaming them
 > breaks filters, colours and calculations silently. Adding your own values alongside them
 > is always safe. The locked values are marked in the picklist reference in the
-> [Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide).
+> [Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md).
 
 ---
 
@@ -743,7 +743,7 @@ Data being correct is not the same as the product being ready. Five steps remain
 
 Then give your users the workbook: **Hamburger Icon → Download Excel SS**. Day-to-day sync
 is covered in the
-[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide).
+[Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md).
 
 ---
 
@@ -752,12 +752,12 @@ is covered in the
 | Topic | Where |
 |---|---|
 | Every field's purpose, type, picklist and sheet | **Schema Values** report — Report Menu → Other |
-| Field rules, hierarchy, rollups, the scheduling engine | [Data Model and Scheduling Engine Guide](https://www.timebars.com/knowledgebase/helparticles/common-03-data-model-and-scheduling-engine-guide) |
-| Day-to-day sync, the import gate, backup, recovery, retention | [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) |
-| Picklists, forms, the Core Form, and all the reports | [Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) |
-| Risks, issues and change requests | [Risks, Issues and Change Requests Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-risks-issues-change-requests-user-guide) |
-| Using the canvas, the menus and the forms | [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) |
-| Publishing to the cloud | [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) |
+| Field rules, hierarchy, rollups, the scheduling engine | [Data Model and Scheduling Engine Guide](Common_03_Data_Model_and_Scheduling_Engine_Guide.md) |
+| Day-to-day sync, the import gate, backup, recovery, retention | [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md) |
+| Picklists, forms, the Core Form, and all the reports | [Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md) |
+| Risks, issues and change requests | [Risks, Issues and Change Requests Guide](Common_05_Risks_Issues_Change_Requests_User_Guide.md) |
+| Using the canvas, the menus and the forms | [User Interface Guide](Common_02_User_Interface_Guide.md) |
+| Publishing to the cloud | [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) |
 | Subscriptions, presentations, feature descriptions | [www.timebars.com/sales/quick-start](https://www.timebars.com/sales/quick-start) |
 
 ---

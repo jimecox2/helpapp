@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Personal Dashboard Guide
@@ -96,7 +96,7 @@ The Personal Dashboard is powered exclusively by your **Active pubset** — the 
 5. Click **Re-Publish!** to send updated data to the cloud
 6. Your Personal Dashboard reflects the new data automatically
 
-For full details on the publishing process, see the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud
+For full details on the publishing process, see the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) - Publish reports to the cloud
 
 ---
 
@@ -173,7 +173,7 @@ Track deviations from baseline plans with variance-specific metrics showing the 
 - Identifying projects requiring corrective action
 - Forecasting final project outcomes
 
-> **Note:** Baselines must be set in the client application before publishing for this report to show variance data. The [Enterprise Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) offers an equivalent Variance Report across combined pubset sources.
+> **Note:** Baselines must be set in the client application before publishing for this report to show variance data. The [Enterprise Dashboard](Common_09_Enterprise_Dashboard_Guide.md) offers an equivalent Variance Report across combined pubset sources.
 
 ---
 
@@ -419,7 +419,7 @@ Available on all tabular reports:
 3. **Secure Authentication**: Enterprise-grade JWT security, encrypted data transmission (HTTPS/TLS)
 4. **Multi-User Viewing**: Multiple users can view the dashboard simultaneously
 
-See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud for full publishing instructions.
+See the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) - Publish reports to the cloud for full publishing instructions.
 
 ---
 
@@ -484,7 +484,7 @@ See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparti
 5. **Use Cards for Presentations**: Card view is excellent for executive briefings
 6. **Export for Offline**: Create Excel exports for offline analysis or board meetings
 7. **Check License**: Ensure your license is current for uninterrupted access
-8. **Need Multi-Pubset Views?**: If you need to combine multiple pubsets (e.g., across teams or products), use the [Enterprise Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) instead
+8. **Need Multi-Pubset Views?**: If you need to combine multiple pubsets (e.g., across teams or products), use the [Enterprise Dashboard](Common_09_Enterprise_Dashboard_Guide.md) instead
 
 ---
 
@@ -535,11 +535,11 @@ See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparti
 ---
 
 ## Related Help Topics
-- [Enterprise Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) — Combine multiple pubsets into shared portfolio views with RBAC
-- [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) — Navigate the client apps
+- [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md) — Combine multiple pubsets into shared portfolio views with RBAC
+- [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) — How to publish data to the cloud and manage pubsets
+- [Local Reports Guide](Common_05_Forms_Reports_And_Graphs_Guide.md) — Reports available within client applications
+- [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md) — Understanding the data model
+- [User Interface Guide](Common_02_User_Interface_Guide.md) — Navigate the client apps
 
 ---
 

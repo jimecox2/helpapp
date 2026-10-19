@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](https://help.timebars.com/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Agilebars — Complete Reference Guide
@@ -9,14 +9,14 @@
 Every help topic for **Agilebars**, compiled into one document: the product guide,
 followed by the guides shared across Agilebars, Timebars and Costbars.
 
-This file is **generated** from the individual guides in `/docsHelp` by
-`tools/buildCompleteGuides.py`. Edit those guides and rebuild — changes made here are
+This file is **generated** from the individual guides in `public/docsHelp` of the helpapp
+repo by `tools/buildCompleteGuides.py`. Edit those guides and rebuild — changes made here are
 lost on the next run.
 
 > Agilebars does not use the Supply and Demand Grids or Text Notifications, so neither is included here. Both are covered in the Timebars and Costbars guides.
 
 > **About the cross-references.** Each part keeps the links it had as a standalone
-> guide, so a reference to another guide points at its published article online. In
+> guide, so a reference to another guide points at its page on the help site. In
 > this document, that guide is one of the parts listed below.
 
 ## Contents
@@ -109,7 +109,7 @@ Agilebars is specifically designed for **Agile Scrum sprint management** with th
 
 Before diving into Agilebars, we recommend:
 
-1. **Read Common Help**: Review the [Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) for basics like:
+1. **Read Common Help**: Review the [Common User Interface Guide](https://help.timebars.com/common-02-user-interface-guide) for basics like:
    - How to create bars using Bar Creator
    - How to delete and duplicate bars
    - How to use filters and search
@@ -1002,19 +1002,19 @@ Agilebars does the rest of the calculations based on internal rules.
 For features shared across Agilebars, Timebars, and Costbars, refer to these comprehensive guides:
 
 #### Core Functionality
-- [Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Bar Creator, Canvas, Shortcuts, Tools
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data hierarchy, IndexedDB, backups
+- [Common User Interface Guide](https://help.timebars.com/common-02-user-interface-guide) - Bar Creator, Canvas, Shortcuts, Tools
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data hierarchy, IndexedDB, backups
 
 #### Data Management
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Bulk data import/export
-- [Common Risks Issues Change Requests User Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-risks-issues-change-requests-user-guide) - RIC management
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Bulk data import/export
+- [Common Risks Issues Change Requests User Guide](https://help.timebars.com/common-05-risks-issues-change-requests-user-guide) - RIC management
 
 #### Reporting
-- [Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - In-app reports
-- [Common Cloud Reports and Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) - Cloud dashboard
+- [Forms, Reports and Graphs Guide](https://help.timebars.com/common-05-forms-reports-and-graphs-guide) - In-app reports
+- [Common Cloud Reports and Dashboard Guide](https://help.timebars.com/common-08-personal-dashboard-guide) - Cloud dashboard
 
 #### Cloud Features
-- [Common Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publishing to Timebars Cloud
+- [Common Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) - Publishing to Timebars Cloud
 
 ---
 
@@ -4161,7 +4161,7 @@ Retention Guide*.
 - Access from any device with internet connection
 - Real-time updates when you publish new data
 
-Learn more in the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md).
+Learn more in the [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide).
 
 ### 8. Tips
 
@@ -5399,10 +5399,10 @@ Values: No, Yes, NA
 
 ### Related Help Topics
 
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Import/export data for bulk editing
-- [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Navigate the application
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Understand the data model
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Import/export data for bulk editing
+- [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) - Publish reports to the cloud
+- [User Interface Guide](https://help.timebars.com/common-02-user-interface-guide) - Navigate the application
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Understand the data model
 
 ---
 
@@ -6368,10 +6368,10 @@ RIC items can be exported/imported via spreadsheet:
 
 ### Related Help Topics
 
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Creating and editing bars
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data stores, backup, import and export
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - Risk and Issue reports
-- [Configurable Data Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - Forms, picklists and the status/health rules
+- [User Interface Guide](https://help.timebars.com/common-02-user-interface-guide) - Creating and editing bars
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data stores, backup, import and export
+- [Local Reports Guide](https://help.timebars.com/common-05-forms-reports-and-graphs-guide) - Risk and Issue reports
+- [Configurable Data Guide](https://help.timebars.com/common-05-forms-reports-and-graphs-guide) - Forms, picklists and the status/health rules
 
 ---
 
@@ -6422,6 +6422,8 @@ RIC items can be exported/imported via spreadsheet:
 You do not need to know any technical field names or rules. You write the way a project manager, portfolio manager or engineer would talk, and the AI fills in the rest.
 
 > Ask AI is powered by Google Gemini. After the AI finishes creating data, **refresh the page (press F5)** to see the new bars appear on the canvas.
+
+> **Log in first.** Ask AI only answers users who are logged in to the Timebars Cloud. If you see "Please log in to the Timebars Cloud to use AI", log in from the Publishing page (or the Login button) and try again.
 
 ---
 
@@ -6592,6 +6594,8 @@ The **Ask AI** button on the main menu (and on the canvas toolbar) opens the **H
 - Use **Clear** to start a fresh conversation.
 - Click the **×** to close it.
 
+The welcome message shows how many help files were loaded for your edition. The assistant reads the common guides (including the Administrators Guide) plus your product's User Guide. The *Complete Reference Guides* are left out on purpose: they repeat the same content.
+
 ---
 
 ### 🐛 Troubleshooting
@@ -6601,6 +6605,9 @@ Refresh the page (F5). New bars show after a reload.
 
 **"No people were assigned to my tasks."**
 Your Resource Pool may have no suitable **named (Human) resources**. Add people with roles and skills, then use the **Create Allocations** button on the Work Package, or the ✨ button on a Task.
+
+**"The Help Assistant says some documentation files could not be loaded."**
+It names the files it could not fetch. The assistant still works, but it can't answer from those files. Refresh the page; if the warning stays, tell your administrator, as the help files are missing from the installed version.
 
 **"The tasks don't quite match what I wanted."**
 Give more detail — name the phases, deliverables or roles you expect — and try again on the same bar.
@@ -7523,7 +7530,7 @@ Device A:
 The Timebars Personal Dashboard delivers a focused suite of interactive reports, visualizations, and data management tools for individual project managers and team leads. It connects directly and automatically to your **single active pubset** — the pubset you have marked as Active (or "connected") in your Timebars, Agilebars, or Costbars client application. No additional configuration is needed; publish your data and the Personal Dashboard reflects it immediately.
 
 > **Personal Dashboard vs. Enterprise Dashboard**
-> The Personal Dashboard (`/personaldashboard`) is designed for a single-pubset workflow: one user, one active data source, instant access. If your organisation needs to combine data from multiple pubsets across projects or teams into a shared portfolio view, see the [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md) (`/dashboard`).
+> The Personal Dashboard (`/personaldashboard`) is designed for a single-pubset workflow: one user, one active data source, instant access. If your organisation needs to combine data from multiple pubsets across projects or teams into a shared portfolio view, see the [Enterprise Dashboard Guide](https://help.timebars.com/common-09-enterprise-dashboard-guide) (`/dashboard`).
 
 ---
 
@@ -7613,7 +7620,7 @@ The Personal Dashboard is powered exclusively by your **Active pubset** — the 
 5. Click **Re-Publish!** to send updated data to the cloud
 6. Your Personal Dashboard reflects the new data automatically
 
-For full details on the publishing process, see the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud
+For full details on the publishing process, see the [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) - Publish reports to the cloud
 
 ---
 
@@ -7690,7 +7697,7 @@ Track deviations from baseline plans with variance-specific metrics showing the 
 - Identifying projects requiring corrective action
 - Forecasting final project outcomes
 
-> **Note:** Baselines must be set in the client application before publishing for this report to show variance data. The [Enterprise Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) offers an equivalent Variance Report across combined pubset sources.
+> **Note:** Baselines must be set in the client application before publishing for this report to show variance data. The [Enterprise Dashboard](https://help.timebars.com/common-09-enterprise-dashboard-guide) offers an equivalent Variance Report across combined pubset sources.
 
 ---
 
@@ -7936,7 +7943,7 @@ Available on all tabular reports:
 3. **Secure Authentication**: Enterprise-grade JWT security, encrypted data transmission (HTTPS/TLS)
 4. **Multi-User Viewing**: Multiple users can view the dashboard simultaneously
 
-See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud for full publishing instructions.
+See the [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) - Publish reports to the cloud for full publishing instructions.
 
 ---
 
@@ -8001,7 +8008,7 @@ See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparti
 5. **Use Cards for Presentations**: Card view is excellent for executive briefings
 6. **Export for Offline**: Create Excel exports for offline analysis or board meetings
 7. **Check License**: Ensure your license is current for uninterrupted access
-8. **Need Multi-Pubset Views?**: If you need to combine multiple pubsets (e.g., across teams or products), use the [Enterprise Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) instead
+8. **Need Multi-Pubset Views?**: If you need to combine multiple pubsets (e.g., across teams or products), use the [Enterprise Dashboard](https://help.timebars.com/common-09-enterprise-dashboard-guide) instead
 
 ---
 
@@ -8052,11 +8059,11 @@ See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparti
 ---
 
 ### Related Help Topics
-- [Enterprise Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-10-enterprise-dashboard-guide) — Combine multiple pubsets into shared portfolio views with RBAC
-- [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) — Navigate the client apps
+- [Enterprise Dashboard Guide](https://help.timebars.com/common-09-enterprise-dashboard-guide) — Combine multiple pubsets into shared portfolio views with RBAC
+- [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
+- [Local Reports Guide](https://help.timebars.com/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
+- [User Interface Guide](https://help.timebars.com/common-02-user-interface-guide) — Navigate the client apps
 
 ---
 
@@ -8083,7 +8090,7 @@ The Timebars Enterprise Dashboard provides a consolidated, organisation-wide vie
 > **Enterprise Dashboard vs. Personal Dashboard**
 > The Enterprise Dashboard (`/dashboard`) is designed for teams and organisations that need to combine data across multiple pubsets — for example, rolling up projects from different teams, products, or time periods into one portfolio view. Role-based access control (RBAC) governs who can see which pubsets and sources.
 >
-> If you work with a single active pubset and want an instant, zero-configuration view of your own data, see the [Personal Dashboard Guide](Common_08_Personal_Dashboard_Guide.md) (`/personaldashboard`).
+> If you work with a single active pubset and want an instant, zero-configuration view of your own data, see the [Personal Dashboard Guide](https://help.timebars.com/common-08-personal-dashboard-guide) (`/personaldashboard`).
 
 ---
 
@@ -8114,10 +8121,10 @@ If you see a message saying you have no access, contact your **Administrator** t
 #### What you need before using the Enterprise Dashboard
 
 1. A user account with a role of **Administrator**, **Project Manager**, or **Team Member**
-2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud)
+2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) - Publish reports to the cloud)
 3. At least one **Dashboard Source** created from your pubsets (see [Creating and Managing Dashboard Sources](#creating-and-managing-dashboard-sources))
 
-> **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) skips this step by automatically connecting to your single active pubset.
+> **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](https://help.timebars.com/common-08-personal-dashboard-guide) skips this step by automatically connecting to your single active pubset.
 
 ---
 
@@ -8195,7 +8202,7 @@ Roles are managed in **Strapi** (the backend CMS) by an Administrator:
 
 #### Step 1 — Publish your data
 
-Before creating a dashboard source, project data must be **published as a pubset** from within Timebars, Agilebars, or Costbars. See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) for full publishing instructions. Each publish creates a new pubset record.
+Before creating a dashboard source, project data must be **published as a pubset** from within Timebars, Agilebars, or Costbars. See the [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) for full publishing instructions. Each publish creates a new pubset record.
 
 #### Step 2 — Browse and select pubsets
 
@@ -8402,7 +8409,7 @@ Navigate to **Dashboard → Drilldown** (`/dashboard/drilldown`) to explore the 
 
 Navigate through your combined portfolio in four levels: **Portfolio → Project → Work Package → Task**. Each card displays health indicators, status, and key metrics. At the task level, tabbed sections show related risks and issues. This view covers all pubsets consolidated in the active Dashboard Source.
 
-> The [Personal Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) offers an equivalent drilldown scoped to your single active pubset.
+> The [Personal Dashboard](https://help.timebars.com/common-08-personal-dashboard-guide) offers an equivalent drilldown scoped to your single active pubset.
 
 ---
 
@@ -8474,12 +8481,12 @@ Before the Resource Cost Charts and Resource Usage Charts can display data, the 
 
 ### Related Help Topics
 
-- [Personal Dashboard Guide](C[ommon_08_Cloud_Reports_And_Dashboard_Guide.md](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide)) — Single-pubset dashboard with zero configuration
+- [Personal Dashboard Guide](https://help.timebars.com/common-08-personal-dashboard-guide) — Single-pubset dashboard with zero configuration
 
-- [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) — Navigate the client apps
+- [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
+- [Local Reports Guide](https://help.timebars.com/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
+- [Data Synchronization, Backup, Recovery and Retention Guide](https://help.timebars.com/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
+- [User Interface Guide](https://help.timebars.com/common-02-user-interface-guide) — Navigate the client apps
 ---
 
 ### Support

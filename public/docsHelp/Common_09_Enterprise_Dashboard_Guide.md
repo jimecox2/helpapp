@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Enterprise Dashboard Guide
@@ -39,10 +39,10 @@ If you see a message saying you have no access, contact your **Administrator** t
 ### What you need before using the Enterprise Dashboard
 
 1. A user account with a role of **Administrator**, **Project Manager**, or **Team Member**
-2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) - Publish reports to the cloud)
+2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) - Publish reports to the cloud)
 3. At least one **Dashboard Source** created from your pubsets (see [Creating and Managing Dashboard Sources](#creating-and-managing-dashboard-sources))
 
-> **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) skips this step by automatically connecting to your single active pubset.
+> **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](Common_08_Personal_Dashboard_Guide.md) skips this step by automatically connecting to your single active pubset.
 
 ---
 
@@ -120,7 +120,7 @@ Roles are managed in **Strapi** (the backend CMS) by an Administrator:
 
 ### Step 1 — Publish your data
 
-Before creating a dashboard source, project data must be **published as a pubset** from within Timebars, Agilebars, or Costbars. See the [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) for full publishing instructions. Each publish creates a new pubset record.
+Before creating a dashboard source, project data must be **published as a pubset** from within Timebars, Agilebars, or Costbars. See the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) for full publishing instructions. Each publish creates a new pubset record.
 
 ### Step 2 — Browse and select pubsets
 
@@ -327,7 +327,7 @@ Navigate to **Dashboard → Drilldown** (`/dashboard/drilldown`) to explore the 
 
 Navigate through your combined portfolio in four levels: **Portfolio → Project → Work Package → Task**. Each card displays health indicators, status, and key metrics. At the task level, tabbed sections show related risks and issues. This view covers all pubsets consolidated in the active Dashboard Source.
 
-> The [Personal Dashboard](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide) offers an equivalent drilldown scoped to your single active pubset.
+> The [Personal Dashboard](Common_08_Personal_Dashboard_Guide.md) offers an equivalent drilldown scoped to your single active pubset.
 
 ---
 
@@ -399,12 +399,12 @@ Before the Resource Cost Charts and Resource Usage Charts can display data, the 
 
 ## Related Help Topics
 
-- [Personal Dashboard Guide](C[ommon_08_Cloud_Reports_And_Dashboard_Guide.md](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide)) — Single-pubset dashboard with zero configuration
+- [Personal Dashboard Guide](Common_08_Personal_Dashboard_Guide.md) — Single-pubset dashboard with zero configuration
 
-- [Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide) — How to publish data to the cloud and manage pubsets
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) — Reports available within client applications
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) — Understanding the data model
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) — Navigate the client apps
+- [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) — How to publish data to the cloud and manage pubsets
+- [Local Reports Guide](Common_05_Forms_Reports_And_Graphs_Guide.md) — Reports available within client applications
+- [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md) — Understanding the data model
+- [User Interface Guide](Common_02_User_Interface_Guide.md) — Navigate the client apps
 ---
 
 ## Support

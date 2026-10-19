@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Costbars User Guide
@@ -157,7 +157,7 @@ For detailed guidance on completing project assessments, see [The Project Assess
 
 ## The Five-Step PPM Process
 
-![PPM Process](../tbimages/costbars-process-diagram.png)
+![PPM Process](/images/help/costbars-process-diagram.png)
 
 The Costbars PPM process helps you make data-driven decisions about project approval and termination through five sequential steps.
 
@@ -681,9 +681,9 @@ Configure automated notifications to alert stakeholders when projects exceed def
 6. Enable automated alerts
 
 **For complete configuration guide:** 
-[Text Notifications Guide](https://www.timebars.com/knowledgebase/helparticles/common-10-text-notifications)
+[Text Notifications Guide](Common_10_Text_Notifications_User_Guide.md)
 
-[Text Notifications User Guide, Part 2 — Technical Reference](https://www.timebars.com/knowledgebase/helparticles/common-10-text-notifications-user-guide)
+[Text Notifications User Guide, Part 2 — Technical Reference](Common_10_Text_Notifications_User_Guide.md)
 
 ---
 
@@ -771,19 +771,19 @@ Costbars shares many features with Timebars and Agilebars. For guidance on these
 
 ### **Core Functionality**
 
-- **[Common User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide)** – Canvas navigation, filters, hierarchy display, bar creator, editing bars, baseline management, view controls
-- **[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)** – How data is organized, IndexedDB details, data hierarchy, backup/restore procedures
-- **[Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide)** – 6-step sync cycle, CSV file export/import, template configuration, bidirectional data exchange
+- **[Common User Interface Guide](Common_02_User_Interface_Guide.md)** – Canvas navigation, filters, hierarchy display, bar creator, editing bars, baseline management, view controls
+- **[Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md)** – How data is organized, IndexedDB details, data hierarchy, backup/restore procedures
+- **[Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md)** – 6-step sync cycle, CSV file export/import, template configuration, bidirectional data exchange
 
 ### **Project Management Features**
 
-- **[Common Risks Issues Change Requests User Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-risks-issues-change-requests-user-guide)** – Creating and managing RIC items, visual indicators, card/tabular views, progress workflows
+- **[Common Risks Issues Change Requests User Guide](Common_05_Risks_Issues_Change_Requests_User_Guide.md)** – Creating and managing RIC items, visual indicators, card/tabular views, progress workflows
 
 ### **Reporting and Publishing**
 
-- **[Forms, Reports and Graphs Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide)** – General Reports, Portfolio Reports, Project Reports, Task Reports, Resource Reports
-- **[Common Cloud Reports and Dashboard Guide](https://www.timebars.com/knowledgebase/helparticles/common-08-personal-dashboard-guide)** – Executive Portfolio Reports, Card-Based Drilldown, Interactive dashboards with 7-dimension health tracking
-- **[Common Cloud Publishing Guide](https://www.timebars.com/knowledgebase/helparticles/common-07-cloud-publishing-guide)** – Publishing to Timebars Cloud, PubSets, Re-Publish, Re-Hydrate, cross-device sync
+- **[Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md)** – General Reports, Portfolio Reports, Project Reports, Task Reports, Resource Reports
+- **[Common Cloud Reports and Dashboard Guide](Common_08_Personal_Dashboard_Guide.md)** – Executive Portfolio Reports, Card-Based Drilldown, Interactive dashboards with 7-dimension health tracking
+- **[Common Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md)** – Publishing to Timebars Cloud, PubSets, Re-Publish, Re-Hydrate, cross-device sync
 
 ---
 
@@ -866,7 +866,7 @@ This guide covers the Costbars Project Portfolio Management (PPM) module - a Fiv
 
 The PPM (Project Portfolio Management) process can start once the Portfolio of Projects has been resource-loaded and is ready for analysis. If resource-loaded schedules are not feasible—which is often the case—ensure that Hours Estimates and/or Cost Estimates have been entered into each Project Bar within the Portfolio.
 
-![PPM Process](../tbimages/costbars-process-diagram.png)
+![PPM Process](/images/help/costbars-process-diagram.png)
 
 ### Prerequisite Workflow: Establish the Data Foundation
 

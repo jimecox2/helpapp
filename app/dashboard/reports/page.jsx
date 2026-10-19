@@ -420,7 +420,7 @@ const EnterpriseReportsPage = () => {
               </p>
               <p className="text-sm text-gray-600">
                 <strong>Need help?</strong> Visit the{' '}
-                <Link href="/help" className="text-blue-600 hover:underline">
+                <Link href="/help/ask" className="text-blue-600 hover:underline">
                   Help Assistant
                 </Link>
                 {' '}to learn more about dashboard sources and enterprise reporting.

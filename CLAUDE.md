@@ -40,7 +40,7 @@ Users pick a product, select relevant documentation, and ask questions in natura
 ### Key Design Decisions
 
 - **No authentication**: Fully public. Accessible to prospective customers, new users, and existing customers alike.
-- **No database**: All documentation is static markdown files bundled in `/public/docsHelp/`. Chat history is ephemeral (localStorage only, per session).
+- **No database**: All documentation is static markdown files in `/public/docsHelp/` (this repo is their master). Chat history is ephemeral (localStorage only, per session).
 - **Dual AI backend**: Supports Google Gemini (cloud) or Ollama (local LLM) — switchable per request.
 - **Documentation-grounded**: The system prompt explicitly instructs the model to answer only from provided docs and say so if the answer isn't there.
 
@@ -57,7 +57,7 @@ Next.js 14 App (Port 3002)
      │
      ├── HelpChatPanel.jsx          → All UI logic: product tabs, doc picker, chat
      │
-     └── /public/docsHelp/*.md      → static markdown help files (copied from tbrunp)
+     └── /public/docsHelp/*.md      → static markdown help files (master copy, maintained here)
               │
               ├── Fetched client-side on demand (per-doc cache, 1-hour TTL)
               └── Sent as context in POST body to /api/chat
@@ -124,7 +124,7 @@ helpapp/
 ├── lib/
 │   └── utils.js                  # cn() helper only
 ├── public/
-│   └── docsHelp/                 # help files, copied from tbrunp docsHelp/
+│   └── docsHelp/                 # help files - the master copy (see Documentation System)
 │       ├── Timebars_User_Guide.md
 │       ├── Agilebars_User_Guide.md
 │       ├── Costbars_User_Guide.md
@@ -272,38 +272,57 @@ export const AI_CONFIG = {
 
 ## Documentation System
 
-### Location
+### Location and ownership
 
-All documentation lives in `/public/docsHelp/` as markdown files. These are served statically by Next.js and fetched client-side.
+**helpapp is the master of the help files** (`public/docsHelp/*.md`). Write and change help content here
+and nowhere else. tbwww and tbrunp no longer hold copies. Marketing articles (`docsOther`) live only in
+tbwww; do not add them here.
+(The old copies in tbwww `public/docsHelp/` and tbrunp `docsHelp/` are being removed; until then they are stale.)
 
-### Documentation Registry
+| What | Where |
+|---|---|
+| Guides (markdown) | `public/docsHelp/*.md` |
+| Images used by the guides | `public/images/help/` (link them as `/images/help/...`) |
+| Complete Reference Guide PDFs, client master spreadsheets | `public/pdf/`, `public/spreadsheets/` |
+| Registry = table of contents | `lib/help/helpDocs.js` |
+| `a1 TOC` | generated from the registry: `npm run toc` (never edit by hand) |
+| Complete Reference Guides (`*_Complete_Reference_Guide.md`) | generated: `python3 tools/buildCompleteGuides.py`; the PDFs are made from them by hand |
+| Appendix A of the Forms guide (picklists) | made in tbrunp by `tools/buildPicklistReference.py`, pasted in here |
 
-The `HELP_DOCS` object in `HelpChatPanel.jsx` (the `/aitemp` panel) is its registry of help (`/docsHelp/`) and
-marketing (`/docsOther/`) docs. Every path must exist under `public/`; the `*_Complete_Reference_Guide.md`
-files are left out because they repeat the other guides. `/help` uses `lib/help/helpDocs.js` instead. Each entry defines:
+### Links inside the guides
 
-```javascript
-{
-  title:    'Timebars User Guide',
-  category: 'User Guide',
-  products: ['TB'],             // TB, AB, CB, or combination
-  path:     '/docsHelp/Timebars_User_Guide.md',
-  priority: 1,                  // Lower = shown first in picker
-}
-```
+- A link to another guide is **relative**: `[User Interface Guide](Common_02_User_Interface_Guide.md#the-canvas)`.
+  Never write `https://www.timebars.com/knowledgebase/helparticles/...` or a help-host address into a guide.
+- Anchors follow GitHub's heading rule (`headingSlugger()` in `lib/help/renderGuide.js`).
+- Images, PDFs and spreadsheets are site paths: `/images/help/...`, `/pdf/...`, `/spreadsheets/...`.
+- Links to marketing pages stay absolute on `https://www.timebars.com/...`.
+- `npm run check:help` (also run by `npm run build`) fails on a guide link, anchor, image or registry path that
+  does not resolve.
 
-### Adding New Documentation
+### The registry (`lib/help/helpDocs.js`)
 
-1. Add the `.md` file to `/public/docsHelp/`
-2. Add an entry to the `HELP_DOCS` object in `HelpChatPanel.jsx`
-3. Set the correct `products` array so the doc appears for the right product tab
+One list for every consumer: the library (`/help`), guide pages (`/help/<slug>`), Ask AI (`/help/ask`), the sitemap
+and `a1 TOC`. `HELP_DOCS` holds the guides (`title`, `category`, `products`, `path`, `priority`), `HELP_DOWNLOADS` the
+PDFs and spreadsheets. A guide's slug is its file name in lower case with `_` → `-`
+(`fileToSlug()`), the same rule that names its Strapi help-article. `*_Complete_Reference_Guide.md` files are not
+guides here (Ask AI would read everything twice); they are offered as PDFs.
+`/aitemp` (`HelpChatPanel.jsx`) still has its own list for its doc picker.
 
-### Doc Fetching (Client-Side)
+### Adding, renaming or deleting a guide
+
+1. Add or change the `.md` file in `public/docsHelp/`.
+2. Update `HELP_DOCS` in `lib/help/helpDocs.js` (and `HelpChatPanel.jsx` for `/aitemp`).
+3. Update tbrunp `scripts/ai/helpDocsLoader.js`: the in-app Ask AI keeps its own copy of the list.
+4. `npm run toc`, then `npm run check:help`. Rebuild the Complete Reference Guides if a guide in their recipes changed.
+
+### Doc Fetching (Ask AI, client-side)
 
 - Docs are fetched via `fetch('/docsHelp/filename.md')` from the browser
 - Cached in memory with a 1-hour TTL
 - Multiple docs are fetched in parallel with `Promise.allSettled` (one failure won't break the rest)
-- The concatenated content is sent as `docsContext` in the POST body to `/api/chat`
+- The concatenated content is sent as `docsContext` in the POST body to `/api/ai/help` (`/api/chat` for `/aitemp`)
+- The guide pages read the files on the server (`app/help/[slug]/page.jsx`) and render them with
+  `renderGuide()`, which shows any raw HTML as text and keeps only safe URLs, so no DOMPurify is needed there.
 
 ---
 
@@ -448,7 +467,7 @@ If using Ollama on the production server, update `OLLAMA_HOST` in `/config/ai.js
 - [ ] Ollama host in `/config/ai.js` matches server network (if using local AI)
 - [ ] `npm run build` completes without errors
 - [ ] No ESLint errors (`npm run lint`)
-- [ ] Docs in `/public/docsHelp/` are up to date
+- [ ] `npm run check:help` passes (the build runs it)
 
 ---
 
@@ -495,7 +514,7 @@ import DocPicker from './DocPicker'
 **Adding a new product**:
 1. Add a product code (e.g., `NP`) to `productNames` in `/app/api/chat/route.js`
 2. Add a new tab in `HelpChatPanel.jsx`
-3. Add relevant docs to `/public/docsHelp/` and register them in `HELP_DOCS`
+3. Add relevant docs to `/public/docsHelp/` and register them in `lib/help/helpDocs.js`
 
 **Adding a new AI provider**:
 1. Add configuration to `/config/ai.js`
@@ -567,26 +586,12 @@ side only.
 - Test: `npm run build && npm run test:ai` (Gemini and Strapi are stubbed, no key needed).
 - Deploy: tbown package, `$TB/tbhelp/deploy.sh` or `$TB/deploy-all.sh` on each server (tag in `.env`, keys in `.secrets.env`). Build and push: `./deploy-push-to-hub-secure.sh`.
 
-## Copies of other repos' files — do not edit here
+## Which repo owns which documents
 
-- `public/docsHelp/` are copies of the help files maintained in the **tbrunp** repo (`docsHelp/`).
-- `public/docsOther/` are copies of the files maintained in the **tbwww** repo (`docsOther/`).
-
-The owner copies them over periodically. Never change them in this repo, whatever the task.
-
-### Manual doc sync checklist (owner copies by hand)
-
-Two batches, each with one master. Mirror the whole folder so renamed or deleted files go too
-(`rsync -a --delete`), then commit in each target repo:
-
-| Batch | Master | Copy to |
-|---|---|---|
-| Help files | tbrunp `docsHelp/` | tbwww `public/docsHelp/`, helpapp `public/docsHelp/` |
-| Marketing / other | tbwww `public/docsOther/` | helpapp `public/docsOther/` (tbrunp `docsOther/` as needed) |
-
-After a help file is added, renamed or deleted, update the Ask AI registries in the same change:
-tbrunp `scripts/ai/helpDocsLoader.js`, helpapp `lib/help/helpDocs.js` and `components/HelpChatPanel.jsx`.
-Leave out `*_Complete_Reference_Guide.md` (duplicates of the other guides).
+- `public/docsHelp/` (help) – **master here**. tbwww and tbrunp do not keep copies.
+- Marketing and other articles (`docsOther`) – master in **tbwww** `public/docsOther/`. Not copied here.
+- tbrunp's in-app Ask AI reads the help files from this container (its nginx proxies `/docsHelp/` over `tbnet`),
+  so there is nothing to copy to tbrunp either.
 
 ## Timebars Cloud (cloud.timebars.com) — moved from tbwww
 
@@ -595,7 +600,9 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | Route | What | Login |
 |---|---|---|
 | `/` | Public home page about Timebars Cloud | no |
-| `/help` | Ask AI help assistant, ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`, `lib/help/helpDocs.js`) | yes |
+| `/help` | Help library: TB / AB / CB tabs listing the guides and downloads (`components/HelpLibrary.jsx`, `lib/help/helpDocs.js`) | no |
+| `/help/<slug>` | One guide, rendered from `public/docsHelp/` (`app/help/[slug]/page.jsx`, `lib/help/renderGuide.js`) | no |
+| `/help/ask` | Ask AI help assistant, ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`) | yes |
 | `/aitemp` | The original helpapp help panel (doc picker, Gemini/Ollama), to be enhanced later | yes |
 | `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
@@ -604,7 +611,9 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/tbgenerator` | AI Generator: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download) | yes |
 
 - `middleware.js`: `help.`, `dashboard.`, `pubsets.<domain>` 308 to `/help`, `/dashboard`, `/pubsets` on
-  `cloud.<domain>`; every page except `/`, `/auth/*` and static files needs a login. API routes check their own login.
+  `cloud.<domain>`; staging names (`helps.`, `dashboards.`, `pubsetss.`) go to `clouds.<domain>`. On a help host the
+  path is kept under `/help` (`help.timebars.com/<slug>` → `/help/<slug>`). Every page except `/`, `/help`,
+  `/help/<slug>`, `/auth/*` and static files needs a login. API routes check their own login.
 - Auth: `app/auth/auth.js` (NextAuth v5, same Strapi as tbwww). **Own session**, not shared with www: cookie
   names start `tbcloud.`. Register / password reset / profile / orders link to `WWW_URL` (`config/site.js`).
 - The Strapi full-access token is `STRAPI_ADMIN_TOKEN`, server only. Writes that need it are server actions
@@ -613,4 +622,4 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 - Public URLs: `config/site.js` (same names as tbwww). Defaults in code are Timebars Ltd.'s addresses; each server
   sets its own at run time in `.env.local` (`CLOUD_API_URL`, `CLOUD_WWW_URL`, `NEXTAUTH_URL`, `RUN_URL_AB/TB/CB`).
   Only `.env.example` and `.env.local` exist — no `NEXT_PUBLIC_` values, nothing built into the image.
-- Nav: the Assistance menu links back to www (pricing, FAQ, help articles, contact). Notification cron: `send-notification.sh`.
+- Nav: Home and Help show signed out; the Assistance menu links back to www (pricing, FAQ, knowledgebase, contact). Notification cron: `send-notification.sh`.

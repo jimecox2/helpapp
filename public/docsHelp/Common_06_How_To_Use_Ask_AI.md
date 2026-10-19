@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # 🤖 How to Use Ask AI
@@ -27,6 +27,8 @@
 You do not need to know any technical field names or rules. You write the way a project manager, portfolio manager or engineer would talk, and the AI fills in the rest.
 
 > Ask AI is powered by Google Gemini. After the AI finishes creating data, **refresh the page (press F5)** to see the new bars appear on the canvas.
+
+> **Log in first.** Ask AI only answers users who are logged in to the Timebars Cloud. If you see "Please log in to the Timebars Cloud to use AI", log in from the Publishing page (or the Login button) and try again.
 
 ---
 
@@ -197,6 +199,8 @@ The **Ask AI** button on the main menu (and on the canvas toolbar) opens the **H
 - Use **Clear** to start a fresh conversation.
 - Click the **×** to close it.
 
+The welcome message shows how many help files were loaded for your edition. The assistant reads the common guides (including the Administrators Guide) plus your product's User Guide. The *Complete Reference Guides* are left out on purpose: they repeat the same content.
+
 ---
 
 ## 🐛 Troubleshooting
@@ -206,6 +210,9 @@ Refresh the page (F5). New bars show after a reload.
 
 **"No people were assigned to my tasks."**
 Your Resource Pool may have no suitable **named (Human) resources**. Add people with roles and skills, then use the **Create Allocations** button on the Work Package, or the ✨ button on a Task.
+
+**"The Help Assistant says some documentation files could not be loaded."**
+It names the files it could not fetch. The assistant still works, but it can't answer from those files. Refresh the page; if the warning stays, tell your administrator, as the help files are missing from the installed version.
 
 **"The tasks don't quite match what I wanted."**
 Give more detail — name the phases, deliverables or roles you expect — and try again on the same bar.

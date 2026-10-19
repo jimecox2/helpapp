@@ -15,9 +15,11 @@ import { WWW_URL } from '@/config/site'
 import { cn } from '@/lib/utils'
 
 // adminOnly items are hidden unless the user's primary_role is Administrator.
+// public items are also shown to signed-out visitors (everything else needs a login).
 const NAV = [
-  { label: 'Home', href: '/' },
-  { label: 'Help', href: '/help' },
+  { label: 'Home', href: '/', public: true },
+  { label: 'Help', href: '/help', public: true },
+  { label: 'Ask AI', href: '/help/ask' },
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Pubsets', href: '/pubsets' },
   { label: 'Personal Dashboard', href: '/personaldashboard' },
@@ -43,7 +45,6 @@ const ASSISTANCE = {
     { label: 'Get a License', path: '/sales/pricing' },
     { label: 'Quick Start', path: '/sales/quick-start' },
     { label: 'FAQ by Topic', path: '/knowledgebase/faq' },
-    { label: 'Help Articles', path: '/knowledgebase/helparticles' },
     { label: 'Knowledgebase', path: '/knowledgebase' },
     { label: 'About Us', path: '/sales/about-us' },
     { label: 'Contact Us', path: '/sales/contact-us' },
@@ -97,11 +98,11 @@ export default function AppNavbar() {
   const signedIn = status === 'authenticated'
   const admin = isAdminRole(session?.user?.primary_role)
 
-  // Signed-out visitors only see Home; everything else needs a login.
+  // Signed-out visitors only see the public pages (Home, Help).
   const items = signedIn
     ? NAV.filter(i => !i.adminOnly || admin)
         .map(i => (i.children ? { ...i, children: i.children.filter(c => !c.adminOnly || admin) } : i))
-    : NAV.slice(0, 1)
+    : NAV.filter(i => i.public)
 
   const closeAll = () => { setMobileOpen(false); setProfileOpen(false) }
 

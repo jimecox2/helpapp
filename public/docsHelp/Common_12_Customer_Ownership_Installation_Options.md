@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Customer Ownership and Installation Options
@@ -116,8 +116,7 @@ notifications.
 - Timebars Cloud publishing and dashboards
 - Text notifications (each recipient installs the Pushover app, a small one-time
   purchase)
-- Ask AI features, run through Timebars Ltd.'s AI service (Google Gemini)
-  *(moving to the Timebars website in an upcoming release — see section 8)*
+- Ask AI features, run through Timebars Ltd.'s AI service (Google Gemini); you log in with your Timebars Cloud account
 - Updates and fixes as they ship, with nothing for you to deploy
 
 You do not need any of the third-party accounts in section 8 — Timebars Ltd.
@@ -156,10 +155,11 @@ do not want to allocate a development team to it.
 - Pull access to the private images, granted to **your own** Docker Hub account
   (you log in with your own read-only access token — Timebars Ltd. does not share
   its credentials)
-- A customer image tag that includes **your** hostnames (the app recognises the
-  addresses it serves; a new address needs a new image tag from Timebars Ltd.)
-- The installation package (`tbown`): Docker Compose configuration for the complete stack,
-  install / backup / restore scripts, seed data and a step-by-step installation guide
+- The same images every customer runs: your addresses are settings, not a custom build
+- The installation package (`tbown`), **Container Option V2**: you fill in one settings file
+  (`tbapps.conf`) and it makes a ready package per environment (DEV, STAGING, PROD, TRAINING), each
+  for its own server, with the Docker Compose stacks, a built-in HTTPS proxy, install / backup /
+  restore scripts, seed data and a step-by-step deployment guide
 - Environment configuration templates
 - Setup and configuration documentation
 - Ongoing image updates covering minor fixes and stability improvements
@@ -177,12 +177,18 @@ do not want to allocate a development team to it.
 A deployment is these three containers plus a database (the public PostgreSQL
 image, or a managed PostgreSQL service).
 
-Two optional images are also available: `jimecox807/tbhelpapp` (a sample help
-application) and `jimecox807/nwi` (a sample customer portal). Neither is needed to
-run the products.
+A fourth container, `jimecox807/tbhelpapp`, is the **AI service**: it runs Ask AI,
+AI Create and the help assistant, keeps your Gemini key on the server and answers only
+logged-in users. It is needed only if you want the AI features; the app reaches it over
+a private Docker network, so it needs no public address. One optional image is also
+available, `jimecox807/nwi` (a sample customer portal), which the products do not need.
+
+In front of them the package runs a proxy (the public Caddy image) that answers every
+address over HTTPS with free Let's Encrypt certificates. If you already run a reverse
+proxy with your own certificates, use that instead.
 
 You also choose which third-party services to connect — AI, notifications,
-email, payments, DNS/tunnel. Each needs **your own** account and keys
+email, payments. Each needs **your own** account and keys
 (section 8). Without them the core products still run; those features stay off.
 
 ### System requirements
@@ -195,16 +201,16 @@ email, payments, DNS/tunnel. Each needs **your own** account and keys
 
 **Software**
 - Docker Engine 24+ with the Compose v2 plugin (`docker compose`)
-- A currently supported Linux server release (for example Ubuntu 22.04 or 24.04
-  LTS, RHEL 9). The images are Linux containers; Windows and macOS are suitable
-  for evaluation, not production hosting
+- Ubuntu 24.04 or 26.04 LTS, one server per environment (the package's scripts are
+  written for Ubuntu). The images are Linux containers; Windows and macOS are
+  suitable for evaluation, not production hosting
 - PostgreSQL 14+ — a container, or a managed database service (the seed data is
   a PostgreSQL 14 dump and restores into 14 or newer)
 
 **Network**
 - Ports 80 and 443, plus any you configure
 - DNS for your domain names
-- TLS certificates (Let's Encrypt is the straightforward route)
+- TLS certificates: the package's proxy gets them from Let's Encrypt, or use your own
 
 ### Team and skills
 
@@ -226,15 +232,15 @@ PostgreSQL setup, backup procedures and initial tuning, 2 to 4 hours.
 
 ### Deployment outline
 
-1. Authenticate to Docker Hub
-2. Pull the images
-3. Configure environment variables and secrets
-4. Provision PostgreSQL
-5. Deploy the stack with the supplied Compose configuration
-6. Configure reverse proxy routing and TLS
-7. Verify all services are running and communicating
-8. Perform initial application configuration and user setup
-9. Establish monitoring, alerting and scheduled backups
+1. On a dev box, fill in `tbapps.conf` with each environment's addresses and run `apply`:
+   one ready package per environment
+2. Prepare one server per environment and send it its package
+3. On the server: install Docker, log in to Docker Hub, paste your keys
+4. Run `deploy-all.sh`: it makes the passwords, starts the database, backend, website,
+   Cloud, app and proxy, and loads the seed data
+5. Point DNS at the proxy and check every address with the supplied check script
+6. Set your own Strapi admin password and API token, and your users
+7. Schedule the nightly backup and your monitoring
 
 ### What to weigh
 
@@ -269,7 +275,7 @@ roadmap is itself the requirement.
   you generate your own secrets)
 - Setup and configuration documentation, including the *Administrators Guide*
 - A supervised handover of the third-party services in section 8: Timebars Ltd.
-  shows you its configuration and you copy what you need (worker code, settings)
+  shows you its configuration and you copy what you need (settings)
   into **your own** accounts
 - Custom feature development under a separate professional services engagement
 
@@ -281,10 +287,10 @@ agreement.
 
 | Repository | Technology | Purpose |
 |---|---|---|
-| `tbrunp` | Vanilla JS, Parcel | the three client applications, the AI worker source, app deploy scripts |
+| `tbrunp` | Vanilla JS, Parcel | the three client applications, app deploy scripts |
 | `tbwww` | Next.js | website, sign-up and payments (Stripe), notifications, Personal and Enterprise dashboards |
 | `tbbe` | Strapi, PostgreSQL | backend API: login, licences, publishing, registration email |
-| `helpapp` *(optional)* | Next.js | sample help application, including an example of calling Gemini from Next.js instead of Cloudflare Workers |
+| `helpapp` *(optional)* | Next.js | the AI service (routes that call Google Gemini, with your key kept on the server) and the help application |
 | `nwi-ghub` *(optional)* | — | sample customer portal |
 
 ### The deployment pipeline
@@ -514,12 +520,12 @@ organisation's account. The *Administrators Guide* has the set-up steps for each
 | **Docker Hub** | where the images are delivered | required, to pull images | optional — you can build and use your own registry | — |
 | **PostgreSQL** (public image) | backend database | required | required | — |
 | **Google Gemini API** | the AI model behind Ask AI | optional | optional | Ask AI unavailable |
-| **Cloudflare Workers** | run the six small AI services today (create project, WBS, staffing, resource plan, business case, help assistant) — being replaced, see below | Timebars Ltd.'s workers | optional — or host the same logic in Next.js (`helpapp` shows how) | Ask AI unavailable |
+| **AI service (`helpapp` container)** | runs the six AI routes (create project, WBS, staffing, resource plan, business case, help assistant), holds the Gemini key and checks the user's login | your own container, with your own Gemini key | your own container, or your own code in its place | Ask AI unavailable |
 | **Pushover** | push notifications to managers' phones | optional | optional | no push alerts |
 | **Twilio** | SMS (Costbars escalation; a fuller SMS channel is planned) | optional | optional | no SMS |
 | **SendGrid** (part of Twilio) | registration and account email from Strapi | optional — or your own mail server | optional — or your own mail server | no sign-up email |
 | **Stripe** | online purchase of subscriptions on the website | not needed | not needed | — *(required only for Option D)* |
-| **Cloudflare DNS and Tunnel** | public addresses and HTTPS without opening inbound ports | optional — any DNS, reverse proxy and TLS | optional — any DNS, reverse proxy and TLS | use your own proxy and certificates |
+| **DNS and HTTPS** | your addresses and their certificates | required — the package's Caddy proxy (Let's Encrypt), or your own proxy and certificates | required — any DNS, reverse proxy and TLS | — |
 | **OpenProject** (open source) | optional two-way sync partner (Tier 3) | optional — your own instance | optional — your own instance | no OpenProject sync |
 | **Lucidchart, Mermaid** | diagrams in the design documentation | — | optional, for your own documentation | — |
 
@@ -532,12 +538,10 @@ Questions to settle in your architecture review:
 - **What replaces a service you leave off?** Most have a self-hosted or
   internal alternative, noted above.
 
-> **Planned change to Ask AI.** The AI features are moving off Cloudflare Workers
-> into a new service with similar features inside the Timebars website (`tbwww`,
-> Next.js). The AI code will be removed from the client application, which will
-> link users to the website for AI. After the change, AI needs no Cloudflare
-> account: the Gemini key (or your own model) is configured on the website server
-> only. Option B and C customers receive this as part of the release that carries it.
+> **Ask AI runs on your own server.** The AI features run in the `helpapp` container on your
+> own server. The Gemini key (or your own model) is configured there only, and requests are accepted only
+> from users logged in to your Timebars Cloud (Strapi). Sites with no Strapi can switch that check off
+> and keep AI reachable from their own network only.
 
 ### 8.1 Licences and users
 

@@ -1,4 +1,4 @@
-![Timebars Logo](../tbimages/logos/timebars-ltd-logo-final.png)
+![Timebars Logo](/images/help/logos/timebars-ltd-logo-final.png)
 ---
 
 # Risks, Issues & Change Requests User Guide
@@ -961,10 +961,10 @@ RIC items can be exported/imported via spreadsheet:
 
 ## Related Help Topics
 
-- [User Interface Guide](https://www.timebars.com/knowledgebase/helparticles/common-02-user-interface-guide) - Creating and editing bars
-- [Data Synchronization, Backup, Recovery and Retention Guide](https://www.timebars.com/knowledgebase/helparticles/common-04-data-synchronization-backup-recovery-and-retention-user-guide) - Data stores, backup, import and export
-- [Local Reports Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - Risk and Issue reports
-- [Configurable Data Guide](https://www.timebars.com/knowledgebase/helparticles/common-05-forms-reports-and-graphs-guide) - Forms, picklists and the status/health rules
+- [User Interface Guide](Common_02_User_Interface_Guide.md) - Creating and editing bars
+- [Data Synchronization, Backup, Recovery and Retention Guide](Common_04_Data_Synchronization_Backup_Recovery_And_Retention_User_Guide.md) - Data stores, backup, import and export
+- [Local Reports Guide](Common_05_Forms_Reports_And_Graphs_Guide.md) - Risk and Issue reports
+- [Configurable Data Guide](Common_05_Forms_Reports_And_Graphs_Guide.md) - Forms, picklists and the status/health rules
 
 ---
 

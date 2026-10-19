@@ -1,4 +1,4 @@
-// app/robots.js — Next.js serves this as /robots.txt. Only the home page is public.
+// app/robots.js — Next.js serves this as /robots.txt. Public: the home page and the help library.
 import { unstable_noStore as noStore } from 'next/cache'
 import { FRONTEND_URL } from '@/config/site'
 
@@ -11,7 +11,7 @@ export default function robots() {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/auth/', '/dashboard/', '/personaldashboard', '/help', '/aitemp', '/pubsets', '/tbgenerator', '/projectArtifacts/'],
+        disallow: ['/admin/', '/api/', '/auth/', '/dashboard/', '/personaldashboard', '/help/ask', '/aitemp', '/pubsets', '/tbgenerator', '/projectArtifacts/'],
       },
     ],
     sitemap: `${FRONTEND_URL}/sitemap.xml`,

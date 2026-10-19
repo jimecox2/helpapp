@@ -1,7 +1,7 @@
-// "/" — public home page of Timebars Cloud (cloud.timebars.com). The only page without a login.
+// "/" — public home page of Timebars Cloud (cloud.timebars.com). Public, like the help library (/help).
 import Link from 'next/link'
 import Image from 'next/image'
-import { Bot, LayoutDashboard, Layers, BellRing, Sparkles, ShieldCheck } from 'lucide-react'
+import { BookOpen, Bot, LayoutDashboard, Layers, BellRing, Sparkles, ShieldCheck } from 'lucide-react'
 import { auth } from '@/auth/auth'
 import { WWW_URL } from '@/config/site'
 
@@ -12,9 +12,15 @@ export const metadata = {
 
 const FEATURES = [
   {
+    icon: BookOpen,
+    title: 'Help Library',
+    href: '/help',
+    text: 'User guides, reference guides and spreadsheets for Agilebars, Timebars and Costbars. No login needed.',
+  },
+  {
     icon: Bot,
     title: 'Ask AI Help Assistant',
-    href: '/help',
+    href: '/help/ask',
     text: 'Ask how to do anything in Agilebars, Timebars or Costbars. Answers come only from the official documentation.',
   },
   {
@@ -68,7 +74,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               {session ? (
                 <>
-                  <Link href="/help" className="rounded-lg bg-white px-6 py-3 font-semibold text-gray-900 hover:bg-gray-200">Ask AI</Link>
+                  <Link href="/help/ask" className="rounded-lg bg-white px-6 py-3 font-semibold text-gray-900 hover:bg-gray-200">Ask AI</Link>
                   <Link href="/dashboard" className="rounded-lg border border-white/60 px-6 py-3 font-semibold hover:bg-white/10">Open Dashboard</Link>
                 </>
               ) : (
