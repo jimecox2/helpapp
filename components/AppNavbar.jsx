@@ -33,7 +33,6 @@ const NAV = [
     ],
   },
   { label: 'Users & Roles', href: '/admin/users', adminOnly: true },
-  { label: 'AI Help (beta)', href: '/aitemp' },
 ]
 
 // Links back to www.timebars.com (same list as its Assistance menu). Shown signed in or out.

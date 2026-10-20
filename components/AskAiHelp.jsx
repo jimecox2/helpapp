@@ -8,10 +8,11 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle, Loader2, Wand2 } from 'lucide-react'
+import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle, Loader2, Wand2, BookOpenCheck } from 'lucide-react'
 import { PRODUCTS, loadProductDocs, estimateQueryCost } from '@/lib/help/helpDocs'
 import { cn } from '@/lib/utils'
 import TbGeneratorPanel from '@/components/TbGeneratorPanel'
+import HelpChatPanel from '@/components/HelpChatPanel'
 
 const MAX_HISTORY_ITEMS = 10
 const HISTORY_KEY = 'helpAiHistory'
@@ -39,7 +40,13 @@ function errorText(err) {
   return msg || 'Please try again later.'
 }
 
-export default function AskAiHelp({ initialProduct, openGenerator = false }) {
+// Extra tools opened by the buttons under the input, one at a time (?tool=generator | byguide opens one).
+const TOOLS = {
+  generator: { label: 'AI Generator', icon: Wand2 },
+  byguide: { label: 'Ask by Guide', icon: BookOpenCheck },
+}
+
+export default function AskAiHelp({ initialProduct, initialTool }) {
   const { data: session } = useSession()
   const [product, setProduct] = useState(initialProduct || 'TB')
   const [docs, setDocs] = useState(null) // { context, loaded, expected }
@@ -47,8 +54,8 @@ export default function AskAiHelp({ initialProduct, openGenerator = false }) {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [copiedId, setCopiedId] = useState(null)
-  const [showGenerator, setShowGenerator] = useState(openGenerator)
-  const generatorRef = useRef(null)
+  const [tool, setTool] = useState(TOOLS[initialTool] ? initialTool : null)
+  const toolRef = useRef(null)
   const logRef = useRef(null)
 
   // Restore the last product and the conversation.
@@ -79,10 +86,10 @@ export default function AskAiHelp({ initialProduct, openGenerator = false }) {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
   }, [messages])
 
-  // Bring the AI Generator into view when it is opened.
+  // Bring the opened tool into view.
   useEffect(() => {
-    if (showGenerator) generatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [showGenerator])
+    if (tool) toolRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [tool])
 
   const ask = useCallback(async () => {
     const question = input.trim()
@@ -246,16 +253,19 @@ export default function AskAiHelp({ initialProduct, openGenerator = false }) {
           >
             <Trash2 className="h-4 w-4" /> Clear
           </button>
-          <button
-            onClick={() => setShowGenerator(v => !v)}
-            aria-expanded={showGenerator}
-            className={cn(
-              'inline-flex items-center gap-2 rounded-lg border border-tbBlue px-4 py-2 text-sm font-medium',
-              showGenerator ? 'bg-tbBlue text-white hover:bg-blue-800' : 'bg-white text-tbBlue hover:bg-blue-50',
-            )}
-          >
-            <Wand2 className="h-4 w-4" /> AI Generator
-          </button>
+          {Object.entries(TOOLS).map(([key, { label, icon: Icon }]) => (
+            <button
+              key={key}
+              onClick={() => setTool(t => (t === key ? null : key))}
+              aria-expanded={tool === key}
+              className={cn(
+                'inline-flex items-center gap-2 rounded-lg border border-tbBlue px-4 py-2 text-sm font-medium',
+                tool === key ? 'bg-tbBlue text-white hover:bg-blue-800' : 'bg-white text-tbBlue hover:bg-blue-50',
+              )}
+            >
+              <Icon className="h-4 w-4" /> {label}
+            </button>
+          ))}
           <span className="ml-auto text-xs text-gray-500">
             Enter to send · Shift+Enter for a new line · Powered by Google Gemini, answers from the official documentation
           </span>
@@ -263,10 +273,11 @@ export default function AskAiHelp({ initialProduct, openGenerator = false }) {
       </div>
     </div>
 
-    {/* AI Generator: paste a document, get a Timebars file to import (was the /tbgenerator page) */}
-    {showGenerator && (
-      <div ref={generatorRef} className="mt-6 scroll-mt-20">
-        <TbGeneratorPanel />
+    {/* AI Generator: paste a document, get a Timebars file to import (was /tbgenerator).
+        Ask by Guide: pick the guides to search, cloud or local model (was /aitemp, "AI Help (beta)"). */}
+    {tool && (
+      <div ref={toolRef} className="mt-6 scroll-mt-20">
+        {tool === 'generator' ? <TbGeneratorPanel /> : <HelpChatPanel />}
       </div>
     )}
     </>

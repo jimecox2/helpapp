@@ -306,12 +306,12 @@ and `a1 TOC`. `HELP_DOCS` holds the guides (`title`, `category`, `products`, `pa
 PDFs and spreadsheets. A guide's slug is its file name in lower case with `_` → `-`
 (`fileToSlug()`), the same rule that names its Strapi help-article. `*_Complete_Reference_Guide.md` files are not
 guides here (Ask AI would read everything twice); they are offered as PDFs.
-`/aitemp` (`HelpChatPanel.jsx`) still has its own list for its doc picker.
+Ask by Guide (`HelpChatPanel.jsx`) still has its own list for its doc picker.
 
 ### Adding, renaming or deleting a guide
 
 1. Add or change the `.md` file in `public/docsHelp/`.
-2. Update `HELP_DOCS` in `lib/help/helpDocs.js` (and `HelpChatPanel.jsx` for `/aitemp`).
+2. Update `HELP_DOCS` in `lib/help/helpDocs.js` (and `HelpChatPanel.jsx` for Ask by Guide).
 3. Update tbrunp `scripts/ai/helpDocsLoader.js`: the in-app Ask AI keeps its own copy of the list.
 4. `npm run toc`, then `npm run check:help`. Rebuild the Complete Reference Guides if a guide in their recipes changed.
 
@@ -320,7 +320,7 @@ guides here (Ask AI would read everything twice); they are offered as PDFs.
 - Docs are fetched via `fetch('/docsHelp/filename.md')` from the browser
 - Cached in memory with a 1-hour TTL
 - Multiple docs are fetched in parallel with `Promise.allSettled` (one failure won't break the rest)
-- The concatenated content is sent as `docsContext` in the POST body to `/api/ai/help` (`/api/chat` for `/aitemp`)
+- The concatenated content is sent as `docsContext` in the POST body to `/api/ai/help` (`/api/chat` for Ask by Guide)
 - The guide pages read the files on the server (`app/help/[slug]/page.jsx`) and render them with
   `renderGuide()`, which shows any raw HTML as text and keeps only safe URLs, so no DOMPurify is needed there.
 
@@ -603,7 +603,7 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/help` | Help library: TB / AB / CB tabs listing the guides and downloads (`components/HelpLibrary.jsx`, `lib/help/helpDocs.js`) | no |
 | `/help/<slug>` | One guide, rendered from `public/docsHelp/` (`app/help/[slug]/page.jsx`, `lib/help/renderGuide.js`) | no |
 | `/help/ask` | Ask AI help assistant, ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`) | yes |
-| `/aitemp` | The original helpapp help panel (doc picker, Gemini/Ollama), to be enhanced later | yes |
+| `/help/ask?tool=byguide` | **Ask by Guide** button on the Help Assistant: the original helpapp help panel (`HelpChatPanel.jsx`, guide picker, Gemini/Ollama). Was `/aitemp` "AI Help (beta)", which redirects here | yes |
 | `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
 | `/personaldashboard/*` | Personal Dashboard (not in the nav; small link at the bottom of `/dashboard`), moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |

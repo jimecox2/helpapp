@@ -18,7 +18,7 @@ export default function HelpPage({ searchParams }) {
       </p>
       <AskAiHelp
         initialProduct={PRODUCT_CODES.includes(requested) ? requested : undefined}
-        openGenerator={searchParams?.tool === 'generator'}
+        initialTool={String(searchParams?.tool || '').toLowerCase()}
       />
     </div>
   )

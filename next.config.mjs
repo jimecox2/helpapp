@@ -11,9 +11,12 @@ const nextConfig = {
     ],
   },
 
-  // The AI Generator moved onto the Help Assistant page.
+  // The AI Generator and Ask by Guide (was "AI Help (beta)") moved onto the Help Assistant page.
   async redirects() {
-    return [{ source: '/tbgenerator', destination: '/help/ask?tool=generator', permanent: true }]
+    return [
+      { source: '/tbgenerator', destination: '/help/ask?tool=generator', permanent: true },
+      { source: '/aitemp', destination: '/help/ask?tool=byguide', permanent: true },
+    ]
   },
 
   experimental: {
