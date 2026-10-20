@@ -11,6 +11,11 @@ const nextConfig = {
     ],
   },
 
+  // The AI Generator moved onto the Help Assistant page.
+  async redirects() {
+    return [{ source: '/tbgenerator', destination: '/help/ask?tool=generator', permanent: true }]
+  },
+
   experimental: {
     // Consolidated dashboard sources are posted to a server action with all their rows.
     serverActions: { bodySizeLimit: '25mb' },

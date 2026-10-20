@@ -16,7 +16,10 @@ export default function HelpPage({ searchParams }) {
       <p className="text-gray-600 mt-1 mb-6">
         Answers come only from the official Agilebars, Timebars and Costbars documentation.
       </p>
-      <AskAiHelp initialProduct={PRODUCT_CODES.includes(requested) ? requested : undefined} />
+      <AskAiHelp
+        initialProduct={PRODUCT_CODES.includes(requested) ? requested : undefined}
+        openGenerator={searchParams?.tool === 'generator'}
+      />
     </div>
   )
 }

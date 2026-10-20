@@ -606,10 +606,10 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/aitemp` | The original helpapp help panel (doc picker, Gemini/Ollama), to be enhanced later | yes |
 | `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
-| `/personaldashboard/*` | Personal Dashboard, moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |
+| `/personaldashboard/*` | Personal Dashboard (not in the nav; small link at the bottom of `/dashboard`), moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |
 | `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
 | `/update-help` | Push `public/docsHelp` into Strapi help-articles: Create / Update per guide, Update All (existing articles only), checkbox to also update title, description, tags and SEO (`app/update-help/`, `/api/help-sync`, `lib/help/strapiSync.js`). Strapi Administrator whose email is in `HELP_EDITORS` | yes |
-| `/tbgenerator` | AI Generator: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download) | yes |
+| `/help/ask?tool=generator` | AI Generator (`components/TbGeneratorPanel.jsx`), opened by the **AI Generator** button on the Help Assistant: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download). `/tbgenerator` redirects here | yes |
 
 - `middleware.js`: `help.`, `dashboard.`, `pubsets.<domain>` 308 to `/help`, `/dashboard`, `/pubsets` on
   `cloud.<domain>`; staging names (`helps.`, `dashboards.`, `pubsetss.`) go to `clouds.<domain>`. On a help host the

@@ -44,7 +44,7 @@ const FEATURES = [
   {
     icon: Sparkles,
     title: 'AI Generator',
-    href: '/tbgenerator',
+    href: '/help/ask?tool=generator',
     text: 'Turn a business case or charter into a starting project plan you can load into the app.',
   },
   {

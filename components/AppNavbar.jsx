@@ -1,8 +1,8 @@
 'use client'
 
-// Main navigation for the Timebars Cloud app (cloud.timebars.com). Refactored from the tbwww
-// Navbar: same look, but the links are the Cloud pages. On /dashboard the Enterprise Dashboard's
-// own blue header sits under this bar (two rows).
+// Main navigation for the Timebars Cloud app (cloud.timebars.com). Started from the tbwww Navbar
+// but has its own dark-blue gradient so Cloud does not look like the marketing site. On /dashboard
+// the Enterprise Dashboard's own blue header sits under this bar (two rows).
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -22,8 +22,6 @@ const NAV = [
   { label: 'Ask AI', href: '/help/ask' },
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Pubsets', href: '/pubsets' },
-  { label: 'Personal Dashboard', href: '/personaldashboard' },
-  { label: 'AI Generator', href: '/tbgenerator' },
   {
     label: 'Notifications',
     children: [
@@ -67,7 +65,7 @@ function Dropdown({ item, pathname, onNavigate, align = 'left' }) {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(o => !o)}
-        className={cn('flex items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-2 text-sm text-white hover:bg-gray-900', active && 'bg-gray-900')}
+        className={cn('flex items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-2 text-sm text-white hover:bg-white/15', active && 'bg-white/20')}
       >
         {item.label} <ChevronDown className={cn('h-4 w-4 transition-transform', open && 'rotate-180')} />
       </button>
@@ -109,13 +107,13 @@ export default function AppNavbar() {
   const assistance = { ...ASSISTANCE, children: ASSISTANCE.children.map(c => ({ ...c, href: `${WWW_URL}${c.path === '/' ? '' : c.path}`, external: true })) }
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-red-500 bg-gray-800">
+    <nav className="sticky top-0 z-50 w-full border-b border-blue-300/40 bg-gradient-to-r from-blue-900 via-blue-700 to-blue-500 shadow-md">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <button
               type="button"
-              className="rounded-md p-2 text-gray-300 hover:bg-gray-700 hover:text-white xl:hidden"
+              className="rounded-md p-2 text-blue-100 hover:bg-white/15 hover:text-white xl:hidden"
               aria-label="Open main menu"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(o => !o)}
@@ -124,7 +122,7 @@ export default function AppNavbar() {
             </button>
             <Link href="/" className="flex shrink-0 items-center gap-2" onClick={closeAll}>
               <Image src="/images/timebars-ltd-logo-final-w.svg" alt="Timebars Ltd." width={150} height={48} className="h-12 w-auto" priority />
-              <span className="hidden pr-2 text-sm font-semibold text-gray-200 sm:inline">Cloud</span>
+              <span className="hidden pr-2 text-sm font-semibold text-blue-100 sm:inline">Cloud</span>
             </Link>
             <div className="ml-2 hidden items-center gap-0.5 xl:flex">
               {items.map(item =>
@@ -134,7 +132,7 @@ export default function AppNavbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={cn('whitespace-nowrap rounded-md px-2.5 py-2 text-sm text-white hover:bg-gray-900', isActive(pathname, item.href) && 'bg-gray-900')}
+                    className={cn('whitespace-nowrap rounded-md px-2.5 py-2 text-sm text-white hover:bg-white/15', isActive(pathname, item.href) && 'bg-white/20')}
                   >
                     {item.label}
                   </Link>
@@ -151,7 +149,7 @@ export default function AppNavbar() {
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen(o => !o)}
-                  className="flex items-center gap-2 rounded-full bg-gray-700 px-3 py-2 text-sm text-white hover:bg-gray-600"
+                  className="flex items-center gap-2 rounded-full bg-white/15 px-3 py-2 text-sm text-white hover:bg-white/25"
                   aria-label="Account menu"
                 >
                   <User className="h-4 w-4" />
@@ -174,7 +172,7 @@ export default function AppNavbar() {
               </div>
             ) : (
               status !== 'loading' && (
-                <Link href="/auth/signin" className="rounded-md bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200">
+                <Link href="/auth/signin" className="rounded-md bg-white px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-50">
                   Sign In
                 </Link>
               )
@@ -184,20 +182,20 @@ export default function AppNavbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-gray-700 px-2 pb-3 pt-2 xl:hidden">
+        <div className="border-t border-white/20 px-2 pb-3 pt-2 xl:hidden">
           {items.flatMap(item => (item.children ? item.children : [item])).map(item => (
             <Link
               key={item.href}
               href={item.href}
               onClick={closeAll}
-              className={cn('block rounded-md px-3 py-2 text-base text-white hover:bg-gray-900', isActive(pathname, item.href) && 'bg-gray-900')}
+              className={cn('block rounded-md px-3 py-2 text-base text-white hover:bg-white/15', isActive(pathname, item.href) && 'bg-white/20')}
             >
               {item.label}
             </Link>
           ))}
-          <p className="mt-2 border-t border-gray-700 px-3 pb-1 pt-3 text-xs uppercase tracking-wide text-gray-400">Assistance</p>
+          <p className="mt-2 border-t border-white/20 px-3 pb-1 pt-3 text-xs uppercase tracking-wide text-blue-100">Assistance</p>
           {assistance.children.map(c => (
-            <a key={c.href} href={c.href} className="block rounded-md px-3 py-2 text-base text-gray-300 hover:bg-gray-900">{c.label}</a>
+            <a key={c.href} href={c.href} className="block rounded-md px-3 py-2 text-base text-blue-50 hover:bg-white/15">{c.label}</a>
           ))}
         </div>
       )}

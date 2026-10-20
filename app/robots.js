@@ -11,7 +11,7 @@ export default function robots() {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin/', '/api/', '/auth/', '/dashboard/', '/personaldashboard', '/help/ask', '/update-help', '/aitemp', '/pubsets', '/tbgenerator', '/projectArtifacts/'],
+        disallow: ['/admin/', '/api/', '/auth/', '/dashboard/', '/personaldashboard', '/help/ask', '/update-help', '/aitemp', '/pubsets', '/projectArtifacts/'],
       },
     ],
     sitemap: `${FRONTEND_URL}/sitemap.xml`,

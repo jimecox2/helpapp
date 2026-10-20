@@ -8,9 +8,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle, Loader2 } from 'lucide-react'
+import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle, Loader2, Wand2 } from 'lucide-react'
 import { PRODUCTS, loadProductDocs, estimateQueryCost } from '@/lib/help/helpDocs'
 import { cn } from '@/lib/utils'
+import TbGeneratorPanel from '@/components/TbGeneratorPanel'
 
 const MAX_HISTORY_ITEMS = 10
 const HISTORY_KEY = 'helpAiHistory'
@@ -38,7 +39,7 @@ function errorText(err) {
   return msg || 'Please try again later.'
 }
 
-export default function AskAiHelp({ initialProduct }) {
+export default function AskAiHelp({ initialProduct, openGenerator = false }) {
   const { data: session } = useSession()
   const [product, setProduct] = useState(initialProduct || 'TB')
   const [docs, setDocs] = useState(null) // { context, loaded, expected }
@@ -46,6 +47,8 @@ export default function AskAiHelp({ initialProduct }) {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [copiedId, setCopiedId] = useState(null)
+  const [showGenerator, setShowGenerator] = useState(openGenerator)
+  const generatorRef = useRef(null)
   const logRef = useRef(null)
 
   // Restore the last product and the conversation.
@@ -75,6 +78,11 @@ export default function AskAiHelp({ initialProduct }) {
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
   }, [messages])
+
+  // Bring the AI Generator into view when it is opened.
+  useEffect(() => {
+    if (showGenerator) generatorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [showGenerator])
 
   const ask = useCallback(async () => {
     const question = input.trim()
@@ -124,6 +132,7 @@ export default function AskAiHelp({ initialProduct }) {
   const missing = docs ? docs.expected - docs.loaded : 0
 
   return (
+    <>
     <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
       {/* Header with product tabs */}
       <div className="bg-gradient-to-r from-tbBlue to-blue-700 text-white px-5 py-4 flex flex-wrap items-center justify-between gap-3">
@@ -237,11 +246,29 @@ export default function AskAiHelp({ initialProduct }) {
           >
             <Trash2 className="h-4 w-4" /> Clear
           </button>
+          <button
+            onClick={() => setShowGenerator(v => !v)}
+            aria-expanded={showGenerator}
+            className={cn(
+              'inline-flex items-center gap-2 rounded-lg border border-tbBlue px-4 py-2 text-sm font-medium',
+              showGenerator ? 'bg-tbBlue text-white hover:bg-blue-800' : 'bg-white text-tbBlue hover:bg-blue-50',
+            )}
+          >
+            <Wand2 className="h-4 w-4" /> AI Generator
+          </button>
           <span className="ml-auto text-xs text-gray-500">
             Enter to send · Shift+Enter for a new line · Powered by Google Gemini, answers from the official documentation
           </span>
         </div>
       </div>
     </div>
+
+    {/* AI Generator: paste a document, get a Timebars file to import (was the /tbgenerator page) */}
+    {showGenerator && (
+      <div ref={generatorRef} className="mt-6 scroll-mt-20">
+        <TbGeneratorPanel />
+      </div>
+    )}
+    </>
   )
 }

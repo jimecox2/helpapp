@@ -132,7 +132,7 @@ export default function TbGeneratorPanel() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-                TB Generator — Timebars Data Generation
+                AI Generator — Timebars Data Generation
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 Paste the text of a charter, business case, risk register, task list or cost estimate into the box, say what you want, and the AI builds a Timebars file you can download and import into the app. Download the sample documents below to see what works well.
