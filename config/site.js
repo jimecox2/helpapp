@@ -17,6 +17,7 @@ const runtime = isServer
       runUrlAb: process.env.RUN_URL_AB,
       runUrlTb: process.env.RUN_URL_TB,
       runUrlCb: process.env.RUN_URL_CB,
+      environment: process.env.TB_ENVIRONMENT,
     }
   : window.__TB_CLOUD__ || {}
 
@@ -44,6 +45,11 @@ export const RUN_URL_AB = pick(runtime.runUrlAb, 'https://ab.timebars.com')
 export const RUN_URL_TB = pick(runtime.runUrlTb, 'https://tb.timebars.com')
 export const RUN_URL_CB = pick(runtime.runUrlCb, 'https://cb.timebars.com')
 
+// Which environment this server is: the tbapps.conf section name (DEV, STAGING, PROD, TRAINING), written
+// by tbown's apply as TB_ENVIRONMENT. Every one but PROD gets the dark red nav bar with its name. Unset = PROD.
+export const TB_ENVIRONMENT = pick(runtime.environment, 'PROD').toUpperCase()
+export const IS_PROD = TB_ENVIRONMENT === 'PROD'
+
 // What the root layout sends to the browser (server only).
 export const BROWSER_CONFIG = {
   apiUrl: API_URL,
@@ -54,4 +60,5 @@ export const BROWSER_CONFIG = {
   runUrlAb: RUN_URL_AB,
   runUrlTb: RUN_URL_TB,
   runUrlCb: RUN_URL_CB,
+  environment: TB_ENVIRONMENT,
 }

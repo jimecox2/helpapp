@@ -237,7 +237,9 @@ has its own server. In short:
 
 1. **Dev box:** clone `tbown`, fill in `tbapps.conf` (one section per environment, six names each; the help name is made from the Cloud name) and
    run `bash scripts/apply.sh`. It makes one package per environment in `envs/<ENV>`, with every address
-   already in place.
+   already in place. The section name is also the environment's name (`TB_ENVIRONMENT` in the Cloud and
+   website `.env.local`): every environment except `PROD` shows a dark red nav bar with its name there, so
+   staging is not mistaken for production.
 2. **Server:** a patched Ubuntu server with an admin user and SSH key login.
    `scripts/00-prep-new-server.sh` sets up a new cloud server.
 3. **Send the package:** `bash envs/<ENV>/00-push-to-server.sh <server> /docker/compose` copies it into

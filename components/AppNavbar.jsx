@@ -1,8 +1,9 @@
 'use client'
 
 // Main navigation for the Timebars Cloud app (cloud.timebars.com). Started from the tbwww Navbar
-// but has its own dark-blue gradient so Cloud does not look like the marketing site. On /dashboard
-// the Enterprise Dashboard's own blue header sits under this bar (two rows).
+// but has its own dark-blue gradient so Cloud does not look like the marketing site. Every environment
+// but PROD (TB_ENVIRONMENT) gets a dark red bar with its name instead. On /dashboard the Enterprise
+// Dashboard's own blue header sits under this bar (two rows).
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -11,7 +12,7 @@ import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { ChevronDown, Menu, X, User } from 'lucide-react'
 import { isAdminRole } from '@/lib/auth/roles'
-import { WWW_URL } from '@/config/site'
+import { WWW_URL, TB_ENVIRONMENT, IS_PROD } from '@/config/site'
 import { cn } from '@/lib/utils'
 
 // adminOnly items are hidden unless the user's primary_role is Administrator.
@@ -107,7 +108,12 @@ export default function AppNavbar() {
   const assistance = { ...ASSISTANCE, children: ASSISTANCE.children.map(c => ({ ...c, href: `${WWW_URL}${c.path === '/' ? '' : c.path}`, external: true })) }
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-blue-300/40 bg-gradient-to-r from-blue-900 via-blue-700 to-blue-500 shadow-md">
+    <nav
+      className={cn(
+        'sticky top-0 z-50 w-full border-b shadow-md bg-gradient-to-r',
+        IS_PROD ? 'border-blue-300/40 from-blue-900 via-blue-700 to-blue-500' : 'border-red-300/40 from-red-950 via-red-900 to-red-700',
+      )}
+    >
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-2">
           <div className="flex items-center gap-2">
@@ -123,6 +129,11 @@ export default function AppNavbar() {
             <Link href="/" className="flex shrink-0 items-center gap-2" onClick={closeAll}>
               <Image src="/images/timebars-ltd-logo-final-w.svg" alt="Timebars Ltd." width={150} height={48} className="h-12 w-auto" priority />
               <span className="hidden pr-2 text-sm font-semibold text-blue-100 sm:inline">Cloud</span>
+              {!IS_PROD && (
+                <span className="rounded bg-white px-2 py-0.5 text-xs font-bold tracking-wide text-red-800" title="Not production">
+                  {TB_ENVIRONMENT}
+                </span>
+              )}
             </Link>
             <div className="ml-2 hidden items-center gap-0.5 xl:flex">
               {items.map(item =>
