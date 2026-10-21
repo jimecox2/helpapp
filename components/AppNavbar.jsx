@@ -15,11 +15,18 @@ import { isAdminRole } from '@/lib/auth/roles'
 import { WWW_URL, TB_ENVIRONMENT, IS_PROD } from '@/config/site'
 import { cn } from '@/lib/utils'
 
+// The Help menu, shown signed in or out. The last two go to the website (WWW_URL).
+const HELP_MENU = [
+  { label: 'Help Library', href: '/help', title: 'Product help guides for Agilebars, Timebars and Costbars, open to everyone' },
+  { label: 'Contact Us', href: `${WWW_URL}/sales/contact-us`, external: true, title: 'Call or email Timebars Ltd. with questions or for more help' },
+  { label: 'Visit Timebars Ltd.', href: WWW_URL, external: true, title: 'See what each product does, compare plans and buy a license' },
+]
+
 // adminOnly items are hidden unless the user's primary_role is Administrator.
 // public items are also shown to signed-out visitors (everything else needs a login).
 const NAV = [
   { label: 'Home', href: '/', public: true },
-  { label: 'Help', href: '/help', public: true },
+  { label: 'Help', public: true, children: HELP_MENU },
   { label: 'Ask AI', href: '/help/ask' },
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Pubsets', href: '/pubsets' },
@@ -35,20 +42,6 @@ const NAV = [
   { label: 'Users & Roles', href: '/admin/users', adminOnly: true },
 ]
 
-// Links back to www.timebars.com (same list as its Assistance menu). Shown signed in or out.
-const ASSISTANCE = {
-  label: 'Assistance',
-  children: [
-    { label: 'timebars.com Home', path: '/' },
-    { label: 'Get a License', path: '/sales/pricing' },
-    { label: 'Quick Start', path: '/sales/quick-start' },
-    { label: 'FAQ by Topic', path: '/knowledgebase/faq' },
-    { label: 'Knowledgebase', path: '/knowledgebase' },
-    { label: 'About Us', path: '/sales/about-us' },
-    { label: 'Contact Us', path: '/sales/contact-us' },
-    { label: 'Terms of Service', path: '/sales/terms-of-service' },
-  ],
-}
 
 const isActive = (pathname, href) => (href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`))
 
@@ -70,16 +63,18 @@ function Dropdown({ item, pathname, onNavigate, align = 'left' }) {
         {item.label} <ChevronDown className={cn('h-4 w-4 transition-transform', open && 'rotate-180')} />
       </button>
       {open && (
-        <div className={cn('absolute z-50 mt-1 w-60 rounded-md bg-white py-1 shadow-lg', align === 'right' ? 'right-0' : 'left-0')}>
+        <div className={cn('absolute z-50 mt-1 w-72 rounded-md bg-white py-1 shadow-lg', align === 'right' ? 'right-0' : 'left-0')}>
           {item.children.map(c => (
             <Link
               prefetch={c.external ? false : undefined}
               key={c.href}
               href={c.href}
+              title={c.title}
               onClick={() => { setOpen(false); onNavigate?.() }}
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
               {c.label}
+              {c.title && <span className="block text-xs text-gray-500">{c.title}</span>}
             </Link>
           ))}
         </div>
@@ -103,8 +98,6 @@ export default function AppNavbar() {
     : NAV.filter(i => i.public)
 
   const closeAll = () => { setMobileOpen(false); setProfileOpen(false) }
-
-  const assistance = { ...ASSISTANCE, children: ASSISTANCE.children.map(c => ({ ...c, href: `${WWW_URL}${c.path === '/' ? '' : c.path}`, external: true })) }
 
   return (
     <nav
@@ -152,9 +145,6 @@ export default function AppNavbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="hidden sm:block">
-              <Dropdown item={assistance} pathname={pathname} align="right" />
-            </div>
             {signedIn ? (
               <div className="relative">
                 <button
@@ -197,15 +187,12 @@ export default function AppNavbar() {
             <Link
               key={item.href}
               href={item.href}
+              title={item.title}
               onClick={closeAll}
               className={cn('block rounded-md px-3 py-2 text-base text-white hover:bg-white/15', isActive(pathname, item.href) && 'bg-white/20')}
             >
               {item.label}
             </Link>
-          ))}
-          <p className="mt-2 border-t border-white/20 px-3 pb-1 pt-3 text-xs uppercase tracking-wide text-blue-100">Assistance</p>
-          {assistance.children.map(c => (
-            <a key={c.href} href={c.href} className="block rounded-md px-3 py-2 text-base text-blue-50 hover:bg-white/15">{c.label}</a>
           ))}
         </div>
       )}
