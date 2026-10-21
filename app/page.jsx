@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { BookOpen, Bot, LayoutDashboard, Layers, BellRing, Sparkles, ShieldCheck } from 'lucide-react'
-import { auth } from '@/auth/auth'
 import { WWW_URL } from '@/config/site'
 
 export const metadata = {
@@ -55,36 +54,20 @@ const FEATURES = [
   },
 ]
 
-export default async function HomePage() {
-  const session = await auth()
-
+export default function HomePage() {
   return (
     <div>
       {/* Hero */}
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-tbBlue text-white">
-        <div className="container mx-auto max-w-6xl px-4 py-16 md:py-24 grid gap-10 md:grid-cols-[1.4fr_1fr] items-center">
+        <div className="container mx-auto max-w-6xl px-4 py-8 md:py-12 grid gap-10 md:grid-cols-[1.4fr_1fr] items-center">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wider text-tbGold">For Timebars Ltd. customers</p>
             <h1 className="mt-3 text-4xl md:text-5xl font-bold leading-tight">Timebars Cloud</h1>
             <p className="mt-5 text-lg text-gray-200">
-              The online side of Agilebars, Timebars and Costbars. Get answers from the AI help assistant, see your
-              portfolio in the Enterprise Dashboard, manage the pubsets your teams publish, and set up text
-              notifications, all in one place.
+              For owners of Agilebars, Timebars and Costbars licenses.
+              <br />
+              Log in to use the AI Help Assistant, Enterprise Dashboard, Pubsets and Notifications, all in one place.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {session ? (
-                <>
-                  <Link href="/help/ask" className="rounded-lg bg-white px-6 py-3 font-semibold text-gray-900 hover:bg-gray-200">Ask AI</Link>
-                  <Link href="/dashboard" className="rounded-lg border border-white/60 px-6 py-3 font-semibold hover:bg-white/10">Open Dashboard</Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/auth/signin" className="rounded-lg bg-white px-6 py-3 font-semibold text-gray-900 hover:bg-gray-200">Sign In</Link>
-                  <a href={`${WWW_URL}/auth/new-user`} className="rounded-lg border border-white/60 px-6 py-3 font-semibold hover:bg-white/10">Create an Account</a>
-                </>
-              )}
-            </div>
-            {session && <p className="mt-4 text-sm text-gray-300">Signed in as {session.user?.email}</p>}
           </div>
           <div className="hidden md:flex justify-center">
             <Image src="/images/timebars-ltd-logo-final-w.svg" alt="Timebars Ltd." width={360} height={160} className="h-auto w-full max-w-sm" priority />
