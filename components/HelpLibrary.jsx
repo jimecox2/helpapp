@@ -34,9 +34,9 @@ export default function HelpLibrary({ initialProduct }) {
   const downloads = downloadsForProduct(product)
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+    <div className="rounded-xl border border-slate-300 bg-slate-50 shadow-md overflow-hidden">
       {/* Header with product tabs */}
-      <div className="bg-gradient-to-r from-tbBlue to-blue-700 text-white px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white px-5 py-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <BookOpen className="h-6 w-6" />
           <h2 className="text-lg font-bold">{productName} Help</h2>
@@ -50,7 +50,7 @@ export default function HelpLibrary({ initialProduct }) {
               onClick={() => choose(code)}
               className={cn(
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
-                product === code ? 'bg-white text-tbBlue' : 'text-white hover:bg-white/20',
+                product === code ? 'bg-white text-blue-900' : 'text-white hover:bg-white/20',
               )}
             >
               {name}
@@ -62,13 +62,13 @@ export default function HelpLibrary({ initialProduct }) {
       <div className="p-5 grid gap-6 md:grid-cols-2">
         {sections.map(s => (
           <section key={s.key}>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-2">{s.title}</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-2">{s.title}</h3>
             <ul className="space-y-1">
               {s.guides.map(g => (
                 <li key={g.slug}>
                   <Link
                     href={`/help/${g.slug}`}
-                    className="flex items-start gap-2 rounded-md px-2 py-1.5 text-tbBlue hover:bg-blue-50"
+                    className="flex items-start gap-2 rounded-md px-2 py-1.5 text-blue-800 hover:bg-slate-200"
                   >
                     <FileText className="h-4 w-4 mt-0.5 shrink-0" />
                     <span>{g.title}</span>
@@ -80,14 +80,14 @@ export default function HelpLibrary({ initialProduct }) {
         ))}
 
         <section>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 mb-2">Downloads</h3>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500 mb-2">Downloads</h3>
           <ul className="space-y-1">
             {downloads.map(d => (
               <li key={d.href}>
                 <a
                   href={d.href}
                   download
-                  className="flex items-start gap-2 rounded-md px-2 py-1.5 text-tbBlue hover:bg-blue-50"
+                  className="flex items-start gap-2 rounded-md px-2 py-1.5 text-blue-800 hover:bg-slate-200"
                 >
                   <Download className="h-4 w-4 mt-0.5 shrink-0" />
                   <span>{d.title}</span>
@@ -98,11 +98,11 @@ export default function HelpLibrary({ initialProduct }) {
         </section>
       </div>
 
-      <div className="border-t border-gray-200 bg-gray-50 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-gray-600">Can&apos;t find it? Ask a question and get an answer from these guides.</p>
+      <div className="border-t border-slate-300 bg-slate-100 px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-slate-600">Can&apos;t find it? Ask a question and get an answer from these guides.</p>
         <Link
           href={`/help/ask?product=${product}`}
-          className="inline-flex items-center gap-2 rounded-md bg-tbBlue px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+          className="inline-flex items-center gap-2 rounded-md bg-blue-800 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-900"
         >
           <Bot className="h-4 w-4" /> Ask AI about {productName}
         </Link>

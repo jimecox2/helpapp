@@ -286,7 +286,7 @@ tbwww; do not add them here.
 | Complete Reference Guide PDFs, client master spreadsheets | `public/pdf/`, `public/spreadsheets/` |
 | Registry = table of contents | `lib/help/helpDocs.js` |
 | `a1 TOC` | generated from the registry: `npm run toc` (never edit by hand) |
-| Complete Reference Guides (`*_Complete_Reference_Guide.md`) | generated: `python3 tools/buildCompleteGuides.py`; the PDFs are made from them by hand |
+| Complete Reference Guides (`*_Complete_Reference_Guide.md`) | generated: `python3 tools/buildCompleteGuides.py`; then `node tools/makeCompleteGuidePdfs.mjs` makes the PDFs |
 | Appendix A of the Forms guide (picklists) | made in tbrunp by `tools/buildPicklistReference.py`, pasted in here |
 
 ### Links inside the guides

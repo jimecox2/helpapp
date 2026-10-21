@@ -3,8 +3,8 @@
 
 # Timebars — Complete Reference Guide
 
-**Version**: 1.3
-**Last Updated**: 2026-09-26
+**Version**: 1.4\
+**Last Updated**: 2026-10-21
 
 Every help topic for **Timebars**, compiled into one document: the product guide,
 followed by the guides shared across Agilebars, Timebars and Costbars.
@@ -34,12 +34,11 @@ lost on the next run.
 
 ---
 
-## What changed in version 1.3 (2026-09-26)
+## What changed in version 1.4 (2026-10-21)
 
-- **Part 10 — Cloud Publishing** rebuilt from Cloud Publishing and Bulk Operations Guide v2.3. License limits (bars, projects, cloud pubsets) now come from the purchased product and are downloaded at login; bars count every row below the Project level. Tier-1 licenses have no pubsets, so the Publish icons are hidden. The OpenProject tab is Tier-3 only. Pubsets are created automatically on cloud login and topped up to the license after an upgrade (the Activate button is gone). Show License lists every limit.
-- New "Who You Are Working As" in Bulk Update: an **Administrator** (resource pool Primary Role) loads every pubset for their Customer ID on the Bulk Update and Re-Publish tabs, so one person can update and re-publish for the whole customer.
+- The help guides moved to the Timebars Help Library. Every link to another guide, and every image, now points at `help.timebars.com` instead of the old help articles on www.timebars.com, and images that did not show in 1.3 (the Supply and Demand grids) are fixed.
 
-Earlier versions: 1.2 (2026-09-10), 1.1 (2026-09-10), 1.0 (2026-09-04).
+Earlier versions: 1.3 (2026-09-26), 1.2 (2026-09-10), 1.1 (2026-09-10), 1.0 (2026-09-04).
 
 ---
 

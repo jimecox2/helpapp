@@ -7,8 +7,9 @@ assembling a complete guide by hand:
 
     python3 tools/buildCompleteGuides.py
 
-It writes the three *_Complete_Reference_Guide.md files into public/docsHelp/. Turning
-them into the PDFs in public/pdf/ (the form /help offers for download) is a manual step.
+It writes the three *_Complete_Reference_Guide.md files into public/docsHelp/. Then
+`node tools/makeCompleteGuidePdfs.mjs` turns them into the PDFs in public/pdf/ (the form
+/help offers for download).
 
 Every source guide is included verbatim, with four mechanical adjustments:
 
@@ -43,12 +44,18 @@ HELP_URL = os.environ.get("HELP_URL", "https://help.timebars.com").rstrip("/")
 # Version of the compiled guides themselves, not of any source guide. Bump this and
 # add a CHANGELOG entry whenever a rebuild carries a change worth telling a reader
 # about; the newest entry is rendered under the contents list of all three guides.
-VERSION = "1.3"
-UPDATED = "2026-09-26"
+VERSION = "1.4"
+UPDATED = "2026-10-21"
 
 # (version, date, [bullets]) - newest first. "{cloud}" in a bullet is replaced with
 # the Cloud Publishing part number, which differs between Agilebars and TB/CB.
 CHANGELOG = [
+    ("1.4", "2026-10-21", [
+        "The help guides moved to the Timebars Help Library. Every link to another guide, "
+        "and every image, now points at `help.timebars.com` instead of the old help "
+        "articles on www.timebars.com, and images that did not show in 1.3 (the Supply "
+        "and Demand grids) are fixed.",
+    ]),
     ("1.3", "2026-09-26", [
         "**Part {cloud} — Cloud Publishing** rebuilt from Cloud Publishing and Bulk "
         "Operations Guide v2.3. License limits (bars, projects, cloud pubsets) now come "
@@ -241,7 +248,7 @@ def build(product: str, recipe: dict) -> str:
 
 # {product} — Complete Reference Guide
 
-**Version**: {VERSION}
+**Version**: {VERSION}\\
 **Last Updated**: {UPDATED}
 
 Every help topic for **{product}**, compiled into one document: the product guide,
