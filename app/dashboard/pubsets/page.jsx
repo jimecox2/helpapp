@@ -37,7 +37,7 @@ export default async function PubsetsPage() {
         <ol className="p-4 bg-blue-50 border border-blue-200 rounded-lg list-decimal list-inside space-y-1 text-sm text-blue-900">
           <li>Tick the pubsets you want to combine.</li>
           <li>Click <strong>Generate Dashboard Source</strong> and review the combined data.</li>
-          <li>Save it. The source is then available on the Enterprise Dashboard.</li>
+          <li>Save it. The source becomes the <Link href="/dashboard/sources" className="underline font-medium hover:text-blue-700">Active source of data</Link> for the Enterprise Dashboard.</li>
         </ol>
       </div>
 
