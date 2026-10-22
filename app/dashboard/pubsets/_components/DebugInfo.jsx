@@ -6,8 +6,8 @@ import { isAdminRole, isProjectManagerRole } from '@/lib/auth/roles';
  * Access Analysis component to show session info and access control details
  * Helps users understand why they can or cannot see specific pubsets
  */
-export default function DebugInfo({ session, allPubsets, accessiblePubsets }) {
-  const [showDebug, setShowDebug] = useState(false);
+export default function DebugInfo({ session, allPubsets, accessiblePubsets, defaultOpen = false }) {
+  const [showDebug, setShowDebug] = useState(defaultOpen);
 
   if (!showDebug) {
     return (

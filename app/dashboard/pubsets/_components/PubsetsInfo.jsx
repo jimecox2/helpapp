@@ -66,7 +66,7 @@ export default function PubsetsInfo() {
               <li><strong>No role or grants:</strong> sees only their own pubsets.</li>
             </ul>
             <p className="mt-2">
-              Missing a pubset? Use <strong>Show Access Analysis</strong> at the bottom of the page to see why,
+              Missing a pubset? The <strong>Manage Access</strong> page (Pubsets menu) shows why,
               then ask the pubset&apos;s Project Manager or your Administrator for access.
             </p>
           </div>

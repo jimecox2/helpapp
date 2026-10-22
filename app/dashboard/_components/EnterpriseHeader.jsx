@@ -28,6 +28,7 @@ import {
   MousePointerClick,
   LineChart,
   ShieldAlert,
+  ShieldCheck,
   AlertOctagon,
   FilePenLine,
   Briefcase,
@@ -124,6 +125,7 @@ const EnterpriseHeader = ({ user }) => {
     ],
     settings: [
       { label: 'Manage Pubsets', href: '/dashboard/pubsets', icon: FolderOpen },
+      { label: 'Manage Access', href: '/dashboard/pubsets/access', icon: ShieldCheck },
       { label: 'Manage Sources', href: '/dashboard/sources', icon: Database },
       { label: 'Preprocess Resource Data', href: '/dashboard/settings/preprocess', icon: RefreshCw },
     ],
