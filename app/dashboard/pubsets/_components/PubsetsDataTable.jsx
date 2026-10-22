@@ -286,7 +286,7 @@ export default function PubsetsDataTable({ data, session }) {
               </TableHead>
               <TableHead
                 onClick={() => handleSort('name')}
-                className="cursor-pointer hover:bg-gray-100 font-semibold"
+                className="cursor-pointer hover:bg-gray-100 font-semibold min-w-[14rem]"
                 title="Name of the pubset as defined by the user"
               >
                 Name{getSortIndicator('name')}
@@ -321,25 +321,11 @@ export default function PubsetsDataTable({ data, session }) {
                 Publish Status{getSortIndicator('publish_status')}
               </TableHead>
               <TableHead
-                onClick={() => handleSort('aggregation_level')}
-                className="cursor-pointer hover:bg-gray-100 font-semibold"
-                title="The scope and level of data in this pubset"
-              >
-                Aggregation Type{getSortIndicator('aggregation_level')}
-              </TableHead>
-              <TableHead
-                onClick={() => handleSort('division')}
-                className="cursor-pointer hover:bg-gray-100 font-semibold"
-                title="Business division or business unit that owns this pubset"
-              >
-                Division{getSortIndicator('division')}
-              </TableHead>
-              <TableHead
                 onClick={() => handleSort('customer_id')}
                 className="cursor-pointer hover:bg-gray-100 font-semibold"
                 title="Customer or organization identifier for multi-tenant RBAC access control"
               >
-                Customer ID{getSortIndicator('customer_id')}
+                Cust ID{getSortIndicator('customer_id')}
               </TableHead>
               <TableHead className="font-semibold" title="Comma-separated list of email addresses granted Project Manager access to this pubset">PM Grant Access</TableHead>
               <TableHead className="font-semibold" title="Comma-separated list of email addresses granted Team Member access to this pubset">TM Grant Access</TableHead>
@@ -348,7 +334,7 @@ export default function PubsetsDataTable({ data, session }) {
           <TableBody>
             {sortedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={14} className="text-center text-gray-500 py-8">
+                <TableCell colSpan={12} className="text-center text-gray-500 py-8">
                   {searchTerm ? 'No pubsets match your search' : 'No pubsets found'}
                 </TableCell>
               </TableRow>
@@ -371,7 +357,7 @@ export default function PubsetsDataTable({ data, session }) {
                     </Link>
                   </TableCell>
                   <TableCell className="text-gray-700 font-mono text-sm">{item.id}</TableCell>
-                  <TableCell className="font-medium">{item.name}</TableCell>
+                  <TableCell className="font-medium min-w-[14rem]">{item.name}</TableCell>
                   <TableCell className="text-gray-700">{item.owner}</TableCell>
                   <TableCell className="text-gray-600">
                     {item.published_date
@@ -416,12 +402,6 @@ export default function PubsetsDataTable({ data, session }) {
                     ) : (
                       <span className="text-gray-400 text-xs">N/A</span>
                     )}
-                  </TableCell>
-                  <TableCell className="text-xs text-gray-700">
-                    {item.aggregation_level || <span className="text-gray-400">N/A</span>}
-                  </TableCell>
-                  <TableCell className="text-xs text-gray-700">
-                    {item.division || <span className="text-gray-400">N/A</span>}
                   </TableCell>
                   <TableCell>
                     {item.customer_id ? (
