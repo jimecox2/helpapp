@@ -40,10 +40,24 @@ function errorText(err) {
   return msg || 'Please try again later.'
 }
 
-// Extra tools opened by the buttons under the input, one at a time (?tool=generator | byguide opens one).
+// The three tools on /help/ask, switched by the buttons at the top; one shows at a time (?tool= picks one).
+// Hidden tools stay mounted, so a conversation or a generated file survives switching back and forth.
 const TOOLS = {
-  generator: { label: 'AI Generator', icon: Wand2 },
-  byguide: { label: 'Ask by Guide', icon: BookOpenCheck },
+  assistant: {
+    label: 'AI Help Assistant',
+    icon: Bot,
+    title: 'Pick your product and ask a question in plain words. It reads every guide for that product.',
+  },
+  byguide: {
+    label: 'AI Ask by Guide',
+    icon: BookOpenCheck,
+    title: 'Choose which guides to search when you know where the answer is. Fewer guides give a quicker, more focused answer.',
+  },
+  generator: {
+    label: 'AI Generator',
+    icon: Wand2,
+    title: 'Paste the text of a charter, business case, risk register, task list or cost estimate and get a Timebars file you can import into the app. Check the file before you import it.',
+  },
 }
 
 export default function AskAiHelp({ initialProduct, initialTool }) {
@@ -54,8 +68,7 @@ export default function AskAiHelp({ initialProduct, initialTool }) {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [copiedId, setCopiedId] = useState(null)
-  const [tool, setTool] = useState(TOOLS[initialTool] ? initialTool : null)
-  const toolRef = useRef(null)
+  const [tool, setTool] = useState(TOOLS[initialTool] ? initialTool : 'assistant')
   const logRef = useRef(null)
 
   // Restore the last product and the conversation.
@@ -85,11 +98,6 @@ export default function AskAiHelp({ initialProduct, initialTool }) {
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight
   }, [messages])
-
-  // Bring the opened tool into view.
-  useEffect(() => {
-    if (tool) toolRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [tool])
 
   const ask = useCallback(async () => {
     const question = input.trim()
@@ -140,12 +148,31 @@ export default function AskAiHelp({ initialProduct, initialTool }) {
 
   return (
     <>
-    <div className="rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+    {/* Tool switcher */}
+    <div className="mb-4 flex flex-wrap gap-2" role="tablist" aria-label="AI tools">
+      {Object.entries(TOOLS).map(([key, { label, icon: Icon, title }]) => (
+        <button
+          key={key}
+          role="tab"
+          aria-selected={tool === key}
+          title={title}
+          onClick={() => setTool(key)}
+          className={cn(
+            'inline-flex items-center gap-2 rounded-lg border border-tbBlue px-4 py-2 text-sm font-medium',
+            tool === key ? 'bg-tbBlue text-white hover:bg-blue-800' : 'bg-white text-tbBlue hover:bg-blue-50',
+          )}
+        >
+          <Icon className="h-4 w-4" /> {label}
+        </button>
+      ))}
+    </div>
+
+    <div className={cn('rounded-xl border border-gray-200 bg-white shadow-lg overflow-hidden', tool !== 'assistant' && 'hidden')}>
       {/* Header with product tabs */}
       <div className="bg-gradient-to-r from-tbBlue to-blue-700 text-white px-5 py-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <Bot className="h-6 w-6" />
-          <h2 className="text-lg font-bold">Help Assistant</h2>
+          <h2 className="text-lg font-bold">AI Help Assistant</h2>
         </div>
         <div className="flex rounded-lg bg-white/15 p-1" role="tablist" aria-label="Product">
           {Object.entries(PRODUCTS).map(([code, name]) => (
@@ -253,19 +280,6 @@ export default function AskAiHelp({ initialProduct, initialTool }) {
           >
             <Trash2 className="h-4 w-4" /> Clear
           </button>
-          {Object.entries(TOOLS).map(([key, { label, icon: Icon }]) => (
-            <button
-              key={key}
-              onClick={() => setTool(t => (t === key ? null : key))}
-              aria-expanded={tool === key}
-              className={cn(
-                'inline-flex items-center gap-2 rounded-lg border border-tbBlue px-4 py-2 text-sm font-medium',
-                tool === key ? 'bg-tbBlue text-white hover:bg-blue-800' : 'bg-white text-tbBlue hover:bg-blue-50',
-              )}
-            >
-              <Icon className="h-4 w-4" /> {label}
-            </button>
-          ))}
           <span className="ml-auto text-xs text-gray-500">
             Enter to send · Shift+Enter for a new line · Powered by Google Gemini, answers from the official documentation
           </span>
@@ -273,13 +287,10 @@ export default function AskAiHelp({ initialProduct, initialTool }) {
       </div>
     </div>
 
-    {/* AI Generator: paste a document, get a Timebars file to import (was /tbgenerator).
-        Ask by Guide: pick the guides to search, cloud or local model (was /aitemp, "AI Help (beta)"). */}
-    {tool && (
-      <div ref={toolRef} className="mt-6 scroll-mt-20">
-        {tool === 'generator' ? <TbGeneratorPanel /> : <HelpChatPanel />}
-      </div>
-    )}
+    {/* Ask by Guide: pick the guides to search, cloud or local model (was /aitemp, "AI Help (beta)").
+        AI Generator: paste a document, get a Timebars file to import (was /tbgenerator). */}
+    <div className={cn(tool !== 'byguide' && 'hidden')}><HelpChatPanel /></div>
+    <div className={cn(tool !== 'generator' && 'hidden')}><TbGeneratorPanel /></div>
     </>
   )
 }

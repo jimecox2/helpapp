@@ -602,7 +602,7 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/` | Public home page about Timebars Cloud | no |
 | `/help` | Help library: TB / AB / CB tabs listing the guides and downloads (`components/HelpLibrary.jsx`, `lib/help/helpDocs.js`) | no |
 | `/help/<slug>` | One guide, rendered from `public/docsHelp/` (`app/help/[slug]/page.jsx`, `lib/help/renderGuide.js`) | no |
-| `/help/ask` | Ask AI help assistant, ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`) | yes |
+| `/help/ask` | Ask AI: three tools switched by buttons at the top (AI Help Assistant, AI Ask by Guide, AI Generator; `?tool=assistant|byguide|generator`). The AI Help Assistant is ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`) | yes |
 | `/help/ask?tool=byguide` | **Ask by Guide** button on the Help Assistant: the original helpapp help panel (`HelpChatPanel.jsx`, guide picker, Gemini/Ollama). Was `/aitemp` "AI Help (beta)", which redirects here | yes |
 | `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |

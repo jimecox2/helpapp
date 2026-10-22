@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { Wand2, FolderOpen, FileText, AlertCircle, Download } from 'lucide-react'
+import { Wand2, FolderOpen, FileText, AlertCircle, Download, Trash2 } from 'lucide-react'
 
 // ─── Sample documents (public/projectArtifacts) ───────────────────────────────
 // Examples of the kinds of documents the AI can read. Users download them to
@@ -212,14 +212,25 @@ export default function TbGeneratorPanel() {
           />
 
           <div className="flex items-center justify-between gap-2 flex-wrap">
-            <Button
-              onClick={handleGenerate}
-              disabled={isGenerating || !promptValue.trim()}
-              className="bg-tbBlue hover:bg-blue-800 text-white"
-            >
-              <Wand2 className="w-4 h-4 mr-2" />
-              {isGenerating ? 'Generating…' : 'Generate'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={handleGenerate}
+                disabled={isGenerating || !promptValue.trim()}
+                className="bg-tbBlue hover:bg-blue-800 text-white"
+              >
+                <Wand2 className="w-4 h-4 mr-2" />
+                {isGenerating ? 'Generating…' : 'Generate'}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => { setPromptValue(''); setResult(null); setStatusMessage(null) }}
+                disabled={isGenerating || (!promptValue && !result && !statusMessage)}
+                aria-label="Clear the text and the generated file"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Clear
+              </Button>
+            </div>
 
             <span className="text-xs text-gray-400 dark:text-gray-500">
               Enter to generate · Shift+Enter for a new line
