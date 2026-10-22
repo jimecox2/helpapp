@@ -110,7 +110,7 @@ const EnterpriseDrilldownPage = () => {
                 <strong>Missing data?</strong> Make sure your dashboard source includes all 5 hierarchy levels.
                 Re-create the source from the{' '}
                 <Link href="/dashboard/pubsets" className="text-blue-600 hover:underline">
-                  Make Sources
+                  Manage Pubsets
                 </Link>
                 {' '}page if needed.
               </p>

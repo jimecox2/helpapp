@@ -85,7 +85,7 @@ const EnterpriseHeader = ({ user }) => {
     resource: 'Resource',
     agile: 'Agile',
     ppm: 'PPM',
-    settings: 'Settings',
+    settings: 'Pubsets',
   }
 
   const menuItems = {
@@ -123,7 +123,7 @@ const EnterpriseHeader = ({ user }) => {
       { label: 'Cost Analytics', href: '/dashboard/analytics/cost', icon: LineChart },
     ],
     settings: [
-      { label: 'Make Sources', href: '/dashboard/pubsets', icon: FolderOpen },
+      { label: 'Manage Pubsets', href: '/dashboard/pubsets', icon: FolderOpen },
       { label: 'Manage Sources', href: '/dashboard/sources', icon: Database },
       { label: 'Preprocess Resource Data', href: '/dashboard/settings/preprocess', icon: RefreshCw },
     ],

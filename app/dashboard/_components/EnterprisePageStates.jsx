@@ -49,7 +49,7 @@ export const EnterpriseNoSource = ({ title, icon: Icon }) => (
             You need to create a dashboard source before you can view this report.
           </p>
           <ol className="list-decimal list-inside text-sm text-yellow-800 space-y-1 mb-4">
-            <li>Go to <a href="/dashboard/pubsets" className="underline font-medium hover:text-yellow-900">Make Sources</a></li>
+            <li>Go to <a href="/dashboard/pubsets" className="underline font-medium hover:text-yellow-900">Manage Pubsets</a></li>
             <li>Select the project pubsets you want to analyze</li>
             <li>Click &quot;Generate Dashboard Source&quot;</li>
             <li>Review and save your dashboard source</li>

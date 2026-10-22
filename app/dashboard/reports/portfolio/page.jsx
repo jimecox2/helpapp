@@ -99,7 +99,7 @@ const PortfolioReportsPage = () => {
                 You need to create a dashboard source before you can view portfolio reports.
               </p>
               <ol className="list-decimal list-inside text-sm text-yellow-800 space-y-1 mb-4">
-                <li>Go to <a href="/dashboard/pubsets" className="underline font-medium hover:text-yellow-900">Make Sources</a></li>
+                <li>Go to <a href="/dashboard/pubsets" className="underline font-medium hover:text-yellow-900">Manage Pubsets</a></li>
                 <li>Select the project pubsets you want to analyze</li>
                 <li>Click "Generate Dashboard Source"</li>
                 <li>Review and save your dashboard source</li>

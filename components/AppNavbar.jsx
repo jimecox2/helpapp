@@ -29,7 +29,6 @@ const NAV = [
   { label: 'Home', href: '/', public: true },
   { label: 'Help', public: true, children: HELP_MENU },
   { label: 'Dashboard', href: '/dashboard' },
-  { label: 'Pubsets', href: '/pubsets' },
   {
     label: 'Notifications',
     children: [

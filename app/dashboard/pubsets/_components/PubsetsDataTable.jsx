@@ -166,7 +166,7 @@ export default function PubsetsDataTable({ data, session }) {
         </div>
       </div>
 
-      {/* Filter Dropdowns */}
+      {/* Filter Dropdowns: hidden for now. Remove the comment markers to bring them back (state and filtering logic are kept).
       <div className="flex items-center gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium text-gray-700">Client Product:</label>
@@ -239,24 +239,29 @@ export default function PubsetsDataTable({ data, session }) {
           </Button>
         )}
       </div>
+      */}
 
-      {/* Generate Dashboard Source Button */}
-      {selectedPubsets.length > 0 && (
-        <div className="flex items-center gap-4 mb-4">
-          <Button
-            onClick={handleConsolidatedReport}
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            Generate Dashboard Source ({selectedPubsets.length} selected)
-          </Button>
+      {/* Generate Dashboard Source Button: always shown, enabled once at least one pubset is ticked */}
+      <div className="flex items-center gap-4 mb-4">
+        <Button
+          onClick={handleConsolidatedReport}
+          disabled={selectedPubsets.length === 0}
+          title={selectedPubsets.length === 0
+            ? 'Tick the checkboxes of the pubsets you want to combine, then click here to review them and save them as a dashboard source'
+            : 'Review the ticked pubsets as one consolidated view, then save it as a dashboard source for the Enterprise Dashboard'}
+          className="bg-green-600 hover:bg-green-700 text-white disabled:pointer-events-auto disabled:cursor-not-allowed"
+        >
+          Generate Dashboard Source ({selectedPubsets.length} selected)
+        </Button>
+        {selectedPubsets.length > 0 && (
           <Button
             variant="outline"
             onClick={() => setSelectedPubsets([])}
           >
             Clear Selection
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Table */}
       <div className="border rounded-lg overflow-hidden">
