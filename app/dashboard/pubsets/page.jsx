@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { filterPubsetsByAccess } from '@/lib/auth/rbac';
 import PubsetsDataTable from './_components/PubsetsDataTable';
 import DebugInfo from './_components/DebugInfo';
+import PubsetsInfo from './_components/PubsetsInfo';
 import { API_URL } from '@/config/site';
 
 
@@ -80,26 +81,18 @@ export default async function PubsetsPage() {
 
   return (
     <div className="container mx-auto p-6">
-      {/* Header */}
+      {/* Header: the info icon holds the what and why, the page keeps the how-to */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-3">Manage Pubsets</h1>
-
-        {/* Instructional Text */}
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-2 text-sm text-blue-900">
-          <p>
-            <strong>Creating Dashboard Sources:</strong> A dashboard source is a consolidated view that combines data from multiple pubsets,
-            giving you executive-level insights across all your projects in one place.
-          </p>
-          <p>
-            <strong>How to create:</strong> Use the checkboxes to select the project pubsets you want to analyze together,
-            then click the &quot;Generate Dashboard Source&quot; button. You&apos;ll be able to review the combined data before saving it as a dashboard source
-            that you can access anytime from the Enterprise Dashboard.
-          </p>
-          <p className="text-xs text-blue-700">
-            Select datasets that are relevant to your analysis needs (e.g., all projects in a division,
-            all active projects, or specific portfolios). You can create multiple dashboard sources for different purposes.
-          </p>
+        <div className="flex items-center gap-2 mb-3">
+          <h1 className="text-3xl font-bold text-gray-900">Manage Pubsets</h1>
+          <PubsetsInfo />
         </div>
+
+        <ol className="p-4 bg-blue-50 border border-blue-200 rounded-lg list-decimal list-inside space-y-1 text-sm text-blue-900">
+          <li>Tick the pubsets you want to combine.</li>
+          <li>Click <strong>Generate Dashboard Source</strong> and review the combined data.</li>
+          <li>Save it. The source is then available on the Enterprise Dashboard.</li>
+        </ol>
       </div>
 
       {/* Table Component */}
@@ -115,53 +108,16 @@ export default async function PubsetsPage() {
         </div>
       )}
 
-      {/* RBAC Explanation Section */}
-      <div className="mt-8 p-6 bg-gray-50 border border-gray-200 rounded-lg">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Understanding Access Control (RBAC)</h2>
-
-        <div className="space-y-4 text-sm text-gray-700">
-          <p>
-            This page uses <strong>Role-Based Access Control (RBAC)</strong> to determine which published datasets (pubsets) you can view.
-            Your access is based on your role, customer ID, and specific grant permissions from Project Managers.
-          </p>
-
-          <p>
-            <strong>Don&apos;t see a pubset you expect?</strong> If you believe you should have access to a specific dataset but don&apos;t see it listed,
-            use the <strong>&quot;Show Access Analysis&quot;</strong> button below to see detailed information about why you can or cannot access each pubset.
-            This tool helps you understand the RBAC rules in action and identify what permissions you may need. Contact your Project Manager
-            or Administrator to request access to specific datasets.
-          </p>
-
-          {/* Show Access Analysis Button */}
-          <div className="my-4">
-            <DebugInfo
-              session={session}
-              allPubsets={allPubsets}
-              accessiblePubsets={accessiblePubsets}
-            />
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-2">Access Rules Summary:</h3>
-            <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>
-                <strong>Owner:</strong> You always have access to pubsets you created.
-              </li>
-              <li>
-                <strong>Administrator:</strong> Administrators can see all pubsets within their customer organization.
-              </li>
-              <li>
-                <strong>Project Manager:</strong> Project Managers can see pubsets where they are granted access via the PM grant list.
-              </li>
-              <li>
-                <strong>Team Member:</strong> Team members can see pubsets where they are granted access via the Team Member grant list.
-              </li>
-              <li>
-                <strong>No Role/Grants:</strong> Users without roles or grant permissions can only see their own pubsets.
-              </li>
-            </ul>
-          </div>
-        </div>
+      {/* Access Analysis: the RBAC rules themselves are in the info dialog */}
+      <div className="mt-8 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700">
+        <p className="mb-3">
+          <strong>Missing a pubset?</strong> Show Access Analysis explains why you can or cannot see each one.
+        </p>
+        <DebugInfo
+          session={session}
+          allPubsets={allPubsets}
+          accessiblePubsets={accessiblePubsets}
+        />
       </div>
     </div>
   );
