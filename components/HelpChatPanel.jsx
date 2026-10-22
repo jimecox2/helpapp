@@ -658,7 +658,7 @@ export default function HelpChatPanel() {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">Ask by Guide</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">AI Ask by Guide</h2>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               {activeModel.provider === 'ollama' ? '🖥️' : '☁️'} {activeModel.label} · Official documentation only
             </p>
