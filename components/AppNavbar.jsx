@@ -15,9 +15,10 @@ import { isAdminRole } from '@/lib/auth/roles'
 import { WWW_URL, TB_ENVIRONMENT, IS_PROD } from '@/config/site'
 import { cn } from '@/lib/utils'
 
-// The Help menu, shown signed in or out. The last two go to the website (WWW_URL).
+// The Help menu, shown signed in or out (Ask AI asks for a login). The last two go to the website (WWW_URL).
 const HELP_MENU = [
   { label: 'Help Library', href: '/help', title: 'Product help guides for Agilebars, Timebars and Costbars, open to everyone' },
+  { label: 'Ask AI', href: '/help/ask', title: 'Ask a question, search chosen guides or generate a Timebars file (sign in needed)' },
   { label: 'Contact Us', href: `${WWW_URL}/sales/contact-us`, external: true, title: 'Call or email Timebars Ltd. with questions or for more help' },
   { label: 'Visit Timebars Ltd.', href: WWW_URL, external: true, title: 'See what each product does, compare plans and buy a license' },
 ]
@@ -27,7 +28,6 @@ const HELP_MENU = [
 const NAV = [
   { label: 'Home', href: '/', public: true },
   { label: 'Help', public: true, children: HELP_MENU },
-  { label: 'Ask AI', href: '/help/ask' },
   { label: 'Dashboard', href: '/dashboard' },
   { label: 'Pubsets', href: '/pubsets' },
   {

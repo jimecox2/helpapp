@@ -628,4 +628,4 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 - Help editors: `lib/help/editors.js` `checkHelpEditor()` lets a user through only when the email is in `HELP_EDITORS`
   (comma list in `.env.local`) **and** the Strapi users row has `primary_role` Administrator. No email is hardcoded
   anywhere; tbwww `/update-articles` uses the same rule. Test: `npm run build && npm run test:help` (Strapi stubbed).
-- Nav: Home and the Help menu show signed out. Help = Help Library, Contact Us and Visit Timebars Ltd. (the last two on `WWW_URL`; there is no Assistance menu). Notification cron: `send-notification.sh`.
+- Nav: Home and the Help menu show signed out. Help = Help Library, Ask AI (`/help/ask`, login), Contact Us and Visit Timebars Ltd. (the last two on `WWW_URL`; there is no Assistance menu). Notification cron: `send-notification.sh`.
