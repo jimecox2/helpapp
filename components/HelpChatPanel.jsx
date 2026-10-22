@@ -6,14 +6,14 @@ import DOMPurify from 'dompurify'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Badge } from '@/components/ui/badge'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { Bot, User, Send, Trash2, Copy, CheckCheck, AlertCircle } from 'lucide-react'
 import { MODELS, DEFAULT_MODEL_ID, getModelById } from '@/config/ai'
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 
 const MAX_HISTORY_ITEMS = 10
+const SELECTED_DOCS_KEY = 'helpByGuideDocs' // the ticked guides, kept in this browser (localStorage)
+const PRODUCT_CATEGORIES = ['Timebars', 'Agilebars', 'Costbars']
 const DOCS_CACHE_TTL    = 1000 * 60 * 60 // 1 hour
 
 const _docCache = {}
@@ -182,11 +182,9 @@ function getKeysByCategory(category) {
   return getDocsByCategory(category).map(([key]) => key)
 }
 
-// Default selection: all Timebars column docs + all Common Help Files
+// Default selection: the Timebars product guide only
 function getDefaultDocKeys() {
-  return Object.entries(HELP_DOCS)
-    .filter(([, cfg]) => cfg.category === 'Timebars' || cfg.category === 'Common Help Files')
-    .map(([key]) => key)
+  return getKeysByCategory('Timebars')
 }
 
 // Detect the primary product from selected docs to build the right system prompt
@@ -263,16 +261,16 @@ function DocCheckbox({ docKey, cfg, selectedDocKeys, onToggle }) {
   )
 }
 
-function SectionHeader({ label, onSelectAll, onSelectNone }) {
+// onClear is left out for the product columns (only one product can be ticked anyway).
+function SectionHeader({ label, onClear }) {
   return (
     <div className="flex items-center justify-between mb-2">
       <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
         {label}
       </span>
-      <span className="flex gap-2">
-        <button onClick={onSelectAll}  className="text-xs text-tbBlue hover:underline font-medium">All</button>
-        <button onClick={onSelectNone} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline">None</button>
-      </span>
+      {onClear && (
+        <button onClick={onClear} className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:underline">Clear all</button>
+      )}
     </div>
   )
 }
@@ -288,7 +286,7 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
   const totalDocs     = Object.keys(HELP_DOCS).length
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
 
       {/* Summary row */}
       <div className="flex items-center justify-between">
@@ -298,20 +296,6 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
             <span className="ml-1 text-red-500 font-medium">— select at least one</span>
           )}
         </span>
-        <div className="flex gap-3">
-          <button
-            onClick={() => onSectionSelect(Object.keys(HELP_DOCS), true)}
-            className="text-xs text-tbBlue hover:underline font-medium"
-          >
-            Select all
-          </button>
-          <button
-            onClick={() => onSectionSelect([], false)}
-            className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline"
-          >
-            Clear all
-          </button>
-        </div>
       </div>
 
       {/* Three product columns */}
@@ -319,11 +303,7 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
 
         {/* Timebars */}
         <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/40 rounded-lg p-3">
-          <SectionHeader
-            label="Timebars"
-            onSelectAll={() => onSectionSelect(getKeysByCategory('Timebars'), true)}
-            onSelectNone={() => onSectionSelect(getKeysByCategory('Timebars'), false)}
-          />
+          <SectionHeader label="Timebars" />
           <div className="space-y-2">
             {tbDocs.map(([key, cfg]) => (
               <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
@@ -333,11 +313,7 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
 
         {/* Agilebars */}
         <div className="bg-green-50 dark:bg-green-950/20 border border-green-100 dark:border-green-900/40 rounded-lg p-3">
-          <SectionHeader
-            label="Agilebars"
-            onSelectAll={() => onSectionSelect(getKeysByCategory('Agilebars'), true)}
-            onSelectNone={() => onSectionSelect(getKeysByCategory('Agilebars'), false)}
-          />
+          <SectionHeader label="Agilebars" />
           <div className="space-y-2">
             {abDocs.map(([key, cfg]) => (
               <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
@@ -347,11 +323,7 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
 
         {/* Costbars */}
         <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-100 dark:border-orange-900/40 rounded-lg p-3">
-          <SectionHeader
-            label="Costbars"
-            onSelectAll={() => onSectionSelect(getKeysByCategory('Costbars'), true)}
-            onSelectNone={() => onSectionSelect(getKeysByCategory('Costbars'), false)}
-          />
+          <SectionHeader label="Costbars" />
           <div className="space-y-2">
             {cbDocs.map(([key, cfg]) => (
               <DocCheckbox key={key} docKey={key} cfg={cfg} selectedDocKeys={selectedDocKeys} onToggle={onToggle} />
@@ -377,10 +349,7 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
               ⬇ Download PDF of Help Files
             </a>
           </div>
-          <span className="flex gap-2">
-            <button onClick={() => onSectionSelect(getKeysByCategory('Common Help Files'), true)}  className="text-xs text-tbBlue hover:underline font-medium">All</button>
-            <button onClick={() => onSectionSelect(getKeysByCategory('Common Help Files'), false)} className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:underline">None</button>
-          </span>
+          <button onClick={() => onSectionSelect(getKeysByCategory('Common Help Files'), false)} className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:underline">Clear all</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2">
           {commonDocs.map(([key, cfg]) => (
@@ -393,8 +362,7 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
       <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
         <SectionHeader
           label="Advanced"
-          onSelectAll={() => onSectionSelect(getKeysByCategory('Advanced'), true)}
-          onSelectNone={() => onSectionSelect(getKeysByCategory('Advanced'), false)}
+          onClear={() => onSectionSelect(getKeysByCategory('Advanced'), false)}
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
           {advDocs.map(([key, cfg]) => (
@@ -408,39 +376,6 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
 }
 
 // ─── Chat Sub-Components ──────────────────────────────────────────────────────
-
-function WelcomeContent({ selectedCount, model }) {
-  const isLocal = model?.provider === 'ollama'
-  return (
-    <div className="p-6 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-100 dark:border-blue-900">
-      <div className="flex items-center gap-3 mb-3">
-        <Bot className="w-8 h-8 text-tbBlue flex-shrink-0" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Timebars Help Assistant
-        </h3>
-      </div>
-      <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
-        Ask me anything about Timebars, Agilebars, or Costbars. I answer only from the selected documentation — tick the docs most relevant to your question above.
-      </p>
-      <div className="flex flex-wrap gap-2 items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
-        <Badge variant="secondary" className="text-xs">
-          📚 {selectedCount} doc{selectedCount !== 1 ? 's' : ''} selected
-        </Badge>
-        <span>•</span>
-        <span>{isLocal ? '🖥️' : '☁️'} {model?.label ?? 'AI'}</span>
-      </div>
-      <div className="text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800/60 rounded p-3 border border-gray-200 dark:border-gray-700">
-        <strong>💡 Tips:</strong>{' '}
-        {isLocal
-          ? 'Local models have a smaller context window — select only the docs relevant to your question.'
-          : 'Cloud AI handles large doc selections with no slowdown.'}
-        {' '}Press{' '}
-        <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Enter</kbd> to send,{' '}
-        <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs">Shift+Enter</kbd> for a new line.
-      </div>
-    </div>
-  )
-}
 
 function LoadingBubble() {
   return (
@@ -534,6 +469,20 @@ export default function HelpChatPanel() {
 
   const activeModel = getModelById(selectedModelId)
 
+  // Restore the ticked guides from the last visit, then keep saving them (localStorage, this browser only).
+  const docsRestored = useRef(false)
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SELECTED_DOCS_KEY) || 'null')
+      if (Array.isArray(saved)) setSelectedDocKeys(saved.filter(k => HELP_DOCS[k]))
+    } catch { /* ignore */ }
+    docsRestored.current = true
+  }, [])
+  useEffect(() => {
+    if (!docsRestored.current) return
+    try { localStorage.setItem(SELECTED_DOCS_KEY, JSON.stringify(selectedDocKeys)) } catch { /* ignore */ }
+  }, [selectedDocKeys])
+
   // Restore saved model preference
   useEffect(() => {
     try {
@@ -566,10 +515,16 @@ export default function HelpChatPanel() {
     try { localStorage.setItem('helpSelectedModel', id) } catch { /* ignore */ }
   }
 
+  // Only one product can be ticked: ticking a product guide unticks the other two products.
   function handleDocToggle(key) {
-    setSelectedDocKeys(prev =>
-      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
-    )
+    setSelectedDocKeys(prev => {
+      if (prev.includes(key)) return prev.filter(k => k !== key)
+      const category = HELP_DOCS[key]?.category
+      const keep = PRODUCT_CATEGORIES.includes(category)
+        ? prev.filter(k => !PRODUCT_CATEGORIES.includes(HELP_DOCS[k]?.category))
+        : prev
+      return [...keep, key]
+    })
   }
 
   // onSectionSelect(keys, add) — add=true adds those keys, add=false removes them
@@ -694,33 +649,16 @@ export default function HelpChatPanel() {
     <Card className="w-full shadow-md border border-gray-200 dark:border-gray-700">
 
       {/* ── Header ── */}
-      <CardHeader className="pb-4 border-b border-gray-100 dark:border-gray-800">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-tbBlue flex items-center justify-center flex-shrink-0">
-              <Bot className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
-                Ask by Guide — pick the guides to search
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {activeModel.provider === 'ollama' ? '🖥️' : '☁️'} {activeModel.label} · Official documentation only
-              </p>
-            </div>
+      <CardHeader className="py-3 border-b border-gray-100 dark:border-gray-800">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-tbBlue flex items-center justify-center flex-shrink-0">
+            <Bot className="w-5 h-5 text-white" />
           </div>
-          <div className="flex flex-col items-end gap-2">
-            <Badge variant="outline" className="text-tbBlue border-tbBlue font-medium hidden sm:flex">
-              Timebars Ltd.
-            </Badge>
-            <a
-              href="https://www.timebars.com/knowledgebase"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1 text-xs text-tbBlue hover:underline font-medium"
-            >
-              📖 Knowledge Base
-            </a>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white leading-tight">Ask by Guide</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              {activeModel.provider === 'ollama' ? '🖥️' : '☁️'} {activeModel.label} · Official documentation only
+            </p>
           </div>
         </div>
       </CardHeader>
@@ -728,7 +666,7 @@ export default function HelpChatPanel() {
       <CardContent className="p-0">
 
         {/* ── Doc Picker (always visible) ── */}
-        <div className="px-6 pt-5 pb-4 border-b border-gray-100 dark:border-gray-800">
+        <div className="px-6 pt-4 pb-3 border-b border-gray-100 dark:border-gray-800">
           <DocPicker
             selectedDocKeys={selectedDocKeys}
             onToggle={handleDocToggle}
@@ -736,16 +674,16 @@ export default function HelpChatPanel() {
           />
         </div>
 
-        {/* ── Messages ── */}
-        <ScrollArea className="h-[420px]">
-          <div className="px-6 py-5 space-y-4">
-            {messages.length === 0 ? (
-              <WelcomeContent
-                selectedCount={selectedDocKeys.length}
-                model={activeModel}
-              />
-            ) : (
-              messages.map(msg => {
+        {/* ── Messages (only once there is a conversation, so the input sits right under the picker) ── */}
+        {messages.length === 0 ? (
+          <p className="px-6 pt-3 text-sm text-gray-600 dark:text-gray-400">
+            Answer questions only from the selected documentation — tick the docs most relevant to your question above
+            and ask AI using the input box.
+          </p>
+        ) : (
+          <div className="max-h-[420px] overflow-y-auto">
+            <div className="px-6 py-5 space-y-4">
+              {messages.map(msg => {
                 if (msg.role === 'loading')   return <LoadingBubble key={msg.id} />
                 if (msg.role === 'user')      return <UserBubble key={msg.id} content={msg.content} />
                 if (msg.role === 'error')     return <ErrorBubble key={msg.id} content={msg.content} />
@@ -760,14 +698,14 @@ export default function HelpChatPanel() {
                     onCopy={handleCopy}
                   />
                 )
-              })
-            )}
-            <div ref={messagesEndRef} />
+              })}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
-        </ScrollArea>
+        )}
 
         {/* ── Input Area ── */}
-        <div className="border-t border-gray-100 dark:border-gray-800 p-4 space-y-3">
+        <div className={messages.length === 0 ? 'p-4 pt-2 space-y-3' : 'border-t border-gray-100 dark:border-gray-800 p-4 space-y-3'}>
           <Textarea
             ref={textareaRef}
             value={inputValue}
