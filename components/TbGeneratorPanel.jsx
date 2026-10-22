@@ -139,9 +139,6 @@ export default function TbGeneratorPanel() {
               </p>
             </div>
           </div>
-          <Badge variant="outline" className="text-tbBlue border-tbBlue font-medium hidden sm:flex">
-            Timebars Ltd.
-          </Badge>
         </div>
       </CardHeader>
 
