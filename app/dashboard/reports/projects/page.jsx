@@ -1,62 +1,20 @@
 // app/dashboard/reports/projects/page.jsx
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
 import { Loader2, FileText, AlertCircle } from 'lucide-react'
-import { getActiveDashboardSource, getUserByEmail } from '@/lib/crud/coreCrud'
+import { useEnterpriseDashboardSource } from '@/app/dashboard/_hooks/useEnterpriseDashboardSource'
 import ItemDetailsDataTable from '@/components/Dashboard/Reports/ItemDetailsDataTable'
 
 /**
  * Enterprise Project Reports Page
  * Shows project status report from the active dashboard source
- * The active source is managed via isActive field in dashboard-sources
+ * Data comes from useEnterpriseDashboardSource (active source or connected pubset)
  */
 const ProjectReportsPage = () => {
-  const { data: session, status } = useSession()
+  const { dashboardSource, session, status, isLoading, error } =
+    useEnterpriseDashboardSource({ autoPreprocess: false })
 
-  const [dashboardSource, setDashboardSource] = useState(null)
-  const [customerId, setCustomerId] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchActiveDashboardSource = async () => {
-      if (status !== 'authenticated') {
-        setIsLoading(false)
-        return
-      }
-
-      try {
-        setIsLoading(true)
-
-        // Get user's Customer_id
-        const strapiUser = await getUserByEmail(session.user.email, session.jwt)
-        const custId = strapiUser?.Customer_id || null
-        setCustomerId(custId)
-
-        if (!custId) {
-          console.error('No Customer_id found for user')
-          setDashboardSource(null)
-          setIsLoading(false)
-          return
-        }
-
-        // Get the active dashboard source
-        const activeSource = await getActiveDashboardSource(custId, session.jwt)
-        setDashboardSource(activeSource)
-      } catch (err) {
-        console.error('Error fetching active dashboard source:', err)
-        setError(err.message)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchActiveDashboardSource()
-  }, [status, session])
-
-  if (status === 'loading' || isLoading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6 flex items-center gap-3">

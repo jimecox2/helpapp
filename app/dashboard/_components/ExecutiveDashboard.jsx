@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Loader2, TrendingUp, TrendingDown, DollarSign, Clock, AlertTriangle, CheckCircle, Calendar, BarChart3, CheckCircle2, Database, ExternalLink } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getAllDashboardSources, setActiveDashboardSource, getUserByEmail, getUserRole } from '@/lib/crud/coreCrud'
+import { setActiveDashboardSource, getUserRole } from '@/lib/crud/coreCrud'
+import { resolveDashboardData } from '@/lib/crud/dashboardData'
 import { isManagerRole } from '@/lib/auth/roles'
 
 /**
@@ -15,6 +16,8 @@ import { isManagerRole } from '@/lib/auth/roles'
 const ExecutiveDashboard = ({ userEmail, jwt }) => {
   const [sources, setSources] = useState([])
   const [activeSource, setActiveSource] = useState(null)
+  const [dataOrigin, setDataOrigin] = useState(null)
+  const [useConnectedPubset, setUseConnectedPubset] = useState(false)
   const [customerId, setCustomerId] = useState(null)
   const [userRole, setUserRole] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -33,41 +36,21 @@ const ExecutiveDashboard = ({ userEmail, jwt }) => {
   const fetchCustomerIdAndSources = async () => {
     setIsLoading(true)
     try {
-      // Get user's Customer_id and role
-      const strapiUser = await getUserByEmail(userEmail, jwt)
-      const custId = strapiUser?.Customer_id || null
-      setCustomerId(custId)
-
       const role = await getUserRole(userEmail, jwt)
       setUserRole(role)
 
-      if (!custId) {
-        setIsLoading(false)
-        return
+      // Active source or connected pubset: same rules as every other dashboard page
+      const resolved = await resolveDashboardData(userEmail, jwt)
+      setCustomerId(resolved.customerId)
+      setSources(resolved.sources)
+      setUseConnectedPubset(resolved.useConnectedPubset)
+      setDataOrigin(resolved.origin)
+
+      if (resolved.origin === 'source' && !resolved.source.isActive && resolved.customerId) {
+        // No active source in the accessible list: make the most recent one active
+        await setActiveDashboardSource(resolved.source.id, resolved.customerId, jwt)
       }
-
-      // Fetch RBAC-filtered sources only
-      const dashboardSources = await getAllDashboardSources(userEmail, jwt)
-
-      if (!dashboardSources || dashboardSources.length === 0) {
-        setSources([])
-        setIsLoading(false)
-        return
-      }
-
-      setSources(dashboardSources)
-
-      // Pick the active source from RBAC-filtered list only
-      const active = dashboardSources.find(s => s.isActive) || null
-
-      if (active) {
-        setActiveSource(active)
-      } else {
-        // No active source in accessible list, set the most recent as active
-        const mostRecent = dashboardSources[0]
-        await setActiveDashboardSource(mostRecent.id, custId, jwt)
-        setActiveSource(mostRecent)
-      }
+      setActiveSource(resolved.source)
     } catch (err) {
       console.error('Error fetching dashboard sources:', err)
     } finally {
@@ -164,7 +147,25 @@ const ExecutiveDashboard = ({ userEmail, jwt }) => {
     )
   }
 
-  if (sources.length === 0) {
+  if (useConnectedPubset && !activeSource) {
+    return (
+      <Card className="border-yellow-200 bg-yellow-50">
+        <CardHeader>
+          <CardTitle className="text-yellow-900">No Connected Pubset Found</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-yellow-700">
+            The dashboard is set to use your connected pubset, but you have none with data yet. Publish
+            from Agilebars, Timebars or Costbars to your connected pubset, or untick &quot;Use my connected
+            pubset&quot; on the{' '}
+            <Link href="/dashboard/sources" className="underline font-medium hover:text-yellow-900">Sources page</Link>.
+          </p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (!activeSource) {
     if (canCreate()) {
       return (
         <Card className="border-yellow-200 bg-yellow-50">
@@ -181,6 +182,8 @@ const ExecutiveDashboard = ({ userEmail, jwt }) => {
               <Link href="/dashboard/pubsets" className="underline font-medium hover:text-yellow-900">
                 Pubsets page
               </Link>.
+              Until then, the dashboard shows your connected pubset as soon as you publish one from
+              Agilebars, Timebars or Costbars.
             </p>
           </CardContent>
         </Card>
@@ -221,7 +224,9 @@ const ExecutiveDashboard = ({ userEmail, jwt }) => {
           <CardContent className="pt-6">
             <div className="flex items-center gap-3 mb-3">
               <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <h3 className="text-lg font-semibold text-green-900">Active Dashboard Source</h3>
+              <h3 className="text-lg font-semibold text-green-900">
+                {dataOrigin === 'pubset' ? 'Your Connected Pubset' : 'Active Dashboard Source'}
+              </h3>
               <Link
                 href="/dashboard/sources"
                 className="flex items-center gap-1 text-sm text-green-700 hover:text-green-900 font-medium ml-auto"
@@ -234,7 +239,7 @@ const ExecutiveDashboard = ({ userEmail, jwt }) => {
             <div className="bg-white rounded-lg p-4 border border-green-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-bold text-xl text-gray-900">{activeSource.name}</p>
+                  <p className="font-bold text-xl text-gray-900">{activeSource.pubsetName || activeSource.name}</p>
                   <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
                     <span>{activeSource.tbmdjoined?.length || 0} items</span>
                     {activeSource.source_product && (

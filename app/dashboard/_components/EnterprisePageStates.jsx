@@ -55,6 +55,12 @@ export const EnterpriseNoSource = ({ title, icon: Icon }) => (
             <li>Review and save your dashboard source</li>
             <li>Return here to view the report</li>
           </ol>
+          <p className="text-sm text-yellow-800 mb-4">
+            Without a source, reports show your connected pubset as soon as you publish one from Agilebars,
+            Timebars or Costbars. If &quot;Use my connected pubset&quot; is ticked on the{' '}
+            <a href="/dashboard/sources" className="underline font-medium hover:text-yellow-900">Sources page</a>,
+            publish to your connected pubset or untick it.
+          </p>
           <a
             href="/dashboard/pubsets"
             className="inline-block px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition-colors"

@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
-import { getAllDashboardSources, getActiveDashboardSource, getUserByEmail, preprocessDashboardSourceData } from '@/lib/crud/coreCrud'
+import { getAllDashboardSources, preprocessDashboardSourceData } from '@/lib/crud/coreCrud'
+import { resolveDashboardData } from '@/lib/crud/dashboardData'
 import { adaptDashboardSourceData } from '@/lib/crud/enterpriseDataAdapter'
 
 /**
- * Shared hook for enterprise pages to fetch the active dashboard source.
+ * Shared hook for enterprise pages to fetch their data: the active dashboard source, or the user's
+ * connected pubset (use_connected_pubset, or no sources yet). The choice is made in
+ * resolveDashboardData (lib/crud/dashboardData.js); a connected pubset has the same shape as a source.
  * Eliminates duplicated boilerplate across enterprise report pages.
  *
  * Returns both the raw dashboard source and the adapted data
@@ -17,12 +20,14 @@ import { adaptDashboardSourceData } from '@/lib/crud/enterpriseDataAdapter'
  *
  * @param {Object} options
  * @param {boolean} options.autoPreprocess - Auto-preprocess if tbrescalcs2 is missing (default: true)
- * @returns {Object} { dashboardSource, adaptedData, session, isLoading, error, isPreprocessing }
+ * @returns {Object} { dashboardSource, dataOrigin ('source'|'pubset'|null), useConnectedPubset, adaptedData, session, isLoading, error, isPreprocessing }
  */
 export function useEnterpriseDashboardSource({ autoPreprocess = true } = {}) {
   const { data: session, status } = useSession()
 
   const [dashboardSource, setDashboardSource] = useState(null)
+  const [dataOrigin, setDataOrigin] = useState(null)
+  const [useConnectedPubset, setUseConnectedPubset] = useState(false)
   const [customerId, setCustomerId] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -40,27 +45,18 @@ export function useEnterpriseDashboardSource({ autoPreprocess = true } = {}) {
         setIsLoading(true)
         setError(null)
 
-        // Get user's Customer_id
-        const strapiUser = await getUserByEmail(session.user.email, session.jwt)
-        const custId = strapiUser?.Customer_id || null
-        setCustomerId(custId)
-
-        if (!custId) {
-          console.error('No Customer_id found for user')
-          setDashboardSource(null)
-          setIsLoading(false)
-          return
-        }
-
-        // Get active source from user's accessible sources only (RBAC-filtered)
-        const accessibleSources = await getAllDashboardSources(session.user.email, session.jwt)
-        const activeSource = accessibleSources?.find(s => s.isActive) ||
-                             (accessibleSources?.length > 0 ? accessibleSources[0] : null)
+        const resolved = await resolveDashboardData(session.user.email, session.jwt)
+        setCustomerId(resolved.customerId)
+        setUseConnectedPubset(resolved.useConnectedPubset)
+        setDataOrigin(resolved.origin)
+        const activeSource = resolved.source
         setDashboardSource(activeSource)
 
-        // Auto-preprocess if tbrescalcs2 is missing and we haven't tried yet
+        // Auto-preprocess if tbrescalcs2 is missing and we haven't tried yet.
+        // Sources only: a connected pubset builds it in memory and is never written to.
         if (
           autoPreprocess &&
+          resolved.origin === 'source' &&
           activeSource &&
           !preprocessAttempted.current &&
           (!activeSource.tbrescalcs2 || !Array.isArray(activeSource.tbrescalcs2) || activeSource.tbrescalcs2.length === 0)
@@ -99,6 +95,8 @@ export function useEnterpriseDashboardSource({ autoPreprocess = true } = {}) {
 
   return {
     dashboardSource,
+    dataOrigin,
+    useConnectedPubset,
     adaptedData,
     session,
     status,

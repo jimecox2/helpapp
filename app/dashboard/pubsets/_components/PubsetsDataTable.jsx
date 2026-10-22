@@ -161,7 +161,7 @@ export default function PubsetsDataTable({ data, session }) {
             htmlFor="showOnlyConnected"
             className="text-sm text-gray-700 cursor-pointer select-none"
           >
-            Show Only Connected to Personal Dashboard
+            Show only connected pubsets
           </label>
         </div>
       </div>

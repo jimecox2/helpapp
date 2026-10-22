@@ -2,6 +2,7 @@
 import { auth } from "@/auth/auth"
 import { redirect } from "next/navigation"
 import DashboardSourceSelector from "./_components/DashboardSourceSelector"
+import ConnectedPubsetSwitch from "./_components/ConnectedPubsetSwitch"
 import EnterpriseDashboardContent from "./_components/EnterpriseDashboardContent"
 import { getUserByEmail } from "@/lib/crud/coreCrud"
 
@@ -21,15 +22,19 @@ const EnterpriseDashboardPage = async ({ searchParams }) => {
 
   // Fetch user from Strapi to get correct Customer_id
   let customerId = null;
+  let useConnectedPubset = false;
   try {
     const strapiUser = await getUserByEmail(email, jwt)
     customerId = strapiUser?.Customer_id || null
+    useConnectedPubset = strapiUser?.use_connected_pubset === true
   } catch (error) {
     console.error('Error fetching user Customer_id:', error)
   }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <ConnectedPubsetSwitch initialValue={useConnectedPubset} />
+
       {/* Dashboard Source Selector */}
       <DashboardSourceSelector
         selectedSourceId={selectedSourceId}

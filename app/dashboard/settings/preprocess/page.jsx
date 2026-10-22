@@ -19,7 +19,7 @@ import { preprocessDashboardSourceData } from '@/lib/crud/coreCrud'
  * from source pubsets into the active dashboard source.
  */
 const PreprocessPage = () => {
-  const { dashboardSource, session, status, isLoading, error } =
+  const { dashboardSource, dataOrigin, session, status, isLoading, error } =
     useEnterpriseDashboardSource()
 
   const [isProcessing, setIsProcessing] = useState(false)
@@ -184,7 +184,8 @@ const PreprocessPage = () => {
           <div className="flex items-center gap-4">
             <Button
               onClick={handlePreprocess}
-              disabled={isProcessing}
+              disabled={isProcessing || dataOrigin === 'pubset'}
+              title={dataOrigin === 'pubset' ? 'A connected pubset is read-only here; its resource data is built in memory each time' : undefined}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3"
             >
               {isProcessing ? (
