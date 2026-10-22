@@ -282,6 +282,9 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
   const commonDocs     = getDocsByCategory('Common Help Files')
   const advDocs        = getDocsByCategory('Advanced')
 
+  // The PDF of every guide for the ticked product (Timebars when none is ticked).
+  const pdfProduct = PRODUCT_CATEGORIES.find(c => selectedDocKeys.some(k => HELP_DOCS[k]?.category === c)) || 'Timebars'
+
   const totalSelected = selectedDocKeys.length
   const totalDocs     = Object.keys(HELP_DOCS).length
 
@@ -341,12 +344,12 @@ function DocPicker({ selectedDocKeys, onToggle, onSectionSelect }) {
               Common Help Files
             </span>
             <a
-              href="https://cdn.timebars.com/other/helpfiles/"
+              href={`/pdf/${pdfProduct}_Complete_Reference_Guide.pdf`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-tbBlue hover:underline font-medium"
             >
-              ⬇ Download PDF of Help Files
+              ⬇ {pdfProduct} Complete Reference Guide (PDF)
             </a>
           </div>
           <button onClick={() => onSectionSelect(getKeysByCategory('Common Help Files'), false)} className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:underline">Clear all</button>
