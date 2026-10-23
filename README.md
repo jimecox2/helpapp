@@ -1,59 +1,23 @@
 
-The proof of concept for the tbgenerator using files in: public/customers, will not be moving forward and that folder and sub folders and files can be deleted after we are done.
-The tbgenerator route will continue to exist and much of the AI stuff will be used and likely repurposed to use an input box where a user will paste in text to generate timebars files instead of using these public/customers files.
-
-Make a new folder in public to host some markdown, excel and csv files among other formats.
-The folder can be called projectArtifacts
-Put these into it:
-
-Left Side Box title: Project Management
-public/customers/FortFrances/Business_Case_FortFrances_Wireless.md
-public/customers/FortFrances/Contract_FortFrances_Wireless.md
-public/customers/FortFrances/Proposal_FortFrances_Wireless.md
-public/customers/Rankin/ProjectCharter-Rankin.md
-public/customers/Rankin/Risk Register.md
-
-Right Side Box title: Business Management
-public/customers/Rankin/RankinMockCostEstimate.xlsx
-public/customers/Rankin/ScopeOfSupplySummary-nwi-last-mile-system.md
-public/customers/Rankin/RankinMockCostEstimateSchedule.csv
-public/customers/Rankin/EquipmentDescription-nwi-last-mile-system.md
-
-Now 
-Remove the word: FortFrances_Wireless and RankinMock and -nwi-last-mile-system from the filenames and put underscores and caps between words e.g. Equipment_Description
-We will expose the documents on the tbgenerator page as links so user can download them. 
-The two existing boxes on the generator page (FortFrances and Rankin) to be changed to contain lists of links per above and titled as described above FortFrances becomes Project Management and Rankin becomes Business Management
-
-This would give customer a good idea as to how documents can look that the AI model can take in and produce results. 
-Remove the text and link: Back to Help Assistant
-the text buttons: Select all and Clear all to be removed.
-Change this title: TB Generator — Customer Data Generation to this: TB Generator — Timebars Data Generation
-
-Change this note: Select customer documents, add a prompt, and generate Timebars data, to be more descriptive as to what the user can do based on what I said above in this context.
-The balance of the page is done but please make the input box height double current size.
-
-## Simple steps deploy prod on lser
-
-git pull
-docker stop tbhelpapp && docker rm tbhelpapp  
-docker rmi jimecox807/tbhelpapp:latest   
+# new deploy 
 ./deploy-push-to-hub-secure.sh
-
-## on prod lser for ollama-server
-cd /docker/compose/tbhelpapp
+Then go to new prod
+ssh jcox@gmk1 
+cd /home/jcox/docker/tbhelp
 ./deploy.sh
 
-cp helpappGitHub/docker-compose.yml helpappGitHub/deploy.sh helpappGitHub/.env.example ~/Docker/tbhelp/
-cd ~/Docker/tbhelp && chmod +x deploy.sh
+#   build tbrun, tbwww and tbhelp containers in one go calling: ./deploy-push-to-hub-secure.sh
+D=~/Documents/SitesGithub; read -rp "Tag (Enter for $(date +%Y.%m.%d)): " T; T=${T:-$(date +%Y.%m.%d)}; read -rp "tbrun APP_VERSION (Enter keeps .env): " V; for r in helpappGitHub tbwwwGithubApr20 tbrunpGitHubMar27; do echo "== $r $T"; (cd $D/$r && if [ $r = tbrunpGitHubMar27 ]; then printf '%s\n%s\n' "$T" "$V"; else printf '%s\n' "$T"; fi | ./deploy-push-to-hub-secure.sh) || break; done
+
+#  deploy tbrun, tbwww and tbhelp containers in one go
+read -rp "Tag for tbwww, tbhelp, tbrun: " T && for s in tbwww tbhelp tbrun; do echo "== $s"; (cd $TB/$s && echo "$T" | ./deploy.sh) || break; done
+
+# Recreate complete ref guides - ask and I’ll run it
+tools/makeCompleteGuidePdfs.mjs
 
 
-Why would I use Timebars, what would be the benefits to me as a PM
+# Lecal help models specs, do this later with better hardware.
 
-# helpapp
-Standalone help app for Gemini Key or local LLM on Ollama
-
-
-To do
 Make several config files one for each model i plan to use and make custom paramaters for each, then give user ability to pick from the hardcoded models in the config file. 
 
 # Fast / lightweight
