@@ -604,9 +604,8 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/help/<slug>` | One guide, rendered from `public/docsHelp/` (`app/help/[slug]/page.jsx`, `lib/help/renderGuide.js`) | no |
 | `/help/ask` | Ask AI: three tools switched by buttons at the top (AI Help Assistant, AI Ask by Guide, AI Generator; `?tool=assistant|byguide|generator`). The AI Help Assistant is ported from tbrunp `scripts/ai/askHelp.js` (`components/AskAiHelp.jsx`) | yes |
 | `/help/ask?tool=byguide` | **AI Ask by Guide** button on Ask AI: the original helpapp help panel (`HelpChatPanel.jsx`, guide picker, Gemini/Ollama). Was `/aitemp` "AI Help (beta)", which redirects here | yes |
-| `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`) | yes |
+| `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`). Data comes from `lib/crud/dashboardData.js` (active source, or the user's connected pubset). `/personaldashboard` was removed and redirects here | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
-| `/personaldashboard/*` | Personal Dashboard (not in the nav; small link at the bottom of `/dashboard`), moved as is from tbwww (to become enterprise reports later; not expected to work yet) | yes |
 | `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
 | `/update-help` | Push `public/docsHelp` into Strapi help-articles: Create / Update per guide, Update All (existing articles only), checkbox to also update title, description, tags and SEO (`app/update-help/`, `/api/help-sync`, `lib/help/strapiSync.js`). Strapi Administrator whose email is in `HELP_EDITORS` | yes |
 | `/help/ask?tool=generator` | AI Generator (`components/TbGeneratorPanel.jsx`), opened by the **AI Generator** button on the Help Assistant: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download). `/tbgenerator` redirects here | yes |

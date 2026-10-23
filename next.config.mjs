@@ -12,8 +12,11 @@ const nextConfig = {
   },
 
   // The AI Generator and Ask by Guide (was "AI Help (beta)") moved onto the Help Assistant page.
+  // The Personal Dashboard was removed; its reports are in the Enterprise Dashboard.
   async redirects() {
     return [
+      { source: '/personaldashboard', destination: '/dashboard', permanent: true },
+      { source: '/personaldashboard/:path*', destination: '/dashboard', permanent: true },
       { source: '/tbgenerator', destination: '/help/ask?tool=generator', permanent: true },
       { source: '/aitemp', destination: '/help/ask?tool=byguide', permanent: true },
     ]
