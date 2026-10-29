@@ -21,7 +21,7 @@ const fetchPubsetsByIds = async (ids, jwt) => {
   try {
     const promises = idArray.map(id =>
       fetch(
-        `${API_URL}/timebars/${id}?fields[0]=name&fields[1]=owner&fields[2]=tbmdjoined&fields[3]=source_product&fields[4]=publish_status&fields[5]=aggregation_level&fields[6]=division&fields[7]=cost_center&fields[8]=geographic_region&fields[9]=tbresources&fields[10]=tbtags&fields[11]=tbcharts`,
+        `${API_URL}/timebars/${id}?fields[0]=name&fields[1]=owner&fields[2]=tbmdjoined&fields[3]=source_product&fields[4]=publish_status&fields[5]=aggregation_level&fields[6]=division&fields[7]=cost_center&fields[8]=geographic_region&fields[9]=tbresources&fields[10]=tbtags&fields[11]=tbcharts&fields[12]=isActive`,
         {
           headers: { 'Authorization': `Bearer ${jwt}` },
           cache: 'no-store'
@@ -51,6 +51,7 @@ const fetchPubsetsByIds = async (ids, jwt) => {
         tbtags: data.data.attributes.tbtags || null,
         tbcharts: data.data.attributes.tbcharts || null,
         source_product: data.data.attributes.source_product || null,
+        isActive: data.data.attributes.isActive === true,
         publish_status: data.data.attributes.publish_status || null,
         aggregation_level: data.data.attributes.aggregation_level || null,
         division: data.data.attributes.division || null,

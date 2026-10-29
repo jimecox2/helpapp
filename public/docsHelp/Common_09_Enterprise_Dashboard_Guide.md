@@ -134,6 +134,8 @@ With pubsets selected, click **Generate Dashboard Source**. You will be taken to
 - Edit the auto-generated source name
 - Click **Save Dashboard Source** to create the source
 
+**Which resource pool the source uses.** A source holds one resource pool. It comes from the **Costbars connected pubset** among the pubsets you selected, and pools in Timebars and Agilebars pubsets are ignored. The save dialog shows the pool it will use. It warns you when no Costbars connected pubset is selected; the pool then comes from another selected pubset. Maintain your pool in Costbars only (see [One Pool for Agile and Traditional Teams](Common_11_Supply_And_Demand_Grids_User_Guide.md#one-pool-for-agile-and-traditional-teams)).
+
 ### Step 4 — Set the active source
 
 Navigate to **Dashboard → Manage Sources** (`/dashboard/sources`). You will see a list of all sources accessible to you. Click **Set Active** on the source you want to use. All reports will now draw from this source.
@@ -237,6 +239,8 @@ Comprehensive resource capacity and allocation data drawn from all pubsets in th
 **Route:** `/dashboard/reports/capacity-demand`
 
 Side-by-side view of resource supply and demand by week and role, consolidated across all included pubsets. Highlights overloaded or underutilised resource pools so you can rebalance allocations or plan hiring decisions proactively.
+
+Supply comes from the source's one resource pool (the Costbars connected pubset). Demand comes from allocations in every included pubset. Agilebars pubsets add sprint burndowns but no demand, because Agilebars has no allocations.
 
 ---
 

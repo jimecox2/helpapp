@@ -18,6 +18,7 @@ import { getUserByEmail, getUserRole } from '@/lib/crud/coreCrud'
 import { buildInflightRollup } from '@/lib/crud/inflightRollup'
 import { createDashboardSourceAction } from '@/app/dashboard/_actions/sources'
 import { isManagerRole } from '@/lib/auth/roles'
+import { pickResourcePool } from '@/lib/crud/resourcePool'
 
 /**
  * Collapsible section showing metadata for included pubsets
@@ -37,6 +38,7 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
   const [isCheckingPermission, setIsCheckingPermission] = useState(true)
 
   const { data: session } = useSession()
+  const pool = pickResourcePool(pubsets)
 
   // Check user permissions on mount
   useEffect(() => {
@@ -120,10 +122,8 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
       // Use the name from the dialog (user may have edited it)
       const generatedName = dashboardName.trim() || generateSourceName()
 
-      // Find first pubset that actually has tbresources data (any product type)
-      const pubsetWithResources = pubsets.find(p =>
-        Array.isArray(p.tbresources) ? p.tbresources.length > 0 : !!p.tbresources
-      )
+      // The master pool: the Costbars connected pubset (lib/crud/resourcePool.js)
+      const pubsetWithResources = pool.pubset
       const tbresources = pubsetWithResources?.tbresources || null
 
       // Find first pubset that actually has tbtags data (any product type)
@@ -419,6 +419,8 @@ const IncludedPubsetsSection = ({ pubsets, consolidatedData }) => {
             <div className="text-sm text-gray-600 space-y-1">
               <p><strong>Source Pubsets:</strong> {pubsets.map(p => p.name).join(', ')}</p>
               <p><strong>Total Items:</strong> {consolidatedData?.length || 0} (all hierarchy levels)</p>
+              <p><strong>Resource Pool:</strong> {pool.pubset ? pool.pubset.name : 'None'}</p>
+              {pool.warning && <p className="text-amber-700 dark:text-amber-400">{pool.warning}</p>}
             </div>
           </div>
 

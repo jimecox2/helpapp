@@ -8,6 +8,7 @@
 - [The Five Summary Rows](#the-five-summary-rows)
 - [View Modes and Configurations](#view-modes-and-configurations)
 - [Primary Roles: Named and Generic Resources](#primary-roles-named-and-generic-resources)
+- [One Pool for Agile and Traditional Teams](#one-pool-for-agile-and-traditional-teams)
 
 ---
 
@@ -69,20 +70,14 @@ At the top of the Resource Demand Grids, five critical rows provide aggregated m
 
 ### 1. Supply Target (FTE) (First Row)
 
-**What it shows**: Total available resource capacity across all Generic Resources
+**What it shows**: The capacity you plan to have, from the Generic Resources in the pool
 
-**Data source**: 
+**Data source**:
 - Sourced from the `tbResources` store (resource pool)
-- Fields:??
-- Each Role has monthly FTE availability defined automatically calculated using tbResQuantity
+- Each Generic Resource contributes its quantity (`tbResQuantity`) as monthly FTE for its role
 
-
-
-**Example**: ??
-
-**Timing considerations**: 
-
-- This allows forward planning for known hiring or departures
+**Timing considerations**:
+- Raise or lower a Generic Resource's quantity to plan for known hiring or departures
 
 ### 2. Supply Pool (FTE) (Second Row)
 
@@ -103,7 +98,7 @@ At the top of the Resource Demand Grids, five critical rows provide aggregated m
 
 ### 3. Variance (ST - SP) (Third Row)
 
-**What it shows**: ???
+**What it shows**: Supply Target minus Supply Pool: the gap between the capacity you plan to have and the capacity the pool holds today
 
 ### 4. Demand (FTE) Row - Green Background
 
@@ -340,3 +335,30 @@ Generic resources have their Primary Role set to match their name:
 - Resource Name: "R&D" → Primary Role: "R&D"
 
 This ensures that when grouping by Role, both named resources with that role AND the generic resource pool for that role are aggregated together, giving a complete picture of capacity for that function.
+
+## One Pool for Agile and Traditional Teams
+
+The grid is only as good as its pool. When sprint teams and traditional projects draw on the same people, keep one pool and get every team's demand into it.
+
+### The rule: one pool, maintained in Costbars
+
+- Maintain the resource pool in **one** place: the Costbars dataset you publish as your **connected pubset**.
+- Timebars and Agilebars datasets may hold their own copy of the pool, but do not edit people or roles there.
+- When you build a Dashboard Source, include the Costbars connected pubset. Its pool is the one the source uses (see the [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md#step-3--generate-a-dashboard-source)).
+
+### Traditional teams
+
+Schedule in Timebars. Allocate Generic Resources early ("two developers, one tester") and replace them with named people as the work firms up. Every allocation counts as demand.
+
+### Agile teams: two options
+
+The grid counts **allocations** only. Agilebars has no allocations (see the [Data Model guide](Common_03_Data_Model_and_Scheduling_Engine_Guide.md)), so sprint work in Agilebars never reaches the grid on its own. Pick one option per team:
+
+| | Option 1: sprints in Agilebars | Option 2: sprints in Timebars |
+| --- | --- | --- |
+| Where the sprint runs | Agilebars, with the Kanban board and burndown | Timebars, one bar per sprint, no Kanban board |
+| How demand reaches the grid | A summary bar for the squad in Costbars, with allocations by role for the project's duration | Allocations on each sprint bar: named people for the current sprint, roles for later sprints |
+| Upkeep | Each month, update the summary bar from velocity and the burndown | None beyond normal scheduling |
+
+Teams that won't do the monthly update should use Option 2.
+
