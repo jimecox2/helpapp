@@ -342,9 +342,10 @@ The grid is only as good as its pool. When sprint teams and traditional projects
 
 ### The rule: one pool, maintained in Costbars
 
-- Maintain the resource pool in **one** place: the Costbars dataset you publish as your **connected pubset**.
+- Maintain the resource pool in **one** place: a Costbars active pubset whose owner ticks **Customer's master resource pool** on the Cloud Publishing page. A customer has one master.
+- Timebars users get it with **Get customer's master resource pool** on their Cloud Publishing page. It replaces only their local resource pool, and stops if their own row is missing from it.
 - Timebars and Agilebars datasets may hold their own copy of the pool, but do not edit people or roles there.
-- When you build a Dashboard Source, include the Costbars connected pubset. Its pool is the one the source uses (see the [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md#step-3--generate-a-dashboard-source)).
+- When you build a Dashboard Source, include the master pool's pubset. Its pool is the one the source uses (see the [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md#step-3--generate-a-dashboard-source)).
 
 ### Traditional teams
 

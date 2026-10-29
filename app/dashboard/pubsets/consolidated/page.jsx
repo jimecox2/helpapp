@@ -19,15 +19,15 @@ const fetchPubsetsByIds = async (ids, jwt) => {
   }
 
   try {
-    const promises = idArray.map(id =>
-      fetch(
-        `${API_URL}/timebars/${id}?fields[0]=name&fields[1]=owner&fields[2]=tbmdjoined&fields[3]=source_product&fields[4]=publish_status&fields[5]=aggregation_level&fields[6]=division&fields[7]=cost_center&fields[8]=geographic_region&fields[9]=tbresources&fields[10]=tbtags&fields[11]=tbcharts&fields[12]=isActive`,
-        {
-          headers: { 'Authorization': `Bearer ${jwt}` },
-          cache: 'no-store'
-        }
-      )
-    );
+    const baseFields = `fields[0]=name&fields[1]=owner&fields[2]=tbmdjoined&fields[3]=source_product&fields[4]=publish_status&fields[5]=aggregation_level&fields[6]=division&fields[7]=cost_center&fields[8]=geographic_region&fields[9]=tbresources&fields[10]=tbtags&fields[11]=tbcharts&fields[12]=isActive`
+    const fetchPubset = async id => {
+      const init = { headers: { 'Authorization': `Bearer ${jwt}` }, cache: 'no-store' }
+      const res = await fetch(`${API_URL}/timebars/${id}?${baseFields}&fields[13]=is_master_pool`, init)
+      // Strapi refuses an unknown field: until is_master_pool is added to timebars, read without it.
+      if (res.status === 400) return fetch(`${API_URL}/timebars/${id}?${baseFields}`, init)
+      return res
+    }
+    const promises = idArray.map(fetchPubset);
 
     const responses = await Promise.all(promises);
     const pubsets = [];
@@ -52,6 +52,7 @@ const fetchPubsetsByIds = async (ids, jwt) => {
         tbcharts: data.data.attributes.tbcharts || null,
         source_product: data.data.attributes.source_product || null,
         isActive: data.data.attributes.isActive === true,
+        is_master_pool: data.data.attributes.is_master_pool === true,
         publish_status: data.data.attributes.publish_status || null,
         aggregation_level: data.data.attributes.aggregation_level || null,
         division: data.data.attributes.division || null,
