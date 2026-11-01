@@ -46,7 +46,7 @@ import {
  * Enterprise Header Component
  * Blue gradient header with logo, dropdown navigation, breadcrumbs, and user profile
  */
-const EnterpriseHeader = ({ user }) => {
+const EnterpriseHeader = ({ user, enterprise = false }) => {
   const [openDropdown, setOpenDropdown] = useState(null)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const pathname = usePathname()
@@ -124,9 +124,12 @@ const EnterpriseHeader = ({ user }) => {
       { label: 'Cost Analytics', href: '/dashboard/analytics/cost', icon: LineChart },
     ],
     settings: [
-      { label: 'Manage Pubsets', href: '/dashboard/pubsets', icon: FolderOpen },
+      // Enterprise edition (tier 3) only; below it the sources page holds the connected-pubset choice
+      ...(enterprise ? [{ label: 'Manage Pubsets', href: '/dashboard/pubsets', icon: FolderOpen }] : []),
       { label: 'Manage Access', href: '/dashboard/pubsets/access', icon: ShieldCheck },
-      { label: 'Manage Sources', href: '/dashboard/sources', icon: Database },
+      enterprise
+        ? { label: 'Manage Sources', href: '/dashboard/sources', icon: Database }
+        : { label: 'Connected Pubset', href: '/dashboard/sources', icon: Database },
       { label: 'Preprocess Resource Data', href: '/dashboard/settings/preprocess', icon: RefreshCw },
     ],
   }

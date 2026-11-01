@@ -17,6 +17,7 @@ import {
   getUserByEmail,
 } from '@/lib/crud/coreCrud'
 import { isAdminRole, isProjectManagerRole, isExecutiveRole, isManagerRole } from '@/lib/auth/roles'
+import { getLicenseTier, isEnterpriseTier } from '@/lib/license/tier'
 
 const adminToken = () => {
   const token = process.env.STRAPI_ADMIN_TOKEN
@@ -32,7 +33,7 @@ async function getCaller() {
   if (!session?.user?.email || !session.jwt) throw new Error('Please sign in again')
   const user = await getUserByEmail(session.user.email, session.jwt)
   if (!user) throw new Error('User not found')
-  return { email: session.user.email, role: user.primary_role, customerId: user.Customer_id }
+  return { email: session.user.email, jwt: session.jwt, role: user.primary_role, customerId: user.Customer_id }
 }
 
 // Same rules as the buttons in DashboardSourceSelector, plus the customer scope.
@@ -85,6 +86,10 @@ async function findSourceByUid(uid) {
 async function saveImpl(data, replaceId = null) {
   const caller = await getCaller()
   if (!isManagerRole(caller.role)) throw new Error('Only an Administrator, Project Manager or Executive can create dashboard sources')
+  // Enterprise edition only (tier 3 on any of the caller's active licenses)
+  if (!isEnterpriseTier(await getLicenseTier(caller.email, caller.jwt))) {
+    throw new Error('Dashboard Sources are part of the Enterprise edition (a Tier 3 license). Your dashboard shows your connected pubset.')
+  }
   if (!caller.customerId) throw new Error('Your account has no customer id')
   const uid = String(data?.uid || '').trim()
   if (!uid) throw new Error('No pubsets selected')
