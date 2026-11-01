@@ -6,6 +6,8 @@ import ConnectedPubsetSwitch from "./_components/ConnectedPubsetSwitch"
 import EnterpriseDashboardContent from "./_components/EnterpriseDashboardContent"
 import { getUserByEmail } from "@/lib/crud/coreCrud"
 import { getConnectedPubsetProducts } from "@/lib/crud/dashboardData"
+import { EnterpriseNotice } from "../_components/EnterpriseNotice"
+import { getLicenseTier, isEnterpriseTier } from "@/lib/license/tier"
 
 /**
  * Enterprise Dashboard Sources Page
@@ -34,6 +36,19 @@ const EnterpriseDashboardPage = async ({ searchParams }) => {
     connectedProducts = await getConnectedPubsetProducts(email, jwt)
   } catch (error) {
     console.error('Error fetching user Customer_id:', error)
+  }
+
+  // Below the Enterprise edition: only the connected-pubset choice, no sources (lib/license/tier.js)
+  const enterprise = isEnterpriseTier(await getLicenseTier(email, jwt))
+  if (!enterprise) {
+    return (
+      <div className="container mx-auto p-6 space-y-6">
+        {connectedProducts.length > 1 && (
+          <ConnectedPubsetSwitch initialValue={true} products={connectedProducts} initialProduct={dashboardProduct} productOnly />
+        )}
+        <EnterpriseNotice feature="Dashboard Sources" />
+      </div>
+    )
   }
 
   return (

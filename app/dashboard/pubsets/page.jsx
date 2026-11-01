@@ -6,6 +6,7 @@ import PubsetsDataTable from './_components/PubsetsDataTable';
 import Link from 'next/link';
 import PubsetsInfo from './_components/PubsetsInfo';
 import { fetchAllPubsets } from './_lib/fetchAllPubsets';
+import { enterpriseGate } from '../_components/EnterpriseNotice';
 
 
 /**
@@ -18,6 +19,9 @@ export default async function PubsetsPage() {
   if (!session) {
     redirect('/auth/signin?callbackUrl=/dashboard/pubsets');
   }
+
+  const gate = await enterpriseGate(session, 'Manage Pubsets and Dashboard Sources');
+  if (gate) return gate;
 
   // Fetch all pubsets from Strapi
   const allPubsets = await fetchAllPubsets(session.jwt);

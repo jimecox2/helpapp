@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { API_URL } from '@/config/site';
 import ConsolidatedReportComponent from "@/components/Dashboard/Reports/ConsolidatedReportComponent.jsx"
 import IncludedPubsetsSection from "./_components/IncludedPubsetsSection"
+import { enterpriseGate } from "../../_components/EnterpriseNotice"
 
 /**
  * Fetch multiple pubsets by IDs
@@ -103,6 +104,9 @@ const ConsolidatedReportPage = async ({ searchParams }) => {
   if (!session) {
     redirect("/auth/signin?callbackUrl=/dashboard/pubsets")
   }
+
+  const gate = await enterpriseGate(session, 'Dashboard Sources')
+  if (gate) return gate
 
   const ids = searchParams?.ids || '';
   const { user: { email }, jwt } = session;

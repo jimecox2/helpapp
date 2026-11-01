@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import { setUseConnectedPubsetAction, setDashboardProductAction } from '@/app/dashboard/_actions/userSettings'
 
-export default function ConnectedPubsetSwitch({ initialValue = false, products = [], initialProduct = null }) {
+export default function ConnectedPubsetSwitch({ initialValue = false, products = [], initialProduct = null, productOnly = false }) {
   const router = useRouter()
   const [checked, setChecked] = useState(initialValue)
   const [saving, setSaving] = useState(false)
@@ -47,7 +47,7 @@ export default function ConnectedPubsetSwitch({ initialValue = false, products =
 
   return (
     <div className={`rounded-lg border p-4 ${checked ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'}`}>
-      <label
+      {!productOnly && <label
         className="flex items-center gap-3 cursor-pointer select-none"
         title="Tick to make every dashboard report use the pubset you chose as connected when publishing from Agilebars, Timebars or Costbars. Untick to use the active source again."
       >
@@ -60,9 +60,9 @@ export default function ConnectedPubsetSwitch({ initialValue = false, products =
         />
         <span className="font-medium text-gray-900">Use my connected pubset instead of the active source</span>
         {saving && <Loader2 className="w-4 h-4 animate-spin text-blue-600" />}
-      </label>
+      </label>}
       {products.length > 1 && (
-        <label className="mt-3 ml-7 flex items-center gap-2 text-sm text-gray-800"
+        <label className={`${productOnly ? '' : 'mt-3 ml-7 '}flex items-center gap-2 text-sm text-gray-800`}
           title="You have a connected pubset in more than one product. Choose which one the dashboard shows when it uses your connected pubset.">
           Show my connected pubset from:
           <select value={product} disabled={saving} onChange={handleProduct}
@@ -71,7 +71,7 @@ export default function ConnectedPubsetSwitch({ initialValue = false, products =
           </select>
         </label>
       )}
-      {checked && (
+      {checked && !productOnly && (
         <p className="mt-2 ml-7 text-sm text-blue-800">
           All dashboard reports now show your connected pubset. The active source below is not used until you untick this.
         </p>

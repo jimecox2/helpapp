@@ -2,6 +2,7 @@
 import { auth } from "@/auth/auth"
 import { redirect } from "next/navigation"
 import EnterpriseHeader from "./_components/EnterpriseHeader"
+import { getLicenseTier, isEnterpriseTier } from "@/lib/license/tier"
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -19,9 +20,12 @@ export default async function EnterpriseLayout({ children }) {
     redirect("/auth/signin?callbackUrl=/dashboard")
   }
 
+  // Enterprise edition (tier 3) shows Manage Pubsets and Manage Sources in the nav
+  const enterprise = isEnterpriseTier(await getLicenseTier(session.user.email, session.jwt))
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <EnterpriseHeader user={session.user} />
+      <EnterpriseHeader user={session.user} enterprise={enterprise} />
       <main>{children}</main>
     </div>
   )
