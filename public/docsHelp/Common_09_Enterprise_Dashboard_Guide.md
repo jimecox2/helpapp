@@ -41,6 +41,10 @@ If you see a message saying you have no access, contact your **Administrator** t
 1. A user account with a role of **Administrator**, **Project Manager**, or **Team Member**
 2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) - Publish reports to the cloud)
 3. At least one **Dashboard Source** created from your pubsets (see [Creating and Managing Dashboard Sources](#creating-and-managing-dashboard-sources))
+4. For Dashboard Sources, Manage Pubsets and Generate Source: the **Enterprise edition**, a Tier-3 license
+   on any of your products. With Tier-2 the dashboard shows your connected pubset, and the sources
+   page lets you choose which product's connected pubset when you have more than one. Sources you
+   saved earlier are kept and come back when you upgrade.
 
 > **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](Common_08_Personal_Dashboard_Guide.md) skips this step by automatically connecting to your single active pubset.
 
