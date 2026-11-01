@@ -134,7 +134,7 @@ With pubsets selected, click **Generate Dashboard Source**. You will be taken to
 - Edit the auto-generated source name
 - Click **Save Dashboard Source** to create the source
 
-**Which resource pool the source uses.** A source holds one resource pool: the **customer's master resource pool**, the Costbars pubset whose owner ticked "Customer's master resource pool" on the Costbars Cloud Publishing page. Include that pubset when you build the source. Pools in Timebars and Agilebars pubsets are ignored. With no master selected, the pool comes from the Costbars connected pubset, then another selected pubset, and the save dialog warns you. Maintain your pool in Costbars only (see [One Pool for Agile and Traditional Teams](Common_11_Supply_And_Demand_Grids_User_Guide.md#one-pool-for-agile-and-traditional-teams)).
+**Which resource pool the source uses.** A source holds one resource pool: the **customer's master resource pool**, the Costbars pubset whose owner ticked **Is MP** on the Costbars Cloud Publishing page (Tier 3). Include that pubset when you build the source. Pools in Timebars and Agilebars pubsets are ignored. With no master selected, the pool comes from the Costbars connected pubset, then another selected pubset, and the save dialog warns you. Maintain your pool in Costbars only (see [One Pool for Agile and Traditional Teams](Common_11_Supply_And_Demand_Grids_User_Guide.md#one-pool-for-agile-and-traditional-teams)).
 
 ### Step 4 — Set the active source
 

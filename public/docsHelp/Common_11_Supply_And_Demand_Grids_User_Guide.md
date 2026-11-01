@@ -342,8 +342,8 @@ The grid is only as good as its pool. When sprint teams and traditional projects
 
 ### The rule: one pool, maintained in Costbars
 
-- Maintain the resource pool in **one** place: a Costbars active pubset whose owner ticks **Customer's master resource pool** on the Cloud Publishing page. A customer has one master.
-- Timebars users get it with **Get customer's master resource pool** on their Cloud Publishing page. It replaces only their local resource pool, and stops if their own row is missing from it.
+- Maintain the resource pool in **one** place, the master pool (MP): a Costbars pubset whose owner ticks **Is MP** on the Cloud Publishing page. A customer has one master. Enterprise Mode (the Is MP and Use MP columns) is in Tier 3 Timebars and Costbars.
+- To plan against it, tick **Use MP** on your own pubset, then click **Download** on that row. The pubset is imported as usual and your local resource pool is replaced with the master pool. Ticking only saves the choice. The download stops if your own row is missing from the master pool. The dashboard sees the new pool once you publish again.
 - Timebars and Agilebars datasets may hold their own copy of the pool, but do not edit people or roles there.
 - When you build a Dashboard Source, include the master pool's pubset. Its pool is the one the source uses (see the [Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md#step-3--generate-a-dashboard-source)).
 
