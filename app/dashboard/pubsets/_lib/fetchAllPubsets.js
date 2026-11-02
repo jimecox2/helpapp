@@ -1,7 +1,7 @@
 // Shared by /dashboard/pubsets and /dashboard/pubsets/access (server only).
 // The query (filters, fields, pagination) is in lib/crud/pubsetListQuery.js.
 import { API_URL } from '@/config/site';
-import { pubsetListQuery } from '@/lib/crud/pubsetListQuery';
+import { pubsetListQuery, invalidKeyOf, PUBSET_LIST_FIELDS } from '@/lib/crud/pubsetListQuery';
 
 const toPubset = item => {
   const a = item.attributes;
@@ -11,7 +11,7 @@ const toPubset = item => {
     name: a.name || 'Untitled',
     owner: a.owner || 'N/A',
     customer_id: a.Customer_id || null,
-    published_date: a.publishedAt || a.createdAt,
+    published_date: a.publishedAt || a.createdAt || a.published_date,
     users_permissions_user: user?.email || user?.username || 'N/A',
     isActive: a.isActive,
     grant_pm_access_to: a.grant_pm_access_to || '',
@@ -39,17 +39,31 @@ export const fetchAllPubsets = async (session) => {
   const customerId = session?.user?.customer_id || null;
   if (!email) return [];
   const rows = [];
+  let fields = [...PUBSET_LIST_FIELDS];
+  let publishedOnly = true;
+  let retries = 0;
   try {
     for (let page = 1; ; page++) {
-      const res = await fetch(`${API_URL}/timebars?${pubsetListQuery({ email, customerId, page })}`, {
+      const res = await fetch(`${API_URL}/timebars?${pubsetListQuery({ email, customerId, page, fields, publishedOnly })}`, {
         headers: { Authorization: `Bearer ${session.jwt}` },
         cache: 'no-store',
       });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 400 && retries < 10) {
+        // A field or filter this Strapi does not have: drop it and ask for the same page again.
+        const key = invalidKeyOf(data);
+        console.error('Pubsets query refused by Strapi:', data?.error?.message || res.statusText);
+        if (key === 'tb' && publishedOnly) publishedOnly = false;
+        else if (key && fields.includes(key)) fields = fields.filter(f => f !== key);
+        else break;
+        retries++;
+        page--;
+        continue;
+      }
       if (!res.ok) {
-        console.error('Failed to fetch pubsets:', res.status, res.statusText);
+        console.error('Failed to fetch pubsets:', res.status, data?.error?.message || res.statusText);
         break;
       }
-      const data = await res.json();
       rows.push(...(data.data || []).map(toPubset));
       const pageCount = data.meta?.pagination?.pageCount || 1;
       if (page >= pageCount) break;
@@ -57,5 +71,6 @@ export const fetchAllPubsets = async (session) => {
   } catch (error) {
     console.error('Error fetching pubsets:', error);
   }
+  console.log('Pubsets list:', { email, customerId, rows: rows.length, fieldsDropped: PUBSET_LIST_FIELDS.filter(f => !fields.includes(f)), publishedOnly });
   return rows;
 };
