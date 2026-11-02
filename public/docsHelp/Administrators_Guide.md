@@ -871,7 +871,7 @@ docker exec -it tbpgdb psql -U <admin_user> -d strapi -c '\di timebars*'
 | Strapi upgrade (for example v4 to v5) | The upgrade may rename or rebuild tables | Run step 1 and step 3; run step 2 again if they are gone, with the new column names |
 
 **Planned:** add the two statements to Strapi's startup code (tbbe `src/index.js`, `bootstrap`), so
-Strapi recreates the indexes itself every time it starts. Steps 1 to 3 then only need step 3, as a check.
+Strapi recreates the indexes itself every time it starts. Then only step 3 is needed, as a check.
 
 ```
 // tbbe src/index.js
