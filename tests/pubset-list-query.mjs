@@ -28,6 +28,7 @@ assert.strictEqual(r.get('fields[1]'), null)
 // Strapi 400 bodies.
 assert.strictEqual(invalidKeyOf({ error: { message: 'Invalid key publishedAt', details: { key: 'publishedAt' } } }), 'publishedAt')
 assert.strictEqual(invalidKeyOf({ error: { message: 'Invalid key tb' } }), 'tb')
+assert.strictEqual(invalidKeyOf({ error: { message: 'Invalid parameter publishedAt' } }), 'publishedAt')
 assert.strictEqual(invalidKeyOf({ error: { message: 'Forbidden' } }), null)
 assert.strictEqual(invalidKeyOf({}), null)
 console.log('pubset-list-query: all tests passed')

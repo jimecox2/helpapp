@@ -11,7 +11,7 @@ const toPubset = item => {
     name: a.name || 'Untitled',
     owner: a.owner || 'N/A',
     customer_id: a.Customer_id || null,
-    published_date: a.publishedAt || a.createdAt || a.published_date,
+    published_date: a.createdAt || a.published_date,
     users_permissions_user: user?.email || user?.username || 'N/A',
     isActive: a.isActive,
     grant_pm_access_to: a.grant_pm_access_to || '',
