@@ -24,7 +24,7 @@ export default async function PubsetsPage() {
   if (gate) return gate;
 
   // Fetch all pubsets from Strapi
-  const allPubsets = await fetchAllPubsets(session.jwt);
+  const allPubsets = await fetchAllPubsets(session);
 
   // Apply security filtering based on role and grants
   const accessiblePubsets = filterPubsetsByAccess(allPubsets, session);
