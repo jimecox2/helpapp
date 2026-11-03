@@ -41,6 +41,10 @@ If you see a message saying you have no access, contact your **Administrator** t
 1. A user account with a role of **Administrator**, **Project Manager**, or **Team Member**
 2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](Common_07_Cloud_Publishing_Guide.md) - Publish reports to the cloud)
 3. At least one **Dashboard Source** created from your pubsets (see [Creating and Managing Dashboard Sources](#creating-and-managing-dashboard-sources))
+4. For Dashboard Sources, Manage Pubsets and Generate Source: the **Enterprise edition**, a Tier-3 license
+   on any of your products. With Tier-2 the dashboard shows your connected pubset, and the sources
+   page lets you choose which product's connected pubset when you have more than one. Sources you
+   saved earlier are kept and come back when you upgrade.
 
 > **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](Common_08_Personal_Dashboard_Guide.md) skips this step by automatically connecting to your single active pubset.
 
@@ -133,6 +137,8 @@ With pubsets selected, click **Generate Dashboard Source**. You will be taken to
 - Review which pubsets are included
 - Edit the auto-generated source name
 - Click **Save Dashboard Source** to create the source
+
+**Which resource pool the source uses.** A source holds one resource pool: the **customer's master resource pool**, the Costbars pubset whose owner ticked **Is MP** on the Costbars Cloud Publishing page (Tier 3). Include that pubset when you build the source. Pools in Timebars and Agilebars pubsets are ignored. With no master selected, the pool comes from the Costbars connected pubset, then another selected pubset, and the save dialog warns you. Maintain your pool in Costbars only (see [One Pool for Agile and Traditional Teams](Common_11_Supply_And_Demand_Grids_User_Guide.md#one-pool-for-agile-and-traditional-teams)).
 
 ### Step 4 — Set the active source
 
@@ -237,6 +243,8 @@ Comprehensive resource capacity and allocation data drawn from all pubsets in th
 **Route:** `/dashboard/reports/capacity-demand`
 
 Side-by-side view of resource supply and demand by week and role, consolidated across all included pubsets. Highlights overloaded or underutilised resource pools so you can rebalance allocations or plan hiring decisions proactively.
+
+Supply comes from the source's one resource pool (the customer's master resource pool). Demand comes from allocations in every included pubset. Agilebars pubsets add sprint burndowns but no demand, because Agilebars has no allocations.
 
 ---
 

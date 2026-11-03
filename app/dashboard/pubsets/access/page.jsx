@@ -16,7 +16,7 @@ export default async function ManageAccessPage() {
     redirect('/auth/signin?callbackUrl=/dashboard/pubsets/access');
   }
 
-  const allPubsets = await fetchAllPubsets(session.jwt);
+  const allPubsets = await fetchAllPubsets(session);
   const accessiblePubsets = filterPubsetsByAccess(allPubsets, session);
 
   return (

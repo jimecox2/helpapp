@@ -255,11 +255,15 @@ Clearing removes all data content from a pubset in the cloud while keeping the p
 
 ### License Tiers
 
-| Tier | Products | Pubsets | Features |
-|------|----------|---------|----------|
-| **Tier-1** | ABT01, TBT01, CBT01 | 0 | Local only — no cloud publishing; Publish icons are hidden |
-| **Tier-2** | ABT02, TBT02, CBT02 | per product | Cloud publishing |
-| **Tier-3** | ABT03, TBT03, CBT03 | per product | Cloud publishing plus OpenProject sync |
+| Tier | Edition | Products | Pubsets | Features |
+|------|---------|----------|---------|----------|
+| **Tier-1** | Local | ABT01, TBT01, CBT01 | 0 | Local only — no cloud publishing; Publish icons are hidden |
+| **Tier-2** | Standard | ABT02, TBT02, CBT02 | per product | Cloud publishing; the Enterprise Dashboard shows your connected pubset |
+| **Tier-3** | Enterprise | ABT03, TBT03, CBT03 | per product | Tier-2 plus Dashboard Sources that combine pubsets, the master resource pool (Is MP / Use MP, Timebars and Costbars) and OpenProject sync |
+
+You can hold one active license per product (for example ABT01 and CBT03). Each app uses the license
+of its own product. Timebars Cloud uses your highest tier, so one Tier-3 license gives you the
+Enterprise edition there. Choose the active license for each product on **My Orders** at www.timebars.com.
 
 The exact numbers for each product are on the pricing page. They come from your
 purchased product and are downloaded each time you log in (gold icon, top right):

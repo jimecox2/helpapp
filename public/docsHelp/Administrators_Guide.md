@@ -7,7 +7,7 @@ Costbars). End users do not need this guide.
 > Timebars Cloud and can be read at `/docsHelp/…`. Never add IP addresses, tokens, passwords or API keys here. Keep those in your
 > password manager and on the servers only.
 
-Last updated: 16 October 2026.
+Last updated: 2 November 2026.
 
 ---
 
@@ -498,6 +498,8 @@ Full study and the code changes needed: `docsOtherNew/Study_Licensing_With_And_W
   supplies their hosts and backend address without a rebuild (section 2). tbwww and helpapp read
   their addresses from `.env.local` at run time, and Strapi its CORS origins, email sender and public
   URL (`CORS_ORIGINS`, `EMAIL_FROM`, `PUBLIC_URL`; October 2026).
+- **Strapi v4 to v5 upgrade:** to be planned. Afterwards check the pubsets indexes (section 17.9).
+- **Pubsets indexes in Strapi's startup code:** to be added to tbbe `src/index.js` (section 17.9).
 - **Strapi on Node 16** (end of life): the tbbe Dockerfile still builds on `node:16-alpine`; move to 18/20
   after a test build (native modules better-sqlite3 and sharp).
 - **AI login:** AI needs a login to the Timebars Cloud (Strapi), checked by helpapp. Sites with no Strapi
@@ -832,6 +834,53 @@ again; the owner will guide you.
 
 When you ask for help, send: the output of the commands in section 17.7, `06-health-check.sh`, and `docker logs --tail 100 <container>` for the failing container. Never send
 `.env.local` values, tokens or passwords.
+
+### 17.9 Database indexes for the pubsets table
+
+Pubsets are the `timebars` table in Strapi's database (`tbpgdb`, database `strapi`). Timebars Cloud's
+Manage Pubsets and Manage Access pages ask Strapi for the pubsets of one customer id, or of one owner.
+Strapi does not index those columns, so on a large table each request reads every row. Two indexes
+keep it fast. Create them once on every server that runs Strapi.
+
+**1. Check the column names.** Strapi v4 keeps the field names, so they should be `Customer_id` and `owner`:
+
+```
+docker exec -it tbpgdb psql -U <admin_user> -d strapi -c '\d timebars'
+```
+
+**2. Create the indexes.** `CONCURRENTLY` builds them without locking the table, so users can keep working.
+`IF NOT EXISTS` makes the commands safe to run again.
+
+```
+docker exec -it tbpgdb psql -U <admin_user> -d strapi -c 'CREATE INDEX CONCURRENTLY IF NOT EXISTS timebars_customer_id_idx ON timebars ("Customer_id");'
+docker exec -it tbpgdb psql -U <admin_user> -d strapi -c 'CREATE INDEX CONCURRENTLY IF NOT EXISTS timebars_owner_idx ON timebars (owner);'
+```
+
+**3. Check them.**
+
+```
+docker exec -it tbpgdb psql -U <admin_user> -d strapi -c '\di timebars*'
+```
+
+**Keeping them**
+
+| Event | What happens to the indexes | What to do |
+|---|---|---|
+| Restore a `pg_dump` (`04-restore.sh`, copying production to staging) | They come back with the dump, if they were in the database that was dumped | Run step 3 |
+| Strapi restarts | Strapi brings the database in line with its own schema at start. It may drop indexes it did not create (not yet confirmed) | Run step 3 after the first restart |
+| Strapi upgrade (for example v4 to v5) | The upgrade may rename or rebuild tables | Run step 1 and step 3; run step 2 again if they are gone, with the new column names |
+
+**Planned:** add the two statements to Strapi's startup code (tbbe `src/index.js`, `bootstrap`), so
+Strapi recreates the indexes itself every time it starts. Then only step 3 is needed, as a check.
+
+```
+// tbbe src/index.js
+async bootstrap({ strapi }) {
+  const knex = strapi.db.connection;
+  await knex.raw('CREATE INDEX IF NOT EXISTS timebars_customer_id_idx ON timebars ("Customer_id")');
+  await knex.raw('CREATE INDEX IF NOT EXISTS timebars_owner_idx ON timebars (owner)');
+},
+```
 
 ---
 
