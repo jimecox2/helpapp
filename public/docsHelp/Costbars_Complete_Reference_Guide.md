@@ -9158,6 +9158,7 @@ It only appears on an **empty** Timebars or Costbars canvas (when there are no P
 - [The Five Summary Rows](#the-five-summary-rows)
 - [View Modes and Configurations](#view-modes-and-configurations)
 - [Primary Roles: Named and Generic Resources](#primary-roles-named-and-generic-resources)
+- [One Pool for Agile and Traditional Teams](#one-pool-for-agile-and-traditional-teams)
 
 ---
 
@@ -9219,20 +9220,14 @@ At the top of the Resource Demand Grids, five critical rows provide aggregated m
 
 #### 1. Supply Target (FTE) (First Row)
 
-**What it shows**: Total available resource capacity across all Generic Resources
+**What it shows**: The capacity you plan to have, from the Generic Resources in the pool
 
-**Data source**: 
+**Data source**:
 - Sourced from the `tbResources` store (resource pool)
-- Fields:??
-- Each Role has monthly FTE availability defined automatically calculated using tbResQuantity
+- Each Generic Resource contributes its quantity (`tbResQuantity`) as monthly FTE for its role
 
-
-
-**Example**: ??
-
-**Timing considerations**: 
-
-- This allows forward planning for known hiring or departures
+**Timing considerations**:
+- Raise or lower a Generic Resource's quantity to plan for known hiring or departures
 
 #### 2. Supply Pool (FTE) (Second Row)
 
@@ -9253,7 +9248,7 @@ At the top of the Resource Demand Grids, five critical rows provide aggregated m
 
 #### 3. Variance (ST - SP) (Third Row)
 
-**What it shows**: ???
+**What it shows**: Supply Target minus Supply Pool: the gap between the capacity you plan to have and the capacity the pool holds today
 
 #### 4. Demand (FTE) Row - Green Background
 
@@ -9490,6 +9485,33 @@ Generic resources have their Primary Role set to match their name:
 - Resource Name: "R&D" → Primary Role: "R&D"
 
 This ensures that when grouping by Role, both named resources with that role AND the generic resource pool for that role are aggregated together, giving a complete picture of capacity for that function.
+
+### One Pool for Agile and Traditional Teams
+
+The grid is only as good as its pool. When sprint teams and traditional projects draw on the same people, keep one pool and get every team's demand into it.
+
+#### The rule: one pool, maintained in Costbars
+
+- Maintain the resource pool in **one** place, the master pool (MP): a Costbars pubset whose owner ticks **Is MP** on the Cloud Publishing page. A customer has one master. Enterprise Mode (the Is MP and Use MP columns) is in Tier 3 Timebars and Costbars.
+- To plan against it, tick **Use MP** on your own pubset, then click **Download** on that row. The pubset is imported as usual and your local resource pool is replaced with the master pool. Ticking only saves the choice. The download stops if your own row is missing from the master pool. The dashboard sees the new pool once you publish again.
+- Timebars and Agilebars datasets may hold their own copy of the pool, but do not edit people or roles there.
+- When you build a Dashboard Source, include the master pool's pubset. Its pool is the one the source uses (see the [Enterprise Dashboard Guide](https://help.timebars.com/common-09-enterprise-dashboard-guide#step-3--generate-a-dashboard-source)).
+
+#### Traditional teams
+
+Schedule in Timebars. Allocate Generic Resources early ("two developers, one tester") and replace them with named people as the work firms up. Every allocation counts as demand.
+
+#### Agile teams: two options
+
+The grid counts **allocations** only. Agilebars has no allocations (see the [Data Model guide](https://help.timebars.com/common-03-data-model-and-scheduling-engine-guide)), so sprint work in Agilebars never reaches the grid on its own. Pick one option per team:
+
+| | Option 1: sprints in Agilebars | Option 2: sprints in Timebars |
+| --- | --- | --- |
+| Where the sprint runs | Agilebars, with the Kanban board and burndown | Timebars, one bar per sprint, no Kanban board |
+| How demand reaches the grid | A summary bar for the squad in Costbars, with allocations by role for the project's duration | Allocations on each sprint bar: named people for the current sprint, roles for later sprints |
+| Upkeep | Each month, update the summary bar from velocity and the burndown | None beyond normal scheduling |
+
+Teams that won't do the monthly update should use Option 2.
 
 ---
 
@@ -10463,11 +10485,15 @@ Clearing removes all data content from a pubset in the cloud while keeping the p
 
 #### License Tiers
 
-| Tier | Products | Pubsets | Features |
-|------|----------|---------|----------|
-| **Tier-1** | ABT01, TBT01, CBT01 | 0 | Local only — no cloud publishing; Publish icons are hidden |
-| **Tier-2** | ABT02, TBT02, CBT02 | per product | Cloud publishing |
-| **Tier-3** | ABT03, TBT03, CBT03 | per product | Cloud publishing plus OpenProject sync |
+| Tier | Edition | Products | Pubsets | Features |
+|------|---------|----------|---------|----------|
+| **Tier-1** | Local | ABT01, TBT01, CBT01 | 0 | Local only — no cloud publishing; Publish icons are hidden |
+| **Tier-2** | Standard | ABT02, TBT02, CBT02 | per product | Cloud publishing; the Enterprise Dashboard shows your connected pubset |
+| **Tier-3** | Enterprise | ABT03, TBT03, CBT03 | per product | Tier-2 plus Dashboard Sources that combine pubsets, the master resource pool (Is MP / Use MP, Timebars and Costbars) and OpenProject sync |
+
+You can hold one active license per product (for example ABT01 and CBT03). Each app uses the license
+of its own product. Timebars Cloud uses your highest tier, so one Tier-3 license gives you the
+Enterprise edition there. Choose the active license for each product on **My Orders** at www.timebars.com.
 
 The exact numbers for each product are on the pricing page. They come from your
 purchased product and are downloaded each time you log in (gold icon, top right):
@@ -11709,6 +11735,10 @@ If you see a message saying you have no access, contact your **Administrator** t
 1. A user account with a role of **Administrator**, **Project Manager**, or **Team Member**
 2. At least one **pubset** published from Timebars, Agilebars, or Costbars (see the [Cloud Publishing Guide](https://help.timebars.com/common-07-cloud-publishing-guide) - Publish reports to the cloud)
 3. At least one **Dashboard Source** created from your pubsets (see [Creating and Managing Dashboard Sources](#creating-and-managing-dashboard-sources))
+4. For Dashboard Sources, Manage Pubsets and Generate Source: the **Enterprise edition**, a Tier-3 license
+   on any of your products. With Tier-2 the dashboard shows your connected pubset, and the sources
+   page lets you choose which product's connected pubset when you have more than one. Sources you
+   saved earlier are kept and come back when you upgrade.
 
 > **Coming from the Personal Dashboard?** The Enterprise Dashboard requires an extra step — you must create a Dashboard Source before reports will display data. This is because the Enterprise Dashboard lets you combine multiple pubsets, and you choose which combination to activate. The [Personal Dashboard](https://help.timebars.com/common-08-personal-dashboard-guide) skips this step by automatically connecting to your single active pubset.
 
@@ -11801,6 +11831,8 @@ With pubsets selected, click **Generate Dashboard Source**. You will be taken to
 - Review which pubsets are included
 - Edit the auto-generated source name
 - Click **Save Dashboard Source** to create the source
+
+**Which resource pool the source uses.** A source holds one resource pool: the **customer's master resource pool**, the Costbars pubset whose owner ticked **Is MP** on the Costbars Cloud Publishing page (Tier 3). Include that pubset when you build the source. Pools in Timebars and Agilebars pubsets are ignored. With no master selected, the pool comes from the Costbars connected pubset, then another selected pubset, and the save dialog warns you. Maintain your pool in Costbars only (see [One Pool for Agile and Traditional Teams](https://help.timebars.com/common-11-supply-and-demand-grids-user-guide#one-pool-for-agile-and-traditional-teams)).
 
 #### Step 4 — Set the active source
 
@@ -11905,6 +11937,8 @@ Comprehensive resource capacity and allocation data drawn from all pubsets in th
 **Route:** `/dashboard/reports/capacity-demand`
 
 Side-by-side view of resource supply and demand by week and role, consolidated across all included pubsets. Highlights overloaded or underutilised resource pools so you can rebalance allocations or plan hiring decisions proactively.
+
+Supply comes from the source's one resource pool (the customer's master resource pool). Demand comes from allocations in every included pubset. Agilebars pubsets add sprint burndowns but no demand, because Agilebars has no allocations.
 
 ---
 

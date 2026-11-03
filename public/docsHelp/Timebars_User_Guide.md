@@ -23,10 +23,11 @@
 9. [Resource Supply vs. Demand Analysis](#resource-supply-vs-demand-analysis)
 10. [Creating Relationships and Constraints](#creating-relationships-and-constraints)
 11. [Reporting](#reporting)
-12. [Scheduling Tips](#scheduling-tips)
-13. [References to Common Guides](#references-to-common-guides)
-14. [Quick Reference](#quick-reference)
-15. [Getting Help](#getting-help)
+12. [Running Sprints with the Burndown Chart](#running-sprints-with-the-burndown-chart)
+13. [Scheduling Tips](#scheduling-tips)
+14. [References to Common Guides](#references-to-common-guides)
+15. [Quick Reference](#quick-reference)
+16. [Getting Help](#getting-help)
 
 ---
 
@@ -306,7 +307,7 @@ Cost = Calculated Hours × Pay Rate
    - **Forecast** dates, costs, hours (current projection)
    - **Actual** dates, costs, hours (completed work)
 4. Traffic light indicators show status (Green/Yellow/Red)
-5. Links to Burndown Chart and Metadata View
+5. Links to the Metadata View, and on an L3 Sub-Project the Burndown Chart (Tier 2 and 3, see [Running Sprints with the Burndown Chart](#running-sprints-with-the-burndown-chart))
 
 **Hours Calculator Popup (Gold Allocation bars only):**
 1. Click on the Allocation bar second line (e.g., "L5:2101")
@@ -892,6 +893,41 @@ The Reports menu launches editable HTML reports that you can:
 For detailed local reporting, see **[Forms, Reports and Graphs Guide](Common_05_Forms_Reports_And_Graphs_Guide.md)**.
 
 For cloud reporting, see **[Common Enterprise Dashboard Guide](Common_09_Enterprise_Dashboard_Guide.md)**.
+
+---
+
+## Running Sprints with the Burndown Chart
+
+Teams that work in sprints can run them in Timebars and track each one with a burndown chart. Timebars has no Kanban board; you update the bars on the canvas instead.
+
+**Who gets it:** Timebars Tier 2 and Tier 3 licenses. Other licenses do not show the Burndown button.
+
+### **Setting Up Sprints**
+
+1. Create an **L2 Project** for the whole piece of work. It usually runs for many months.
+2. Under it, create one **L3 Sub-Project** per sprint, typically 4 to 6 weeks long. The Sub-Project bar's start and finish are the sprint's dates.
+3. Create the sprint's **L4 Tasks** under the Sub-Project, with their hours. Allocations under a Task feed its hours as usual.
+
+### **Opening the Burndown Chart**
+
+1. Click the lower left of the L3 Sub-Project bar to open its **Cost Schedule Popup**.
+2. Click **Burndown**. The burndown page opens with the Sub-Project's name at the top.
+
+### **What the Chart Counts**
+
+- Every L4 Task under the Sub-Project. A Task's hours already include its Allocations, so nothing is counted twice.
+- The x-axis has one point per working day of the Sub-Project bar, plus one closing day where the line reaches zero.
+- Task bars that sit outside the Sub-Project bar still count, at its first or last day. You are told which ones, so you can widen the Sub-Project bar.
+
+### **Using the Page**
+
+The page works the same way as in Agilebars:
+- **Current Forecast:** click **[Create!]** for the first snapshot, then **[Recalculate!]** at the end of each reporting period, after the bars are updated.
+- **Planned (Baseline):** click **[Create!]** once scope is settled. Take a **Revised Baseline Plan** (up to three) after a scope change.
+- **Run!** draws the chart from the saved snapshots. It never recalculates.
+- **Publish** opens the Publishing page so you can publish your data to Timebars Cloud. Run the chart first.
+
+To read the chart, see [How to Read and Interpret the Burndown Chart](Agilebars_User_Guide.md#how-to-read-and-interpret-the-burndown-chart) in the Agilebars User Guide.
 
 ---
 
