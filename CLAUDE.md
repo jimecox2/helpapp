@@ -628,3 +628,17 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   (comma list in `.env.local`) **and** the Strapi users row has `primary_role` Administrator. No email is hardcoded
   anywhere; tbwww `/update-articles` uses the same rule. Test: `npm run build && npm run test:help` (Strapi stubbed).
 - Nav: Home and the Help menu show signed out. Help = Help Library, Ask AI (`/help/ask`, login), Contact Us and Visit Timebars Ltd. (the last two on `WWW_URL`; there is no Assistance menu). Notification cron: `send-notification.sh`.
+
+## Expired licenses (Jim, 4 Nov 2026)
+
+- Rule: `lib/license/expiry.js` (same file in tbrunp `scripts/tbLicenseExpiry.js` and tbwww `lib/licenseExpiry.js`;
+  change all three). Good to the end of the `expires_on` day, then 7 days of grace, then expired.
+- `getLicenseTier()` skips orders past grace, so an expired Tier 3 loses the Enterprise pages on the next page load.
+- At sign-in (`app/auth/auth.js` jwt callback → `lib/license/signInLicense.js`, rules in `signInRules.js`): orders
+  past grace are set inactive with the user's own JWT, `token.license` keeps the notices. `middleware.js` sends the
+  user to `WWW_URL/sales/myorders?notice=expired` once per sign-in (cookie `tbcloud.license-notice`), only when their
+  own order just expired and no live license is left. Expired users can still use the Cloud and download pubsets.
+- Team members with no orders follow their company: the Administrators of the same customer id (read with
+  `STRAPI_ADMIN_TOKEN`). They get "Your company's license expired, contact your administrator", no redirect.
+- `components/LicenseBanner.jsx` (root layout) shows the notices. Tests: `npm run test:license`, and after a build
+  `npm run test:license:app`.

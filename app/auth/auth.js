@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
 });
 
 import { API_URL, WWW_URL } from '@/config/site';
+import { checkLicenseAtSignIn } from '@/lib/license/signInLicense';
 
 async function checkUserInStrapi(email, password) {
   try {
@@ -165,6 +166,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.customer_id = null;
           token.primary_role = null;
         }
+
+        // Expired licenses (lib/license/signInLicense.js): set orders past their grace period
+        // inactive, keep the banner notices, and the one-time redirect to My Orders for middleware.js.
+        token.license = await checkLicenseAtSignIn({
+          email: user.email,
+          jwt: user.jwt,
+          customerId: token.customer_id,
+          primaryRole: token.primary_role,
+        });
       }
       return token;
     },
@@ -177,6 +187,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // Add RBAC fields to session
       session.user.customer_id = token.customer_id;
       session.user.primary_role = token.primary_role;
+
+      // License notices from sign-in (components/LicenseBanner.jsx works out the wording)
+      session.license = token.license ? { notices: token.license.notices || [], company: token.license.company || null } : null;
 
       return session;
     },

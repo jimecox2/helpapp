@@ -3,6 +3,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import './globals.css'
 import { AuthProvider } from '@/auth/components/AuthProvider'
 import AppNavbar from '@/components/AppNavbar'
+import LicenseBanner from '@/components/LicenseBanner'
 import Script from 'next/script'
 import { FRONTEND_URL, BROWSER_CONFIG } from '@/config/site'
 
@@ -50,6 +51,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen bg-gray-50 font-sans antialiased">
         <AuthProvider>
           <AppNavbar />
+          <LicenseBanner />
           <main>{children}</main>
           <ToastContainer />
         </AuthProvider>
