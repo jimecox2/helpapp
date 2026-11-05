@@ -1,22 +1,25 @@
-# Supply & Install Agreement — Fort Frances & Area Wireless Broadband Network
+# Supply & Install Agreement — Town A Wireless Broadband Network
 
-**Between:** Jam21.net ("the Customer")
-**and:** Northern Wireless Inc. ("NWI" / "the Supplier")
-**Date:** July 17, 2026
-**Reference:** NWI-CTR-FF-2026 · Rev 0
-**Relates to:** NWI Proposal NWI-PROP-FF-2026 (issued July 3, 2026)
+**Project Name:** Town A Wireless Broadband Network
+**Document Type:** Contract
+**Between:** Company A ("the Customer")
+**and:** Company B ("the Supplier")
+**Contract Number:** B-CTR-001
+**Version:** Rev 0 — July 17, 2026
+**Relates to:** Company B Proposal B-PROP-001 (issued July 3, 2026)
 
 ---
 
-## 1. Purpose
+## Background Info
 
-NWI shall engineer, supply, install, commission and test a complete fixed-wireless
-broadband network for the Customer serving Fort Frances and the surrounding area, as
-described in the Proposal and detailed in the Schedule of Supply & Pricing (Section 8).
+Company B shall engineer, supply, install, commission and test a complete
+fixed-wireless broadband network for the Customer serving Town A and the surrounding
+area, as described in the Proposal and detailed in the Budget Commentary (Schedule of
+Supply & Pricing) below.
 
-## 2. Scope of Supply
+## Objectives and Scope
 
-NWI's turnkey scope comprises:
+Company B's turnkey scope of supply comprises:
 
 - Engineering and administration (site study, design, drawings, technical manual, procurement).
 - Tower supply, installation, power and lighting.
@@ -28,21 +31,30 @@ NWI's turnkey scope comprises:
 
 The network is designed for **60 Mbps** capacity across up to **8 break-out locations**.
 
-## 3. Customer Responsibilities
+## Key Dependencies
 
 The Customer is responsible for: tower rental; IP address allocation; purchase and
 resale of bandwidth; traffic and usage data collection; subscriber firewalls; per-POP
 battery backup; and providing timely approvals of tower sites, network design and
-procurement orders. NWI provides power conditioning and outage protection on backbone
-equipment and recommended spares.
+procurement orders. Company B provides power conditioning and outage protection on
+backbone equipment and recommended spares.
 
-## 4. Ownership & Handover
+## Implementation Approach
+
+### Ownership and Handover
 
 On completion of commissioning and testing and receipt of final payment, title to all
 supplied equipment passes to the Customer, who thereafter owns and operates the network.
-NWI provides operator training and vendor documentation (hard and soft copy).
+Company B provides operator training and vendor documentation (hard and soft copy).
 
-## 5. Schedule & Milestones
+### Warranty and Support
+
+Company B passes through manufacturer warranties on all supplied equipment and warrants
+its installation workmanship for **12 months** from handover. Recommended spares (power
+supplies, antennas, radios, connectors, cable) are supplied. Remote monitoring is
+standard on all wireless products in this design.
+
+## Schedule Commentary
 
 | Milestone | Target date |
 |---|---|
@@ -56,12 +68,9 @@ NWI provides operator training and vendor documentation (hard and soft copy).
 Dates are confirmed in the project master schedule, agreed by both parties before
 execution. Time is of the essence.
 
-## 6. Contract Price
+## Financial Commentary
 
-The total firm price for the supply and install scope is **CAD $97,500**, exclusive of
-applicable taxes, per the Schedule of Supply & Pricing in Section 8.
-
-## 7. Payment Milestones
+### Payment Milestones
 
 | # | Milestone | % | Amount (CAD) |
 |---|---|---:|---:|
@@ -73,11 +82,18 @@ applicable taxes, per the Schedule of Supply & Pricing in Section 8.
 
 Invoices are due net 15 days from milestone completion.
 
-## 8. Schedule of Supply & Pricing
+## Budget Commentary
+
+### Contract Price
+
+The total firm price for the supply and install scope is **CAD $97,500**, exclusive of
+applicable taxes, per the Schedule of Supply & Pricing below.
+
+### Schedule of Supply & Pricing
 
 All amounts in Canadian dollars, exclusive of applicable taxes.
 
-### 8.1 Engineering & Admin
+#### Engineering & Admin
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -89,7 +105,7 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Procurement time | Days | 2 | $520 | $1,040 |
 | **Subtotal** | | | | **$10,480** |
 
-### 8.2 Tower
+#### Tower
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -98,7 +114,7 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Tower power and lighting | Each | 1 | $1,500 | $1,500 |
 | **Subtotal** | | | | **$17,000** |
 
-### 8.3 Tower POP (Head-End)
+#### Tower POP (Head-End)
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -109,7 +125,7 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Installation of above | Each | 1 | $500 | $500 |
 | **Subtotal** | | | | **$5,500** |
 
-### 8.4 Wireless Backhaul
+#### Wireless Backhaul
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -118,7 +134,7 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Installation both ends | Each | 1 | $600 | $600 |
 | **Subtotal** | | | | **$5,500** |
 
-### 8.5 Core Wired Network
+#### Core Wired Network
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -130,7 +146,7 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Server / network installation | Each | 1 | $2,600 | $2,600 |
 | **Subtotal** | | | | **$19,500** |
 
-### 8.6 Premise Equipment (100 Subscribers)
+#### Premise Equipment (100 Subscribers)
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -140,7 +156,7 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Connectors | Each | 200 | $10 | $2,000 |
 | **Subtotal** | | | | **$31,200** |
 
-### 8.7 Commissioning
+#### Commissioning
 
 | Item | Unit | Qty | Unit Price | Total |
 |---|---|---:|---:|---:|
@@ -148,9 +164,9 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Installed on-site testing | Days | 10 | $520 | $5,200 |
 | **Subtotal** | | | | **$8,320** |
 
-### 8.8 Total
+#### Total
 
-| Section | Total (CAD) |
+| Work package | Total (CAD) |
 |---|---:|
 | Engineering & Admin | $10,480 |
 | Tower | $17,000 |
@@ -161,38 +177,33 @@ All amounts in Canadian dollars, exclusive of applicable taxes.
 | Commissioning | $8,320 |
 | **Total Supply & Install** | **$97,500** |
 
-## 9. Warranty & Support
+## Constraints and Assumptions
 
-NWI passes through manufacturer warranties on all supplied equipment and warrants its
-installation workmanship for **12 months** from handover. Recommended spares (power
-supplies, antennas, radios, connectors, cable) are supplied. Remote monitoring is
-standard on all wireless products in this design.
-
-## 10. Changes
+### Changes
 
 Any change to scope, quantities or pricing is handled by written change order signed by
 both parties before the affected work proceeds.
 
-## 11. General
+### General
 
 Each party is responsible for its own obligations under this Agreement. Matters not
 addressed here — including insurance, liability limits, dispute resolution and governing
 law — are to be settled between the parties' representatives prior to execution. This is
 a mock agreement prepared for illustration and is not a binding legal instrument.
 
-## 12. Acceptance
+## Decisions Required
 
 Accepted and agreed:
 
-**For Jam21.net**
+**For Company A**
 Name: ________________________  Title: ________________  Date: ____________
 Signature: ____________________
 
-**For Northern Wireless Inc.**
-Name: Jim Cox  Title: Project Manager  Date: ____________
+**For Company B**
+Name: Person A  Title: Project Manager  Date: ____________
 Signature: ____________________
 
 ---
 
-*Northern Wireless Inc. — turnkey wireless internet solutions.
+*Company B — turnkey wireless internet solutions.
 Figures are illustrative for planning purposes.*
