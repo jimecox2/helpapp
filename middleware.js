@@ -9,6 +9,7 @@
 //    not /help/ask) and the sign-in pages needs a login.
 //    API routes are not gated here; each one checks its own login (the /api/ai/* routes are also
 //    called by the Timebars apps through their nginx with a Strapi token, not a cookie).
+// 3. Expired license: one redirect to My Orders on www after a sign-in whose license just expired.
 import { NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
@@ -36,6 +37,8 @@ function hostRoute(label) {
 const secureCookie = process.env.NODE_ENV === 'production'
 // Must match cookies.sessionToken.name in app/auth/auth.js.
 const SESSION_COOKIE = `${secureCookie ? '__Secure-' : ''}tbcloud.session-token`
+// Set when the expired-license redirect has been made for this sign-in (step 3).
+const LICENSE_NOTICE_COOKIE = 'tbcloud.license-notice'
 
 function requestHost(req) {
   const raw = req.headers.get('x-forwarded-host') || req.headers.get('host') || ''
@@ -82,6 +85,16 @@ export async function middleware(req) {
     signIn.search = ''
     signIn.searchParams.set('callbackUrl', pathname + search)
     return NextResponse.redirect(signIn)
+  }
+
+  // 3. Expired license: once per sign-in, send the user to My Orders on www (lib/license/signInLicense.js
+  //    decides; only when their own order just expired and nothing live is left). The cookie holds the
+  //    sign-in time, so the next page load lets them in: they can still see and download their pubsets.
+  const lic = token.license
+  if (lic?.redirectTo && req.cookies.get(LICENSE_NOTICE_COOKIE)?.value !== String(lic.at)) {
+    const res = NextResponse.redirect(lic.redirectTo)
+    res.cookies.set(LICENSE_NOTICE_COOKIE, String(lic.at), { httpOnly: true, sameSite: 'lax', secure: secureCookie, path: '/' })
+    return res
   }
   return NextResponse.next()
 }
