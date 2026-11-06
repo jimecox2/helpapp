@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
-import { WWW_URL } from '@/config/site'
 import {
   ChevronDown,
   LayoutDashboard,
@@ -15,9 +13,6 @@ import {
   PieChart,
   Settings,
   Bell,
-  User,
-  LogOut,
-  Home,
   FolderOpen,
   GitCompare,
   Users,
@@ -44,11 +39,11 @@ import {
 
 /**
  * Enterprise Header Component
- * Blue gradient header with logo, dropdown navigation, breadcrumbs, and user profile
+ * Blue gradient header with title, dropdown navigation and breadcrumbs.
+ * The profile menu and Sign Out are in the Cloud nav (components/AppNavbar.jsx), not here.
  */
 const EnterpriseHeader = ({ user, enterprise = false }) => {
   const [openDropdown, setOpenDropdown] = useState(null)
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
   const pathname = usePathname()
 
   const toggleDropdown = (menu) => {
@@ -57,7 +52,6 @@ const EnterpriseHeader = ({ user, enterprise = false }) => {
 
   const closeDropdowns = () => {
     setOpenDropdown(null)
-    setIsUserMenuOpen(false)
   }
 
   // Generate breadcrumbs from pathname
@@ -139,7 +133,7 @@ const EnterpriseHeader = ({ user, enterprise = false }) => {
       {/* Blue Gradient Header */}
       <div className="bg-gradient-to-r from-blue-900 to-blue-700 text-white shadow-lg">
         <div className="container mx-auto px-4">
-          {/* Top Bar with Logo, Navigation, and User Profile */}
+          {/* Top Bar: title (sign-in and profile are in the Cloud nav above) */}
           <div className="flex items-center justify-between py-3">
             {/* Title */}
             <Link href="/dashboard" className="flex items-center" onClick={closeDropdowns}>
@@ -151,56 +145,6 @@ const EnterpriseHeader = ({ user, enterprise = false }) => {
               </div>
             </Link>
 
-            {/* User Profile Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => {
-                  setIsUserMenuOpen(!isUserMenuOpen)
-                  setOpenDropdown(null)
-                }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
-              >
-                <User className="w-5 h-5" />
-                <span className="hidden md:inline">{user?.name || user?.email}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {/* User Menu Dropdown */}
-              {isUserMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-50 py-2">
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
-                    <p className="text-xs text-gray-500 truncate">{user?.email}</p>
-                  </div>
-
-                  <Link
-                    href={`${WWW_URL}/auth/yourprofile`}
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    onClick={closeDropdowns}
-                  >
-                    <User className="w-4 h-4" />
-                    Your Profile
-                  </Link>
-
-                  <Link
-                    href="/"
-                    className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    onClick={closeDropdowns}
-                  >
-                    <Home className="w-4 h-4" />
-                    Cloud Home
-                  </Link>
-
-                  <button
-                    onClick={() => signOut({ callbackUrl: '/' })}
-                    className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Navigation Dropdowns */}
@@ -266,7 +210,7 @@ const EnterpriseHeader = ({ user, enterprise = false }) => {
       </div>
 
       {/* Click outside to close dropdowns */}
-      {(openDropdown || isUserMenuOpen) && (
+      {openDropdown && (
         <div
           className="fixed inset-0 z-40"
           onClick={closeDropdowns}
