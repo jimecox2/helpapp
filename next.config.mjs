@@ -19,6 +19,8 @@ const nextConfig = {
       { source: '/personaldashboard/:path*', destination: '/dashboard', permanent: true },
       { source: '/tbgenerator', destination: '/help/ask?tool=generator', permanent: true },
       { source: '/aitemp', destination: '/help/ask?tool=byguide', permanent: true },
+      // Users & Roles was /admin/dashboardusers on www; www forwards /admin/* here with the same path
+      { source: '/admin/dashboardusers', destination: '/admin/users', permanent: true },
     ]
   },
 
