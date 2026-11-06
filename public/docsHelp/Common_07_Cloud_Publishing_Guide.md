@@ -145,6 +145,18 @@ The blue navigation bar at the top of the publishing page provides quick actions
 
 After logging in, your pubsets are displayed in two views:
 
+### Pubsets Are by Product
+
+Each pubset is tagged with the product that published it (Agilebars, Timebars or Costbars).
+The Publishing page in each app shows only the pubsets of **that app's product**: Agilebars
+lists Agilebars pubsets, Timebars lists Timebars pubsets, and so on. This applies to the
+Pubsets tabs, **Bulk Update** and **Re-Publish**.
+
+- A pubset with no product tag is not listed anywhere in the apps. Contact support to have it tagged.
+- **Timebars Cloud** (cloud.timebars.com) is the one place that shows your pubsets of every product together.
+- An Administrator who bulk updates or re-publishes for the whole customer logs in to each product in turn.
+- The master resource pool link (a Timebars pubset using a Costbars master pool) is not affected.
+
 ### Card View
 
 - Shows each pubset as a card with its name and action buttons
@@ -292,6 +304,27 @@ Each cloud login re-reads your license and tops your pubsets up to the number it
 Pubsets are never deleted automatically — after a downgrade you keep the ones you have.
 Only the person who purchased the license gets pubsets created; team members see the
 pubsets shared with them. After activation, your PubSets are permanent until you manually clear them.
+
+### When Your License Expires
+
+A license is good to the **end** of its expiry date, then has **7 days of grace**:
+
+| Stage | What happens |
+|-------|--------------|
+| **Active** | Everything works |
+| **Grace** (7 days after the expiry date) | Everything still works, publishing included. An orange message at login, in the top menu and when you publish gives the date publishing stops |
+| **Expired** (after the grace period) | The app keeps working on this device with the same limits, and you can still download your pubsets. Writes to the Cloud and OpenProject are blocked: **Publish**, **Bulk Update**, **Re-Publish**, **Is MP / Use MP** and the **OpenProject** tab. The top menu says the license expired, with a link to **My Orders** |
+
+In **Timebars Cloud**, an expired license is handled when you sign in:
+
+- Your expired order is set inactive, and you are sent once to **My Orders** at www.timebars.com to renew.
+  After that you can keep using the Cloud and download your own pubsets.
+- An expired Tier-3 license no longer gives the Enterprise pages (for example Dashboard Sources).
+- Team members with no order of their own follow their company's Administrator. When that license
+  expires they see *"Your company's license expired, contact your administrator."* and are not redirected.
+
+To renew, buy a new order or make another order active on **My Orders**. Renewing early adds the new
+months to the end of your current license. Log in again so the app downloads the new license.
 
 ### Viewing Your License
 
@@ -653,6 +686,8 @@ tbResources, matched by the login email).
 | **Administrator** (shown in red) | **Every** pubset for the administrator's Customer ID, whoever owns it, plus the administrator's own — so one person can bulk update and re-publish for the whole customer |
 | Anyone else | Only the pubsets you own |
 
+Only pubsets of the product you are logged in to are loaded (see *Pubsets Are by Product* in section 5).
+
 The **Published Since** date narrows either list. Each loaded pubset shows its owner.
 An Administrator's changes are written to each pubset in place — the owner does not change.
 
@@ -890,6 +925,8 @@ Device A:
 | Data not in dashboard | Ensure you published to the **active** pubset (blue highlight) |
 | Re-Hydrate fails | Check "Last Published" date on pubset — if empty, pubset has no data |
 | "No pubsets found" (Bulk Update) | Adjust or clear the Published Since date filter |
+| A pubset is missing from the list | It belongs to another product, or has no product tag — see *Pubsets Are by Product* in section 5 |
+| Publish, Bulk Update or OpenProject does nothing and a red message appears | The license is past its grace period — renew on My Orders (section 9) |
 | Field Name dropdown empty (Bulk Update) | Ensure local tbTags store has definitions with matching tbTagTbInternalName prefix |
 | Pubset is empty (Re-Publish) | Pubset has been cleared — publish data to it first |
 | OpenProject run does nothing | Run **Test Connection** first; check the OpenProject URL field (`apOpUrl`) |

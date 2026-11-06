@@ -55,6 +55,12 @@ if you are still deciding which product fits your work.
 resources are untouched by the upgrade — you log in, the license downloads automatically,
 and you carry on with a larger allowance.
 
+**When a subscription ends:** a license is good to the end of its expiry date, then has
+7 days of grace in which everything still works and you are reminded. After that the app
+keeps working on your device, but publishing to the Cloud, Bulk Update, Re-Publish, the master
+resource pool and OpenProject sync stop until you renew on **My Orders** at www.timebars.com.
+Details: [When Your License Expires](Common_07_Cloud_Publishing_Guide.md#when-your-license-expires).
+
 The rest of this guide assumes you have the app open, and turns to the harder question:
 getting your data in.
 
