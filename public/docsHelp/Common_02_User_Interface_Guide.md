@@ -245,7 +245,7 @@ The population of demo data includes not only project data but all the seed data
 
 
 ### Top Menu and the Main Menu
-The top menu shows the product icon and name, import and export arrows, bar refresh icon, shopping cart icon and login icon. In the middle of the top menu is the currently logged in user, if the license is invalid or not downloaded yet it will show license status instead.
+The top menu shows the product icon and name, import and export arrows, bar refresh icon, shopping cart icon and login icon. In the middle of the top menu is the currently logged in user, if the license is invalid or not downloaded yet it will show license status instead. The second line shows your email, then **Cust ID** (your customer id, which keeps your company's pubsets and users apart from every other customer's), then whether the Cloud is connected. Once a license is past its expiry date the top menu says so, with a link to **My Orders** (see [When Your License Expires](Common_07_Cloud_Publishing_Guide.md#when-your-license-expires)).
 
 The Main Menu is a row of icons for launching core functionality of the application, an explanation of each follows within the Core Product Functionality section.
 
