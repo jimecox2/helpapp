@@ -640,5 +640,8 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   own order just expired and no live license is left. Expired users can still use the Cloud and download pubsets.
 - Team members with no orders follow their company: the Administrators of the same customer id (read with
   `STRAPI_ADMIN_TOKEN`). They get "Your company's license expired, contact your administrator", no redirect.
+- Orders are never written with the user's login (Jim, 14 Nov 2026): the Strapi Authenticated role has no create /
+  update / delete on Order. The sign-in expiry above sets orders inactive with `STRAPI_ADMIN_TOKEN`; orders are made
+  on tbwww (Enterprise contracts and seat orders: tbwww `lib/orders/seatRules.js`).
 - `components/LicenseBanner.jsx` (root layout) shows the notices. Tests: `npm run test:license`, and after a build
   `npm run test:license:app`.
