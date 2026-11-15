@@ -38,7 +38,14 @@ const NAV = [
       { label: 'Notification Control Panel', href: '/admin', adminOnly: true },
     ],
   },
-  { label: 'Users & Roles', href: '/admin/users', adminOnly: true },
+  {
+    label: 'Users & Roles',
+    adminOnly: true,
+    children: [
+      { label: 'Users & Roles', href: '/admin/users', adminOnly: true },
+      { label: 'Licences & Accounts', href: '/admin/licences', adminOnly: true },
+    ],
+  },
 ]
 
 
@@ -159,6 +166,7 @@ export default function AppNavbar() {
                     <p className="truncate border-b px-4 py-2 text-xs text-gray-500">{session.user?.email}</p>
                     <a href={`${WWW_URL}/auth/yourprofile`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
                     <a href={`${WWW_URL}/sales/myorders`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders &amp; License</a>
+                    <Link href="/account/password" onClick={closeAll} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Change Password</Link>
                     <a href={`${WWW_URL}/auth/password-forgot`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reset Password</a>
                     <button
                       onClick={() => signOut({ callbackUrl: '/' })}

@@ -645,3 +645,22 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   on tbwww (Enterprise contracts and seat orders: tbwww `lib/orders/seatRules.js`).
 - `components/LicenseBanner.jsx` (root layout) shows the notices. Tests: `npm run test:license`, and after a build
   `npm run test:license:app`.
+
+## Self-managed licences: Licences & Accounts (Phase 3, Jim, 15 Nov 2026)
+
+- `/admin/licences` (`app/admin/licences/`, rules `lib/licence/selfManaged.js`, test `npm run test:licences`). Same
+  records as tbwww's Enterprise seats: organisation, contract order with `seats` (its Administrator's own seat
+  included), free seat orders. tbrunp and the helpapp licence checks read them unchanged.
+- `LICENSING_MODE` (`.env.local`): `sales` (default) or `self-managed`. A licence manager (self-managed, email in
+  `LICENCE_MANAGERS`, Strapi `primary_role` Administrator) sets up companies (new Administrator accounts get a
+  one-time password) and contracts with `total` 0 and `checkout_session` `self-managed`; a second save of the same
+  product changes seats and date (never fewer than in use) and moves the seat orders' dates.
+- A company's Administrator (both modes): accounts from the resource pool (`lib/licence/parsePool.js`, Human rows
+  with an email; existing accounts move in only from their own individual organisation when alone), seats on and
+  off, a new one-time password. The pool's Administrator role is never given (one Administrator per organisation).
+  One-time passwords are shown once and never stored.
+- `/account/password`: Change password through Strapi `/auth/change-password` with the user's own login (the
+  Authenticated role needs `changePassword`). No email needed.
+- Copies of tbwww, kept the same (only import paths differ): `lib/org/orgRules.js`, `lib/orders/seatRules.js`,
+  `lib/orders/seatPrice.js`, `lib/orders/licenseOrders.js` (tbwww `lib/licenseOrders.js`), `lib/strapiAdmin.js`,
+  `tests/fakeStrapi.mjs`. All writes use `STRAPI_ADMIN_TOKEN` on the server.

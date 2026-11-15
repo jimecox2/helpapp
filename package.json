@@ -16,7 +16,8 @@
     "test:tier": "node --no-warnings tests/license-tier.mjs",
     "test:pubsets": "node --no-warnings tests/pubset-list-query.mjs",
     "test:license": "node --no-warnings tests/license-expiry.mjs && node --no-warnings tests/license-signin.mjs",
-    "test:license:app": "node --no-warnings tests/license-redirect.mjs"
+    "test:license:app": "node --no-warnings tests/license-redirect.mjs",
+    "test:licences": "node --no-warnings tests/licence-self-managed.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.12",

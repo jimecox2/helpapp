@@ -16,7 +16,7 @@ export default async function UsersPage() {
       <h1 className="text-3xl font-extrabold text-gray-900">Users &amp; Roles</h1>
       <p className="text-gray-600 mt-2 mb-6">
         Everyone in your organisation who has a Timebars Cloud account, and the role that decides which
-        pubsets and dashboards they can see. New people register at timebars.com first.
+        pubsets and dashboards they can see. New people register at timebars.com, or you make their accounts on Licences &amp; Accounts.
       </p>
       <UsersAndRoles />
     </div>
