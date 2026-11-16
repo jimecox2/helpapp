@@ -7,6 +7,7 @@ import {
 } from '../lib/licence/selfManaged.js'
 import { createOrganisation } from '../lib/org/orgRules.js'
 import { fakeStrapi as baseFake } from './fakeStrapi.mjs'
+import { parsePool } from '../lib/licence/parsePool.js'
 
 // The tbwww fake plus the users-permissions list / create calls this file makes.
 function fakeStrapi() {
@@ -95,7 +96,7 @@ await t('manager: changing a contract keeps at least the seats in use and moves 
   const r = await setUpOrganisation(strapi, { name: 'Acme', adminEmail: 'boss@acme.com' })
   const c = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 3, expiresOn: '2027-06-30' }, NOW)
   const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
-  await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com' }, { email: 'b@acme.com' }], contractIds: [c.contract.id], apply: true }, NOW)
+  await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com', contractId: c.contract.id }, { email: 'b@acme.com', contractId: c.contract.id }], apply: true }, NOW)
   assert.match((await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 2, expiresOn: '2027-06-30' }, NOW)).error, /already uses 3/)
   const ch = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 10, expiresOn: '2028-01-31' }, NOW)
   assert.equal(ch.changed, true)
@@ -119,12 +120,13 @@ await t('administrator: accounts from the pool get one-time passwords and seats 
     { email: 'new2@acme.com' },
     { email: 'NEW1@acme.com' }, { email: 'boss@acme.com' }, { email: 'not an email' },
   ]
-  const preview = await accountsFromPool(strapi, admin.id, { rows, contractIds: [c.contract.id] }, NOW)
+  const preview = await accountsFromPool(strapi, admin.id, { rows }, NOW)
   assert.deepEqual(preview.rows.map(x => [x.email, x.status]), [['new1@acme.com', 'new'], ['u1@x.com', 'join'], ['u2@x.com', 'other'], ['new2@acme.com', 'new']])
+  assert.equal(preview.defaultContractId, c.contract.id)
   assert.match(preview.rows[1].roleNote, /one Administrator/)
   assert.equal(db.users.size, 4) // nothing made yet
 
-  const done = await accountsFromPool(strapi, admin.id, { rows, contractIds: [c.contract.id], apply: true }, NOW)
+  const done = await accountsFromPool(strapi, admin.id, { rows: rows.map(x => ({ ...x, contractId: c.contract.id })), apply: true }, NOW)
   assert.equal(done.ok, true, done.error)
   const by = Object.fromEntries(done.rows.map(x => [x.email, x]))
   assert.equal(by['new1@acme.com'].status, 'created')
@@ -132,7 +134,8 @@ await t('administrator: accounts from the pool get one-time passwords and seats 
   assert.deepEqual(by['new1@acme.com'].seats, ['TBT03'])
   assert.deepEqual([by['u1@x.com'].status, by['u1@x.com'].password, by['u1@x.com'].seats], ['moved in', null, ['TBT03']])
   assert.equal(by['u2@x.com'].status, 'other')
-  assert.deepEqual(by['new2@acme.com'].noSeat, ['TBT03']) // 3 seats: boss + 2
+  assert.deepEqual([by['new2@acme.com'].status, by['new2@acme.com'].noSeat, by['new2@acme.com'].password], ['skipped', ['TBT03'], null]) // 3 seats: boss + 2
+  assert.equal([...db.users.values()].some(u => u.email === 'new2@acme.com'), false) // no account without a seat
   const n1 = [...db.users.values()].find(u => u.email === 'new1@acme.com')
   assert.deepEqual([n1.username, n1.customer_id, n1.primary_role, n1.confirmed], ['New One', r.organisation.customerId, 'Project Manager', true])
   assert.equal(db.users.get(1).primary_role, '')
@@ -141,7 +144,7 @@ await t('administrator: accounts from the pool get one-time passwords and seats 
 
   const view = await companyOverview(strapi, admin.id, NOW)
   assert.deepEqual([view.contracts[0].used, view.contracts[0].free], [3, 0])
-  assert.deepEqual(view.members.find(m => m.email === 'new2@acme.com').seats, [])
+  assert.equal(view.members.some(m => m.email === 'new2@acme.com'), false)
 })
 
 await t('administrator: seats on and off, one-time password; only for their own company', async () => {
@@ -149,12 +152,13 @@ await t('administrator: seats on and off, one-time password; only for their own 
   const r = await setUpOrganisation(strapi, { name: 'Acme', adminEmail: 'boss@acme.com' })
   const c = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 2, expiresOn: '2027-11-15' }, NOW)
   const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
-  await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com' }], contractIds: [], apply: true }, NOW)
+  await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com', contractId: c.contract.id }], apply: true }, NOW)
   const a = [...db.users.values()].find(u => u.email === 'a@acme.com')
-  assert.equal((await setSeat(strapi, admin.id, { userId: a.id, contractId: c.contract.id, on: true }, NOW)).ok, true)
   assert.equal(seatOrders(db, c.contract.id).length, 1)
   assert.equal((await setSeat(strapi, admin.id, { userId: a.id, contractId: c.contract.id, on: false }, NOW)).ok, true)
   assert.equal(seatOrders(db, c.contract.id).length, 0)
+  assert.equal((await setSeat(strapi, admin.id, { userId: a.id, contractId: c.contract.id, on: true }, NOW)).ok, true)
+  assert.equal(seatOrders(db, c.contract.id).length, 1)
   assert.match((await setSeat(strapi, admin.id, { userId: admin.id, contractId: c.contract.id, on: false }, NOW)).error, /own licence/)
 
   const pw = await newOneTimePassword(strapi, admin.id, a.id)
@@ -165,6 +169,40 @@ await t('administrator: seats on and off, one-time password; only for their own 
   assert.match((await newOneTimePassword(strapi, admin.id, 7)).error, /not in your organisation/)
   assert.match((await companyOverview(strapi, a.id, NOW)).error, /Only the Administrator/)
   assert.match((await accountsFromPool(strapi, a.id, { rows: [] }, NOW)).error, /Only the Administrator/)
+})
+await t('import: needs a live contract; one licence each, TBT03 by default, switchable; skip', async () => {
+  const { strapi, db } = fakeStrapi()
+  const r = await setUpOrganisation(strapi, { name: 'Acme', adminEmail: 'boss@acme.com' })
+  const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
+  assert.match((await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com' }] }, NOW)).error, /no live Enterprise contract/)
+  const cb = await saveContract(strapi, { orgId: r.organisation.id, productId: 8, seats: 3, expiresOn: '2027-11-15' }, NOW)
+  const tb = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 3, expiresOn: '2027-11-15' }, NOW)
+  const rows = [{ email: 'a@acme.com' }, { email: 'b@acme.com' }, { email: 'c@acme.com' }]
+  const preview = await accountsFromPool(strapi, admin.id, { rows }, NOW)
+  assert.equal(preview.defaultContractId, tb.contract.id)
+  assert.deepEqual(preview.rows.map(x => x.contractId), [tb.contract.id, tb.contract.id, tb.contract.id])
+  const done = await accountsFromPool(strapi, admin.id, { rows: [
+    { email: 'a@acme.com', contractId: tb.contract.id },
+    { email: 'b@acme.com', contractId: cb.contract.id },
+    { email: 'c@acme.com', contractId: '' },
+  ], apply: true }, NOW)
+  assert.deepEqual(done.rows.map(x => [x.email, x.status, x.seats]), [['a@acme.com', 'created', ['TBT03']], ['b@acme.com', 'created', ['CBT03']], ['c@acme.com', 'skipped', []]])
+  assert.equal([...db.users.values()].some(u => u.email === 'c@acme.com'), false)
+  assert.match((await accountsFromPool(strapi, admin.id, { rows: [{ email: 'd@acme.com', contractId: 999 }], apply: true }, NOW)).error, /no longer live/)
+})
+
+await t('parsePool: tbResources.json, a backup and a tbrunp tbResources.js data file', () => {
+  const pool = { tbResources: [
+    { tbResName: 'Ann', tbResEmail: 'ann@x.com', tbResPrimaryRole: 'PM', tbResLabourType: 'Human' },
+    { tbResName: 'Room', tbResEmail: 'room@x.com', tbResLabourType: 'Generic' },
+    { tbResName: 'No mail "quoted } brace"', tbResEmail: '' },
+  ] }
+  const expected = [{ email: 'ann@x.com', name: 'Ann', role: 'PM' }]
+  assert.deepEqual(parsePool(JSON.stringify(pool)), expected)
+  assert.deepEqual(parsePool(JSON.stringify({ tbAdminPanel: [], ...pool })), expected)
+  const js = `export function gettbResourcesDemoDataCore() {\n    const jdata =\n${JSON.stringify(pool)}\n    return jdata\n}\n`
+  assert.deepEqual(parsePool(js), expected)
+  assert.throws(() => parsePool('export const x = 1'), /No tbResources/)
 })
 
 console.log(failed ? `\n${failed} failed` : '\nall passed')

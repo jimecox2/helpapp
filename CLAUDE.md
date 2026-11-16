@@ -655,9 +655,12 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   `LICENCE_MANAGERS`, Strapi `primary_role` Administrator) sets up companies (new Administrator accounts get a
   one-time password) and contracts with `total` 0 and `checkout_session` `self-managed`; a second save of the same
   product changes seats and date (never fewer than in use) and moves the seat orders' dates.
-- A company's Administrator (both modes): accounts from the resource pool (`lib/licence/parsePool.js`, Human rows
-  with an email; existing accounts move in only from their own individual organisation when alone), seats on and
-  off, a new one-time password. The pool's Administrator role is never given (one Administrator per organisation).
+- A company's Administrator (both modes): accounts from the resource pool (`lib/licence/parsePool.js`: a backup,
+  tbResources.json, a tbrunp tbResources.js data file or a CSV; Human rows with an email; existing accounts move in
+  only from their own individual organisation when alone). Import needs a live contract: each person gets one
+  licence (TBT03 by default, `defaultContract()`, changeable per row or Skip) and nobody gets an account without a
+  seat (Jim, 16 Nov 2026). The people table has a seat checkbox per product (a person may hold several licences);
+  a new one-time password. The pool's Administrator role is never given (one Administrator per organisation).
   One-time passwords are shown once and never stored.
 - `/account/password`: Change password through Strapi `/auth/change-password` with the user's own login (the
   Authenticated role needs `changePassword`). No email needed.

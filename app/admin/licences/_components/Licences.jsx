@@ -24,6 +24,7 @@ const STATUS = {
   created: ['Created', 'bg-green-100 text-green-800'],
   'moved in': ['Moved in', 'bg-green-100 text-green-800'],
   'already in': ['Already in', 'bg-gray-100 text-gray-700'],
+  skipped: ['Skipped', 'bg-yellow-100 text-yellow-800'],
 }
 const Status = ({ s }) => { const [label, cls] = STATUS[s] || [s, 'bg-gray-100']; return <span className={`rounded px-2 py-0.5 text-xs ${cls}`}>{label}</span> }
 
@@ -183,7 +184,7 @@ function Company({ company, reload }) {
   const { organisation: org, contracts, members } = company
   const [busy, setBusy] = useState('')
   const [password, setPassword] = useState(null)
-  const [pool, setPool] = useState(null) // { rows, picked: Set(email), contracts: Set(id) }
+  const [pool, setPool] = useState(null) // { rows, choice: { email: contractId | '' } }
   const [result, setResult] = useState(null)
 
   const seat = async (m, c, on) => {
@@ -212,29 +213,24 @@ function Company({ company, reload }) {
     try {
       const rows = parsePool(await file.text())
       if (!rows.length) throw new Error('No Human resources with an email in that file.')
-      const r = await accountsFromPoolAction({ rows, contractIds: [] })
+      const r = await accountsFromPoolAction({ rows })
       if (!r?.ok) throw new Error(r?.error || 'Could not read the accounts.')
-      setPool({
-        source: rows,
-        rows: r.rows,
-        picked: new Set(r.rows.filter(x => x.status !== 'other').map(x => x.email)),
-        contracts: new Set(contracts.map(c => c.id)),
-      })
+      // Each person's licence: the default (TBT03 when live), or nothing when they already hold one or are elsewhere.
+      const choice = Object.fromEntries(r.rows.map(x => [x.email,
+        x.status === 'other' ? '' : x.has.length ? String(x.has[0]) : String(r.defaultContractId)]))
+      setPool({ rows: r.rows, choice })
     } catch (err) {
       toast.error(err.message)
       setPool(null)
     } finally { setBusy('') }
   }
-  const toggle = (key, value) => setPool(p => {
-    const next = new Set(p[key])
-    next.has(value) ? next.delete(value) : next.add(value)
-    return { ...p, [key]: next }
-  })
+  const choose = (email, contractId) => setPool(p => ({ ...p, choice: { ...p.choice, [email]: contractId } }))
   const apply = async () => {
     setBusy('apply')
     try {
-      const rows = pool.source.filter(r => pool.picked.has(r.email.trim().toLowerCase()))
-      const r = await accountsFromPoolAction({ rows, contractIds: [...pool.contracts], apply: true })
+      const rows = pool.rows.filter(r => r.status !== 'other' && pool.choice[r.email])
+        .map(r => ({ email: r.email, name: r.name, role: r.role, contractId: pool.choice[r.email] }))
+      const r = await accountsFromPoolAction({ rows, apply: true })
       if (!r?.ok) { toast.error(r?.error || 'Could not make the accounts.'); return }
       setResult(r.rows)
       setPool(null)
@@ -242,8 +238,20 @@ function Company({ company, reload }) {
     } finally { setBusy('') }
   }
 
-  const picked = pool ? pool.rows.filter(r => pool.picked.has(r.email) && r.status !== 'other').length : 0
-  const freeTotal = c => c.free
+  // Seats each licence would use, row by row in file order: a row past the free seats is flagged before apply.
+  const plan = (() => {
+    if (!pool) return { left: {}, over: new Set(), count: 0 }
+    const left = Object.fromEntries(contracts.map(c => [String(c.id), c.free]))
+    const over = new Set()
+    let count = 0
+    for (const r of pool.rows) {
+      const id = pool.choice[r.email]
+      if (r.status === 'other' || !id) continue
+      if (r.has.map(String).includes(id)) { count++; continue }
+      if (left[id] > 0) { left[id]--; count++ } else over.add(r.email)
+    }
+    return { left, over, count }
+  })()
 
   return (
     <>
@@ -308,50 +316,55 @@ function Company({ company, reload }) {
         <CardHeader>
           <CardTitle>Accounts from the resource pool</CardTitle>
           <CardDescription>
-            Upload a backup from Timebars, Agilebars or Costbars (Start → Data Actions → Make Backup), a tbResources.json, or a CSV with
-            {' '}<code>tbResEmail</code>, <code>tbResName</code> and <code>tbResPrimaryRole</code> columns. Each Human resource with an email
-            gets an account in {org.name} with a one-time password, and a seat in the contracts you tick, until seats run out. You see the
-            list before anything is made.
+            Upload a backup from Timebars, Agilebars or Costbars (Start → Data Actions → Make Backup), a tbResources.json or
+            tbResources.js, or a CSV with <code>tbResEmail</code>, <code>tbResName</code> and <code>tbResPrimaryRole</code> columns. Each Human
+            resource with an email gets an account in {org.name} with a one-time password and a seat of the licence you choose for them
+            (TBT03 by default). Nobody gets an account without a seat. You see the list before anything is made.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50">
-            <Upload className="h-4 w-4" /> Choose file
-            <input type="file" accept=".js,.json,.csv" onChange={onFile} className="hidden" />
-          </label>
+          {contracts.length === 0
+            ? <p className="rounded border border-yellow-300 bg-yellow-50 p-3 text-sm text-yellow-900">Import needs a live Enterprise contract: every person imported takes one of its seats.</p>
+            : (
+              <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50">
+                <Upload className="h-4 w-4" /> Choose file
+                <input type="file" accept=".js,.json,.csv" onChange={onFile} className="hidden" />
+              </label>
+            )}
           {busy === 'pool' && <p className="flex items-center gap-2 text-sm text-gray-600"><Loader2 className="h-4 w-4 animate-spin" /> Checking accounts…</p>}
 
           {pool && (
             <>
-              <div className="flex flex-wrap gap-4 text-sm">
-                <span className="text-gray-600">Give seats in:</span>
-                {contracts.map(c => (
-                  <label key={c.id} className="flex items-center gap-1">
-                    <input type="checkbox" checked={pool.contracts.has(c.id)} onChange={() => toggle('contracts', c.id)} /> {c.productName} ({freeTotal(c)} free)
-                  </label>
-                ))}
-                {contracts.length === 0 && <span className="text-gray-500">no live contract, accounts only</span>}
-              </div>
+              <p className="flex flex-wrap gap-4 text-sm text-gray-700">
+                Seats left after this import:
+                {contracts.map(c => <span key={c.id}><b>{c.productCode}</b> {plan.left[String(c.id)]} of {c.free} free</span>)}
+              </p>
               <table className="w-full text-sm">
                 <thead className="text-left text-gray-500 border-b">
-                  <tr><th className="py-2 pr-2"></th><th className="py-2 pr-4">Email</th><th className="py-2 pr-4">Name</th><th className="py-2 pr-4">Role</th><th className="py-2">What happens</th></tr>
+                  <tr><th className="py-2 pr-4">Email</th><th className="py-2 pr-4">Name</th><th className="py-2 pr-4">Role</th><th className="py-2 pr-4">Licence</th><th className="py-2">What happens</th></tr>
                 </thead>
                 <tbody>
                   {pool.rows.map(r => (
                     <tr key={r.email} className="border-b last:border-0">
-                      <td className="py-1 pr-2">
-                        <input type="checkbox" aria-label={`Include ${r.email}`} disabled={r.status === 'other'} checked={r.status !== 'other' && pool.picked.has(r.email)} onChange={() => toggle('picked', r.email)} />
-                      </td>
                       <td className="py-1 pr-4">{r.email}</td>
                       <td className="py-1 pr-4">{r.name || '—'}</td>
                       <td className="py-1 pr-4">{r.role || '—'}{r.roleNote && <div className="text-xs text-gray-500">{r.roleNote}</div>}</td>
+                      <td className="py-1 pr-4">
+                        {r.status === 'other' ? '—' : (
+                          <select aria-label={`Licence for ${r.email}`} className={input} value={pool.choice[r.email]} onChange={e => choose(r.email, e.target.value)}>
+                            {contracts.map(c => <option key={c.id} value={String(c.id)}>{c.productCode}{r.has.includes(c.id) ? ' (has it)' : ''}</option>)}
+                            <option value="">Skip</option>
+                          </select>
+                        )}
+                        {plan.over.has(r.email) && <div className="text-xs text-red-700">No free seat: skipped</div>}
+                      </td>
                       <td className="py-1"><Status s={r.status} />{r.note && <span className="ml-2 text-xs text-gray-500">{r.note}</span>}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <Button onClick={apply} disabled={!!busy || picked === 0}>
-                {busy === 'apply' ? 'Please wait…' : `Make accounts and seats for ${picked} ${picked === 1 ? 'person' : 'people'}`}
+              <Button onClick={apply} disabled={!!busy || plan.count === 0}>
+                {busy === 'apply' ? 'Please wait…' : `Make accounts and seats for ${plan.count} ${plan.count === 1 ? 'person' : 'people'}`}
               </Button>
             </>
           )}
@@ -372,7 +385,7 @@ function Company({ company, reload }) {
                       <td className="py-1 pr-4">{r.email}</td>
                       <td className="py-1 pr-4"><Status s={r.status} />{r.note && <span className="ml-2 text-xs text-gray-600">{r.note}</span>}</td>
                       <td className="py-1 pr-4 font-mono">{r.password || '—'}</td>
-                      <td className="py-1">{r.seats?.join(', ') || '—'}{r.noSeat?.length ? <span className="ml-2 text-xs text-red-700">no free seat: {r.noSeat.join(', ')}</span> : null}</td>
+                      <td className="py-1">{r.seats?.join(', ') || '—'}{r.noSeat?.length ? <span className="ml-2 text-xs text-red-700">no free {r.noSeat.join(', ')} seat, no account made</span> : null}</td>
                     </tr>
                   ))}
                 </tbody>
