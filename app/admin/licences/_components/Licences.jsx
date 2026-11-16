@@ -25,6 +25,7 @@ const STATUS = {
   'moved in': ['Moved in', 'bg-green-100 text-green-800'],
   'already in': ['Already in', 'bg-gray-100 text-gray-700'],
   skipped: ['Skipped', 'bg-yellow-100 text-yellow-800'],
+  failed: ['Failed', 'bg-red-100 text-red-800'],
 }
 const Status = ({ s }) => { const [label, cls] = STATUS[s] || [s, 'bg-gray-100']; return <span className={`rounded px-2 py-0.5 text-xs ${cls}`}>{label}</span> }
 
@@ -383,7 +384,7 @@ function Company({ company, reload }) {
                   {result.map(r => (
                     <tr key={r.email} className="border-b last:border-0">
                       <td className="py-1 pr-4">{r.email}</td>
-                      <td className="py-1 pr-4"><Status s={r.status} />{r.note && <span className="ml-2 text-xs text-gray-600">{r.note}</span>}</td>
+                      <td className="py-1 pr-4"><Status s={r.status} />{r.note && <span className="ml-2 text-xs text-gray-600">{r.note}</span>}{r.error && <div className="text-xs text-red-700">{r.error}</div>}</td>
                       <td className="py-1 pr-4 font-mono">{r.password || '—'}</td>
                       <td className="py-1">{r.seats?.join(', ') || '—'}{r.noSeat?.length ? <span className="ml-2 text-xs text-red-700">no free {r.noSeat.join(', ')} seat, no account made</span> : null}</td>
                     </tr>

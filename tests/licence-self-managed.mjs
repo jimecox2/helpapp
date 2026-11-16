@@ -21,13 +21,21 @@ function fakeStrapi() {
     if (url.pathname === '/users' && method === 'POST') {
       const b = JSON.parse(init.body)
       const all = [...db.users.values()]
+      // Like Strapi 4.14: role is required; a taken username is not checked when an email is sent.
+      if (b.role == null) throw Object.assign(new Error('Strapi 400 on /users: role must be a defined value'), { status: 400 })
+      if (f.failEmail && b.email === f.failEmail) throw Object.assign(new Error('Strapi 500 on /users: boom'), { status: 500 })
       if (all.some(u => u.email === b.email)) throw Object.assign(new Error('Strapi 400: Email already taken'), { status: 400 })
       if (all.some(u => u.username === b.username)) throw Object.assign(new Error('Strapi 400: Username already taken'), { status: 400 })
       const u = { id: nextUser++, customer_id: null, primary_role: null, organisation: null, ...b }
       db.users.set(u.id, u)
       return { ...u }
     }
+    if (url.pathname === '/users-permissions/roles') {
+      return { roles: [{ id: 1, name: 'Authenticated', type: 'authenticated' }, { id: 2, name: 'Public', type: 'public' }] }
+    }
     if (url.pathname === '/users' && method === 'GET') {
+      const uname = url.searchParams.get('filters[username][$eqi]')
+      if (uname != null) return [...db.users.values()].filter(u => String(u.username).toLowerCase() === uname.toLowerCase())
       const email = url.searchParams.get('filters[email][$eqi]')
       const org = url.searchParams.get('filters[organisation][id][$eq]')
       return [...db.users.values()]
@@ -145,6 +153,26 @@ await t('administrator: accounts from the pool get one-time passwords and seats 
   const view = await companyOverview(strapi, admin.id, NOW)
   assert.deepEqual([view.contracts[0].used, view.contracts[0].free], [3, 0])
   assert.equal(view.members.some(m => m.email === 'new2@acme.com'), false)
+})
+
+await t('import: new accounts get the Authenticated role; a taken name falls back to the email; one failure does not stop the rest', async () => {
+  const f = fakeStrapi()
+  const { strapi, db } = f
+  const r = await setUpOrganisation(strapi, { name: 'Acme', adminEmail: 'boss@acme.com', adminName: 'Joe' })
+  const c = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 5, expiresOn: '2027-11-15' }, NOW)
+  const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
+  assert.equal(admin.role, 1)
+  f.failEmail = 'bad@acme.com'
+  const rows = [{ email: 'joe@rlan.ca', name: 'Joe' }, { email: 'bad@acme.com', name: 'Bad' }, { email: 'ann@acme.com', name: 'Ann' }]
+  const done = await accountsFromPool(strapi, admin.id, { rows: rows.map(x => ({ ...x, contractId: c.contract.id })), apply: true }, NOW)
+  assert.equal(done.ok, true, done.error)
+  const by = Object.fromEntries(done.rows.map(x => [x.email, x]))
+  assert.deepEqual([by['joe@rlan.ca'].status, !!by['joe@rlan.ca'].password], ['created', true])
+  assert.deepEqual([by['bad@acme.com'].status, by['bad@acme.com'].error], ['failed', 'Strapi 500 on /users: boom'])
+  assert.equal(by['ann@acme.com'].status, 'created')
+  const joe = [...db.users.values()].find(u => u.email === 'joe@rlan.ca')
+  assert.deepEqual([joe.username, joe.role, joe.organisation, joe.customer_id], ['joe@rlan.ca', 1, r.organisation.id, r.organisation.customerId])
+  assert.equal(seatOrders(db, c.contract.id).length, 2)
 })
 
 await t('administrator: seats on and off, one-time password; only for their own company', async () => {
