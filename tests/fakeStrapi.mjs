@@ -43,8 +43,13 @@ export function fakeStrapi() {
       return { ...u, organisation: org ? { ...org } : null }
     }
     if (p === '/users/count') {
+      // Like Strapi 4.14: /users/count does not take filters and answers 500.
+      if ([...url.searchParams.keys()].some(k => k.startsWith('filters'))) throw err(500, 'Internal Server Error')
+      return db.users.size
+    }
+    if (method === 'GET' && p === '/users' && url.searchParams.has('filters[organisation][id][$eq]')) {
       const id = Number(url.searchParams.get('filters[organisation][id][$eq]'))
-      return [...db.users.values()].filter(u => u.organisation === id).length
+      return [...db.users.values()].filter(u => u.organisation === id).map(u => ({ id: u.id }))
     }
     if ((m = p.match(/^\/(organisations|orders|products)(?:\/(\d+))?$/))) {
       const [, table, id] = m
