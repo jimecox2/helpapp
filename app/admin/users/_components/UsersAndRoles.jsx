@@ -6,31 +6,13 @@ import { Loader2, RefreshCw, Upload } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { parsePool } from '@/lib/licence/parsePool'
 import { listCustomerUsers, setUserRole, syncRolesFromPool } from '../_actions'
 
 const RBAC_ROLES = ['Administrator', 'Project Manager', 'Executive', 'Team Member']
 
-// Reads a resource pool export: a tbrunp backup (.js/.json with a tbResources store),
-// a tbResources.json, a plain array, or a CSV with tbResEmail and tbResPrimaryRole columns.
-function parsePool(text) {
-  const trimmed = text.trim()
-  let list = null
-  if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
-    const data = JSON.parse(trimmed)
-    list = Array.isArray(data) ? data : data.tbResources
-  } else {
-    const [head, ...lines] = trimmed.split(/\r?\n/)
-    const cols = head.split(',').map(c => c.trim().replace(/^"|"$/g, ''))
-    list = lines.filter(Boolean).map(line => {
-      const cells = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''))
-      return Object.fromEntries(cols.map((c, i) => [c, cells[i]]))
-    })
-  }
-  if (!Array.isArray(list)) throw new Error('No tbResources rows found in that file')
-  return list
-    .filter(r => r && r.tbResEmail && r.tbResPrimaryRole && (r.tbResLabourType || 'Human') === 'Human')
-    .map(r => ({ email: String(r.tbResEmail), role: String(r.tbResPrimaryRole) }))
-}
+// Only rows with a primary role: this page copies roles, it makes no accounts.
+const parseRolePool = text => parsePool(text, { needRole: true }).map(({ email, role }) => ({ email, role }))
 
 const statusColor = {
   update: 'bg-blue-100 text-blue-800',
@@ -79,7 +61,7 @@ export default function UsersAndRoles() {
     if (!file) return
     setPreview(null)
     try {
-      const rows = parsePool(await file.text())
+      const rows = parseRolePool(await file.text())
       if (!rows.length) throw new Error('No Human resources with an email and a primary role in that file')
       setPoolRows(rows)
       setBusy(true)
@@ -165,7 +147,7 @@ export default function UsersAndRoles() {
           <CardDescription>
             Upload a backup from Timebars, Agilebars or Costbars (Start → Data Actions → Make Backup), a tbResources.json,
             or a CSV with <code>tbResEmail</code> and <code>tbResPrimaryRole</code> columns. Each Human resource's primary role is
-            copied to the matching account in your organisation. You see the changes before anything is saved. No accounts are created.
+            copied to the matching account in your organisation. You see the changes before anything is saved. To make accounts and give seats, use Licences &amp; Accounts.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
