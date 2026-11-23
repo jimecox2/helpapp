@@ -452,6 +452,46 @@ controls their own licences. Treat an Option B purchase as a licence for the who
 Full study and the code changes needed: `docsOtherNew/Study_Licensing_With_And_Without_Strapi.md`
 (internal).
 
+### 10.2 Enterprise companies, seats and self-managed licensing
+
+**Records (Strapi).** A company is an **Organisation** (`org_customer_id`, `org_join_code`, `org_type`
+`individual` or `organisation`); its users carry the same `customer_id`. An Enterprise purchase on
+Costbars Enterprise (CBT03) makes one **contract** order per product (CBT03, TBT03, ABT03): owner = the
+company's Administrator (seat 1), `seats`, `organisation`, one `expires_on` for the company. Each team
+member's seat is a **seat** order (owner = that person, `total` 0, same product and date). Extra seats bought
+during a contract are an add-on order that points at the contract and is never a licence itself. The
+apps read seat and contract orders like any other licence (owner email, product, `active_status`,
+`expires_on`), so nothing changes on the user's device. The three orders of one purchase share the Stripe
+checkout session, and each saves the payment id in `stripe_payment_id`. Orders are written only by the
+websites' servers with the server key, never with a user's login.
+
+**Sales mode (default).** Companies buy, renew and add seats at www.timebars.com (Cloud Publishing Guide,
+section 9). The company's Administrator manages accounts and seats on Timebars Cloud,
+**Licences & Accounts** (`/admin/licences`): accounts from the resource pool (a backup, `tbResources.json`
+or `.js`, or a CSV), one licence each (TBT03 by default), a seat checkbox per product, and one-time
+passwords (shown once, never stored; the person changes it on **Change password**). Nobody gets an account
+without a seat.
+
+**Self-managed mode (containers, own the code, air-gapped).** No payment: a **licence manager** sets up the
+companies and their contracts on the same page. In the tbown package set, in `tbapps.conf`:
+
+| Setting | Value |
+|---|---|
+| `LICENSING_MODE` | `self-managed` (default `sales`) |
+| `LICENCE_MANAGERS` | comma list of the licence managers' emails; each must also be an Administrator (`primary_role`) in Strapi |
+
+Run `apply`, then `deploy-all.sh`. On **Licences & Accounts** the licence manager:
+
+1. **Sets up a company**: its name and its Administrator's email. A new email gets an account with a
+   one-time password; an existing person can come only from their own individual organisation.
+2. **Sets the contracts** in one form: Costbars, Timebars and Agilebars seats and **one expiry date** for
+   the company, the same rules as a purchase. A product can be 0, with at least 2 seats in total. A live
+   product never goes below the seats in use, and 0 ends it only while nobody but the Administrator holds
+   a seat. A new date moves every contract and seat. Choose the company (or **Change contracts** in the
+   table) to see its current seats and date.
+
+The company's Administrator then manages accounts and seats as in sales mode.
+
 ---
 
 ## 11. OpenProject connection

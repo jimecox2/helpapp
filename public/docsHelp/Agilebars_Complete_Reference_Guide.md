@@ -6898,6 +6898,39 @@ You can hold one active license per product (for example ABT01 and CBT03). Each 
 of its own product. Timebars Cloud uses your highest tier, so one Tier-3 license gives you the
 Enterprise edition there. Choose the active license for each product on **My Orders** at www.timebars.com.
 
+#### Enterprise, multi-user licences (companies)
+
+A **personal licence** is for one person and is bought on each product's page at www.timebars.com.
+A company buys **Enterprise, multi-user** licences instead, and only on **Costbars Enterprise (CBT03)**:
+
+1. On the Costbars Enterprise page choose **Enterprise, multi-user**, enter the company name, and pick the
+   number of **Costbars**, **Timebars** and **Agilebars** Enterprise seats and the months. Each product is
+   priced at its own Enterprise price, all in one payment. A product can be 0; at least 2 seats in total.
+2. The buyer becomes the company's **Administrator** and holds one seat of each product bought. Every
+   product ends on the same date.
+3. After payment the order confirmation (and **Your organisation** at www.timebars.com) shows the
+   **join code**. Send it to your team.
+4. Each person registers at www.timebars.com, signs in, opens **Your organisation**, pastes the join code
+   and takes a seat of each product they need. A seat is that person's licence for the product.
+
+The Timebars Enterprise (TBT03) and Agilebars Enterprise (ABT03) pages sell personal licences only, and
+point companies to Costbars Enterprise. Someone who already has a product through their company cannot
+buy a personal licence of the same product.
+
+**Renew or add seats.** The Administrator opens **Your organisation → Renew or add seats** (or Renew on
+My Orders), which goes to the Costbars Enterprise page:
+
+- **Renew**: choose the products and seats for the next months. The renewal starts on the company's
+  expiry date, and the team keeps its seats. A product cannot go below the seats in use; set it to 0 to
+  let it end on the expiry date. A product added at renewal starts at once and ends with the others.
+- **Add seats or a product now**: more seats, or a product the company does not have yet, charged for the
+  months left. Everything still ends on the company's date.
+
+**Timebars Cloud.** The Administrator can also manage accounts and seats on **Licences & Accounts**
+(Users & Roles menu, cloud.timebars.com): make accounts for the people in the resource pool (each gets a
+one-time password and a seat, Timebars by default), tick or untick each person's seat of each product,
+and set a new one-time password. Setup details: [Administrators Guide](https://help.timebars.com/administrators-guide#102-enterprise-companies-seats-and-self-managed-licensing).
+
 The exact numbers for each product are on the pricing page. They come from your
 purchased product and are downloaded each time you log in (gold icon, top right):
 
