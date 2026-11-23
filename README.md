@@ -6,6 +6,19 @@ ssh jcox@gmk1
 cd /home/jcox/docker/tbhelp
 ./deploy.sh
 
+2026.11.06
+2026.11.15
+
+NWI cust id TB-KW7R4R6PEV
+join code: 9VB7-PGSZ-4DR5-GP4Z
+
+# use this for force pull on reused tag
+docker compose pull && docker compose up -d --force-recreate
+
+
+docker stats is command to see high cpu or this is better
+docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.MemPerc}}"
+
 #   build tbrun, tbwww and tbhelp containers in one go calling: ./deploy-push-to-hub-secure.sh
 D=~/Documents/SitesGithub; read -rp "Tag (Enter for $(date +%Y.%m.%d)): " T; T=${T:-$(date +%Y.%m.%d)}; read -rp "tbrun APP_VERSION (Enter keeps .env): " V; for r in helpappGitHub tbwwwGithubApr20 tbrunpGitHubMar27; do echo "== $r $T"; (cd $D/$r && if [ $r = tbrunpGitHubMar27 ]; then printf '%s\n%s\n' "$T" "$V"; else printf '%s\n' "$T"; fi | ./deploy-push-to-hub-secure.sh) || break; done
 
@@ -14,6 +27,10 @@ read -rp "Tag for tbwww, tbhelp, tbrun: " T && for s in tbwww tbhelp tbrun; do e
 
 # Recreate complete ref guides - ask and I’ll run it
 tools/makeCompleteGuidePdfs.mjs
+
+# git add commit push
+acp "message"
+
 
 
 # Lecal help models specs, do this later with better hardware.
