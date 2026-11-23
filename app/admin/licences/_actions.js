@@ -11,7 +11,7 @@ import { auth } from '@/auth/auth'
 import { strapiAdmin as strapi, strapiProblem } from '@/lib/strapiAdmin'
 import { getUser } from '@/lib/org/orgRules'
 import {
-  licensingMode, isLicenceManager, managerOverview, setUpOrganisation, saveContract,
+  licensingMode, isLicenceManager, managerOverview, setUpOrganisation, saveCompanyContracts,
   companyOverview, accountsFromPool, setSeat, newOneTimePassword,
 } from '@/lib/licence/selfManaged'
 
@@ -52,8 +52,8 @@ export async function setUpOrganisationAction(input) {
   return run('set up organisation', managerOnly(() => setUpOrganisation(strapi, input || {})))
 }
 
-export async function saveContractAction(input) {
-  return run('save contract', managerOnly(() => saveContract(strapi, input || {})))
+export async function saveContractsAction(input) {
+  return run('save contracts', managerOnly(() => saveCompanyContracts(strapi, input || {})))
 }
 
 export async function accountsFromPoolAction(input) {

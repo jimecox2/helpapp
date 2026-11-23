@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { parsePool } from '@/lib/licence/parsePool'
 import {
-  getLicencesPage, setUpOrganisationAction, saveContractAction, accountsFromPoolAction, setSeatAction, newOneTimePasswordAction,
+  getLicencesPage, setUpOrganisationAction, saveContractsAction, accountsFromPoolAction, setSeatAction, newOneTimePasswordAction,
 } from '../_actions'
 
 const input = 'rounded border border-gray-300 px-2 py-1'
@@ -75,7 +75,8 @@ export default function Licences() {
 function Manager({ view, reload }) {
   const [org, setOrg] = useState({ name: '', adminEmail: '', adminName: '' })
   const [made, setMade] = useState(null)
-  const [contract, setContract] = useState({ orgId: '', productId: '', seats: 5, expiresOn: '' })
+  // One form per company: seats of each Enterprise product and the company's one expiry date.
+  const [contract, setContract] = useState({ orgId: '', seats: {}, expiresOn: '' })
   const [busy, setBusy] = useState('')
 
   const setUp = async e => {
@@ -93,13 +94,21 @@ function Manager({ view, reload }) {
     e.preventDefault()
     setBusy('contract')
     try {
-      const r = await saveContractAction({ ...contract, seats: Number(contract.seats) })
-      if (!r?.ok) { toast.error(r?.error || 'Could not save the contract.'); return }
-      toast.success(r.changed ? 'Contract changed.' : 'Contract made.')
+      const r = await saveContractsAction(contract)
+      if (!r?.ok) { toast.error(r?.error || 'Could not save the contracts.'); return }
+      const said = [r.made.length && `made: ${r.made.join(', ')}`, r.changed.length && `changed: ${r.changed.join(', ')}`, r.ended.length && `ended: ${r.ended.join(', ')}`].filter(Boolean)
+      toast.success(`Contracts saved (${said.join('; ')}), all until ${r.expiresOn}.`)
       await reload()
     } finally { setBusy('') }
   }
-  const pick = (orgId, c) => setContract({ orgId: String(orgId), productId: String(c?.productId || ''), seats: c?.seats || 5, expiresOn: '' })
+  // Choosing a company fills in its live seats and its date.
+  const pick = orgId => {
+    const o = view.organisations.find(x => String(x.id) === String(orgId))
+    const seats = Object.fromEntries(view.products.map(p => [p.code, o?.contracts.find(c => c.productCode === p.code)?.seats || 0]))
+    setContract({ orgId: String(orgId || ''), seats, expiresOn: o?.expiresOnInput || '' })
+  }
+  const chosen = view.organisations.find(o => String(o.id) === contract.orgId)
+  const inUse = code => chosen?.contracts.find(c => c.productCode === code)
 
   return (
     <Card>
@@ -123,11 +132,10 @@ function Manager({ view, reload }) {
                   <td className="py-2 pr-4">{o.members}</td>
                   <td className="py-2 space-y-1">
                     {o.contracts.map(c => (
-                      <button key={c.id} type="button" onClick={() => pick(o.id, c)} className="block text-left text-blue-700 hover:underline">
-                        {c.productName}: {c.used} of {c.seats} seats, until {c.expiresOn}
-                      </button>
+                      <div key={c.id}>{c.productName}: {c.used} of {c.seats} seats</div>
                     ))}
-                    <button type="button" onClick={() => pick(o.id)} className="text-sm text-gray-600 hover:underline">+ contract</button>
+                    {o.expiresOn && <div className="text-gray-500">until {o.expiresOn}</div>}
+                    <button type="button" onClick={() => pick(o.id)} className="text-sm text-blue-700 hover:underline">{o.contracts.length ? 'Change contracts' : '+ contracts'}</button>
                   </td>
                 </tr>
               ))}
@@ -154,24 +162,29 @@ function Manager({ view, reload }) {
           </form>
 
           <form onSubmit={save} className="space-y-2 rounded border border-gray-200 p-4">
-            <h3 className="font-semibold">Contract</h3>
+            <h3 className="font-semibold">Contracts</h3>
             <label className="block text-sm">Company
-              <select className={`${input} w-full`} value={contract.orgId} onChange={e => setContract({ ...contract, orgId: e.target.value })} required>
+              <select className={`${input} w-full`} value={contract.orgId} onChange={e => pick(e.target.value)} required>
                 <option value="">Choose…</option>
                 {view.organisations.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
               </select>
             </label>
-            <label className="block text-sm">Product
-              <select className={`${input} w-full`} value={contract.productId} onChange={e => setContract({ ...contract, productId: e.target.value })} required>
-                <option value="">Choose…</option>
-                {view.products.map(p => <option key={p.id} value={p.id}>{p.name} ({p.code})</option>)}
-              </select>
-            </label>
-            {view.products.length === 0 && <p className="text-xs text-red-700">No Enterprise (T03) products in Strapi. Add the product rows first.</p>}
-            <label className="block text-sm">Seats (the Administrator&apos;s included)<input type="number" min={2} max={1000} className={`${input} w-32`} value={contract.seats} onChange={e => setContract({ ...contract, seats: e.target.value })} required /></label>
-            <label className="block text-sm">Expires on<input type="date" className={`${input} w-48`} value={contract.expiresOn} onChange={e => setContract({ ...contract, expiresOn: e.target.value })} required /></label>
-            <p className="text-xs text-gray-500">A company with a live contract of this product gets that contract changed: new seats and date, never fewer seats than are in use.</p>
-            <Button type="submit" disabled={!!busy}>{busy === 'contract' ? 'Please wait…' : 'Save contract'}</Button>
+            {view.products.length === 0 && <p className="text-xs text-red-700">No Enterprise products (CBT03, TBT03, ABT03) in Strapi. Add the product rows first.</p>}
+            {view.products.map(p => (
+              <label key={p.code} className="block text-sm">{p.name} seats
+                {inUse(p.code) && <span className="text-gray-500"> ({inUse(p.code).used} in use)</span>}
+                <input type="number" min={0} max={1000} aria-label={`${p.name} seats`} className={`${input} ml-2 w-24`}
+                  value={contract.seats[p.code] ?? 0}
+                  onChange={e => setContract({ ...contract, seats: { ...contract.seats, [p.code]: e.target.value } })} />
+              </label>
+            ))}
+            <label className="block text-sm">Expires on (every product)<input type="date" className={`${input} w-48`} value={contract.expiresOn} onChange={e => setContract({ ...contract, expiresOn: e.target.value })} required /></label>
+            <p className="text-xs text-gray-500">
+              One date for the whole company, at least 2 seats in total. The Administrator holds one seat of each product
+              with seats. A product can be 0; a live one keeps at least the seats in use, and 0 ends it only when nobody
+              else holds a seat. A new date moves every seat with it.
+            </p>
+            <Button type="submit" disabled={!!busy || !contract.orgId}>{busy === 'contract' ? 'Please wait…' : 'Save contracts'}</Button>
           </form>
         </div>
       </CardContent>
@@ -264,7 +277,8 @@ function Company({ company, reload }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 overflow-x-auto">
-          {contracts.length === 0 && <p className="text-gray-600">No live Enterprise contract yet.</p>}
+          {contracts.length === 0 && <p className="text-gray-600">No live Enterprise contract yet. Enterprise licences are bought on Costbars Enterprise (CBT03) on the website, with seats of Costbars, Timebars and Agilebars in one order.</p>}
+          {contracts.length > 0 && <p className="text-sm text-gray-600">Each person can hold a seat of every product your company has: tick the seats they need.</p>}
           {contracts.map(c => (
             <p key={c.id} className="text-sm"><b>{c.productName}</b> <span className="font-mono text-gray-500">{c.productCode}</span>: {c.used} of {c.seats} seats in use, {c.free} free, until {c.expiresOn}{c.selfManaged ? ' (self-managed)' : ''}</p>
           ))}
@@ -320,7 +334,8 @@ function Company({ company, reload }) {
             Upload a backup from Timebars, Agilebars or Costbars (Start → Data Actions → Make Backup), a tbResources.json or
             tbResources.js, or a CSV with <code>tbResEmail</code>, <code>tbResName</code> and <code>tbResPrimaryRole</code> columns. Each Human
             resource with an email gets an account in {org.name} with a one-time password and a seat of the licence you choose for them
-            (TBT03 by default). Nobody gets an account without a seat. You see the list before anything is made.
+            (TBT03 by default). Nobody gets an account without a seat. You see the list before anything is made. To give
+            someone more products afterwards, tick their seats in the table above.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

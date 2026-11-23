@@ -653,8 +653,11 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   included), free seat orders. tbrunp and the helpapp licence checks read them unchanged.
 - `LICENSING_MODE` (`.env.local`): `sales` (default) or `self-managed`. A licence manager (self-managed, email in
   `LICENCE_MANAGERS`, Strapi `primary_role` Administrator) sets up companies (new Administrator accounts get a
-  one-time password) and contracts with `total` 0 and `checkout_session` `self-managed`; a second save of the same
-  product changes seats and date (never fewer than in use) and moves the seat orders' dates.
+  one-time password) and its contracts with `total` 0 and `checkout_session` `self-managed`, all in one form
+  (`saveCompanyContracts`, Jim 23 Nov 2026, the same bundle rules as a CBT03 purchase): seats of CBT03, TBT03 and ABT03
+  and one expiry date for the company; a product may be 0, at least 2 seats in total; a live product never below the
+  seats in use, 0 ends it only while nobody but the Administrator holds a seat; every contract and seat order moves to
+  the date.
 - A company's Administrator (both modes): accounts from the resource pool (`lib/licence/parsePool.js`: a backup,
   tbResources.json, a tbrunp tbResources.js data file or a CSV; Human rows with an email; existing accounts move in
   only from their own individual organisation when alone). Import needs a live contract: each person gets one
@@ -664,6 +667,8 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   One-time passwords are shown once and never stored.
 - `/account/password`: Change password through Strapi `/auth/change-password` with the user's own login (the
   Authenticated role needs `changePassword`). No email needed.
-- Copies of tbwww, kept the same (only import paths differ): `lib/org/orgRules.js`, `lib/orders/seatRules.js`,
+- Enterprise contracts are bought only on tbwww CBT03 (Costbars, Timebars and Agilebars seats in one order, one date per
+  company); the Licences page shows a seat column per product the company has.
+- Copies of tbwww, kept the same (only import paths differ; last synced 23 Nov 2026): `lib/org/orgRules.js`, `lib/orders/seatRules.js`,
   `lib/orders/seatPrice.js`, `lib/orders/licenseOrders.js` (tbwww `lib/licenseOrders.js`), `lib/strapiAdmin.js`,
   `tests/fakeStrapi.mjs`. All writes use `STRAPI_ADMIN_TOKEN` on the server.

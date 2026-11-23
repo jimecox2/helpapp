@@ -1,4 +1,4 @@
-// Copy of tbwww tests/fakeStrapi.mjs (Phase 3, 15 Nov 2026). Keep the two the same; only the import paths differ.
+// Copy of tbwww tests/fakeStrapi.mjs (synced 23 Nov 2026). Keep the two the same; only the import paths differ.
 // In-memory Strapi for tests: users (users-permissions, flat), organisations, orders, products
 // (v4 { id, attributes }), with the filters and relations lib/org and lib/orders use.
 // Used by tests/seats.mjs; serve() puts it behind HTTP for a browser run.
@@ -79,6 +79,7 @@ export function fakeStrapi() {
   const addUser = (id, extra = {}) => db.users.set(id, { id, username: `user${id}`, email: `u${id}@x.com`, customer_id: null, primary_role: null, organisation: null, ...extra })
   db.products.set(8, { id: 8, name: 'Costbars Enterprise', product_code: 'CBT03', price: 50, discount_price: null })
   db.products.set(9, { id: 9, name: 'Timebars Enterprise', product_code: 'TBT03', price: 40, discount_price: 30 })
+  db.products.set(7, { id: 7, name: 'Agilebars Enterprise', product_code: 'ABT03', price: 20, discount_price: null })
   db.products.set(2, { id: 2, name: 'Costbars Basic', product_code: 'CBT01', price: 10 })
   return { strapi, db, addUser }
 }

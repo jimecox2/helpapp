@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import {
   licensingMode, licenceManagers, isLicenceManager, makeOneTimePassword,
-  managerOverview, setUpOrganisation, saveContract, companyOverview, accountsFromPool, setSeat, newOneTimePassword,
+  managerOverview, setUpOrganisation, saveCompanyContracts, companyOverview, accountsFromPool, setSeat, newOneTimePassword,
 } from '../lib/licence/selfManaged.js'
 import { createOrganisation } from '../lib/org/orgRules.js'
 import { fakeStrapi as baseFake } from './fakeStrapi.mjs'
@@ -48,6 +48,17 @@ function fakeStrapi() {
 }
 
 const NOW = new Date(2026, 10, 15)
+
+const CODES = { 8: 'CBT03', 9: 'TBT03', 7: 'ABT03' }
+// One product's seats, the company's other live seats kept (the form sends all of them).
+async function saveContract(strapi, { orgId, productId, seats, expiresOn }, now) {
+  const view = await managerOverview(strapi, now)
+  const org = view.organisations.find(o => String(o.id) === String(orgId))
+  const all = Object.fromEntries((org?.contracts || []).map(c => [c.productCode, c.seats]))
+  const r = await saveCompanyContracts(strapi, { orgId, seats: { ...all, [CODES[productId]]: seats }, expiresOn }, now)
+  return r.ok ? { ...r, contract: r.contracts.find(c => c.productCode === CODES[productId]) } : r
+}
+
 let failed = 0
 const t = async (name, fn) => { try { await fn(); console.log('ok  ', name) } catch (e) { failed++; console.log('FAIL', name, '-', e.stack.split('\n').slice(0, 2).join(' ')) } }
 const seatOrders = (db, contractId) => [...db.orders.values()].filter(o => o.order_type === 'seat' && o.contract === contractId && o.active_status)
@@ -72,18 +83,23 @@ await t('manager: set up a company with a new Administrator account, then a cont
   assert.equal(boss.confirmed, true)
   assert.deepEqual([boss.primary_role, boss.customer_id], ['Administrator', r.organisation.customerId])
 
-  assert.match((await saveContract(strapi, { orgId: r.organisation.id, productId: 2, seats: 5, expiresOn: '2027-11-15' }, NOW)).error, /Enterprise/)
-  assert.match((await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 1, expiresOn: '2027-11-15' }, NOW)).error, /from 2/)
-  assert.match((await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 5, expiresOn: '2026-11-01' }, NOW)).error, /from today/)
-  const c = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 5, expiresOn: '2027-11-15' }, NOW)
+  const org = r.organisation.id
+  assert.match((await saveCompanyContracts(strapi, { orgId: org, seats: { TBT03: 1 }, expiresOn: '2027-11-15' }, NOW)).error, /at least 2 seats in total/)
+  assert.match((await saveCompanyContracts(strapi, { orgId: org, seats: { TBT03: 5 }, expiresOn: '2026-11-01' }, NOW)).error, /from today/)
+  assert.match((await saveCompanyContracts(strapi, { orgId: org, seats: { TBT03: -1, CBT03: 3 }, expiresOn: '2027-11-15' }, NOW)).error, /0 to/)
+  const c = await saveCompanyContracts(strapi, { orgId: org, seats: { CBT03: 1, TBT03: 5, ABT03: 0 }, expiresOn: '2027-11-15' }, NOW)
   assert.equal(c.ok, true, c.error)
-  const o = db.orders.get(c.contract.id)
+  assert.deepEqual([c.made, c.changed, c.ended, c.expiresOn], [['CBT03', 'TBT03'], [], [], '15 November 2027'])
+  const tb = c.contracts.find(x => x.productCode === 'TBT03')
+  const o = db.orders.get(tb.id)
   assert.deepEqual([o.order_type, o.seats, o.total, o.status, o.active_status, o.owner, o.expires_on, o.checkout_session],
     ['contract', 5, 0, 'paid', true, 'boss@acme.com', '15 November 2027', 'self-managed'])
+  assert.equal(db.orders.get(c.contracts.find(x => x.productCode === 'CBT03').id).seats, 1)
   const view = await managerOverview(strapi, NOW)
   assert.equal(view.organisations[0].administrator, 'boss@acme.com')
-  assert.equal(view.organisations[0].contracts[0].seats, 5)
-  assert.deepEqual(view.products.map(p => p.code), ['CBT03', 'TBT03'])
+  assert.deepEqual(view.organisations[0].contracts.map(x => [x.productCode, x.seats]).sort(), [['CBT03', 1], ['TBT03', 5]])
+  assert.deepEqual([view.organisations[0].expiresOn, view.organisations[0].expiresOnInput], ['15 November 2027', '2027-11-15'])
+  assert.deepEqual(view.products.map(p => p.code), ['CBT03', 'TBT03', 'ABT03'])
 })
 
 await t('manager: an existing person moves only from their own individual organisation (same Customer ID)', async () => {
@@ -107,7 +123,7 @@ await t('manager: changing a contract keeps at least the seats in use and moves 
   await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com', contractId: c.contract.id }, { email: 'b@acme.com', contractId: c.contract.id }], apply: true }, NOW)
   assert.match((await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 2, expiresOn: '2027-06-30' }, NOW)).error, /already uses 3/)
   const ch = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 10, expiresOn: '2028-01-31' }, NOW)
-  assert.equal(ch.changed, true)
+  assert.deepEqual(ch.changed, ['TBT03'])
   assert.equal(db.orders.get(c.contract.id).seats, 10)
   assert.deepEqual(seatOrders(db, c.contract.id).map(o => o.expires_on), ['31 January 2028', '31 January 2028'])
 })
@@ -231,6 +247,34 @@ await t('parsePool: tbResources.json, a backup and a tbrunp tbResources.js data 
   const js = `export function gettbResourcesDemoDataCore() {\n    const jdata =\n${JSON.stringify(pool)}\n    return jdata\n}\n`
   assert.deepEqual(parsePool(js), expected)
   assert.throws(() => parsePool('export const x = 1'), /No tbResources/)
+})
+
+
+await t('manager: one date for the company; a product added later, or ended only while nobody else holds a seat', async () => {
+  const { strapi, db } = fakeStrapi()
+  const r = await setUpOrganisation(strapi, { name: 'Acme', adminEmail: 'boss@acme.com' })
+  const org = r.organisation.id
+  const first = await saveCompanyContracts(strapi, { orgId: org, seats: { CBT03: 2, TBT03: 3 }, expiresOn: '2027-06-30' }, NOW)
+  assert.equal(first.ok, true, first.error)
+  const id = code => first.contracts.find(x => x.productCode === code).id
+  const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
+  await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com', contractId: id('TBT03') }], apply: true }, NOW)
+
+  // Agilebars added later; every contract and seat moves to the new date.
+  const add = await saveCompanyContracts(strapi, { orgId: org, seats: { CBT03: 2, TBT03: 3, ABT03: 4 }, expiresOn: '2027-12-31' }, NOW)
+  assert.equal(add.ok, true, add.error)
+  assert.deepEqual([add.made, add.changed.sort()], [['ABT03'], ['CBT03', 'TBT03']])
+  assert.deepEqual(add.contracts.map(x => x.expiresOn), ['31 December 2027', '31 December 2027', '31 December 2027'])
+  assert.deepEqual(seatOrders(db, id('TBT03')).map(o => o.expires_on), ['31 December 2027'])
+
+  // Timebars has a member's seat: it cannot end, nor go below the 2 in use. Costbars (only the Administrator) can end.
+  assert.match((await saveCompanyContracts(strapi, { orgId: org, seats: { CBT03: 2, TBT03: 0, ABT03: 4 }, expiresOn: '2027-12-31' }, NOW)).error, /1 person holds a seat/)
+  assert.match((await saveCompanyContracts(strapi, { orgId: org, seats: { CBT03: 2, TBT03: 1, ABT03: 4 }, expiresOn: '2027-12-31' }, NOW)).error, /already uses 2/)
+  const end = await saveCompanyContracts(strapi, { orgId: org, seats: { CBT03: 0, TBT03: 3, ABT03: 4 }, expiresOn: '2027-12-31' }, NOW)
+  assert.equal(end.ok, true, end.error)
+  assert.deepEqual(end.ended, ['CBT03'])
+  assert.equal(db.orders.get(id('CBT03')).active_status, false)
+  assert.deepEqual(end.contracts.map(x => x.productCode).sort(), ['ABT03', 'TBT03'])
 })
 
 console.log(failed ? `\n${failed} failed` : '\nall passed')
