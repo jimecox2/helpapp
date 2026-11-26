@@ -147,7 +147,7 @@ function Manager({ view, reload }) {
         </div>
 
         <form onSubmit={submit} className="space-y-3 rounded border border-gray-200 p-4 max-w-2xl">
-          <h3 className="font-semibold">{editing ? `Change products: ${editing.name}` : 'Create Account Group & Products'}</h3>
+          <h3 className="font-semibold">{editing ? `Change products: ${editing.name}` : 'Create Account Group & Product Seats'}</h3>
           {!editing && (
             <>
               <label className="block text-sm">Account group name, for example a department<input className={`${input} w-full`} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required maxLength={100} placeholder="e.g. Human Resources" /></label>

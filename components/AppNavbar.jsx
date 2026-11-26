@@ -12,7 +12,7 @@ import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { ChevronDown, Menu, X, User } from 'lucide-react'
 import { isAdminRole } from '@/lib/auth/roles'
-import { WWW_URL, TB_ENVIRONMENT, IS_PROD } from '@/config/site'
+import { WWW_URL, TB_ENVIRONMENT, IS_PROD, SELF_MANAGED } from '@/config/site'
 import { cn } from '@/lib/utils'
 
 // The Help menu, shown signed in or out (Ask AI asks for a login). The last two go to the website (WWW_URL).
@@ -43,7 +43,7 @@ const NAV = [
     adminOnly: true,
     children: [
       { label: 'Users & Roles', href: '/admin/users', adminOnly: true },
-      { label: 'Licences & Accounts', href: '/admin/licences', adminOnly: true },
+      { label: SELF_MANAGED ? 'Account Groups' : 'Licences & Accounts', href: '/admin/licences', adminOnly: true },
     ],
   },
 ]

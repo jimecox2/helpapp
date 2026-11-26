@@ -18,6 +18,7 @@ const runtime = isServer
       runUrlTb: process.env.RUN_URL_TB,
       runUrlCb: process.env.RUN_URL_CB,
       environment: process.env.TB_ENVIRONMENT,
+      licensingMode: process.env.LICENSING_MODE,
     }
   : window.__TB_CLOUD__ || {}
 
@@ -50,6 +51,10 @@ export const RUN_URL_CB = pick(runtime.runUrlCb, 'https://cb.timebars.com')
 export const TB_ENVIRONMENT = pick(runtime.environment, 'PROD').toUpperCase()
 export const IS_PROD = TB_ENVIRONMENT === 'PROD'
 
+// LICENSING_MODE (sales | self-managed, see lib/licence/selfManaged.js). Not a secret; the menu names the
+// licences page after it: Account Groups on a self-managed server (Jim, 26 Nov 2026).
+export const SELF_MANAGED = String(runtime.licensingMode || '').trim().toLowerCase() === 'self-managed'
+
 // What the root layout sends to the browser (server only).
 export const BROWSER_CONFIG = {
   apiUrl: API_URL,
@@ -61,4 +66,5 @@ export const BROWSER_CONFIG = {
   runUrlTb: RUN_URL_TB,
   runUrlCb: RUN_URL_CB,
   environment: TB_ENVIRONMENT,
+  licensingMode: SELF_MANAGED ? 'self-managed' : 'sales',
 }
