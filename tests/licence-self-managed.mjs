@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import {
   licensingMode, licenceManagers, isLicenceManager, makeOneTimePassword,
-  managerOverview, setUpOrganisation, saveCompanyContracts, companyOverview, accountsFromPool, setSeat, newOneTimePassword,
+  managerOverview, setUpOrganisation, saveCompanyContracts, createAccountGroup, companyOverview, accountsFromPool, setSeat, newOneTimePassword,
 } from '../lib/licence/selfManaged.js'
 import { createOrganisation } from '../lib/org/orgRules.js'
 import { fakeStrapi as baseFake } from './fakeStrapi.mjs'
@@ -275,6 +275,24 @@ await t('manager: one date for the company; a product added later, or ended only
   assert.deepEqual(end.ended, ['CBT03'])
   assert.equal(db.orders.get(id('CBT03')).active_status, false)
   assert.deepEqual(end.contracts.map(x => x.productCode).sort(), ['ABT03', 'TBT03'])
+})
+
+await t('manager: one step makes an account group, its Administrator and its products; bad seats make nothing', async () => {
+  const { strapi, db } = fakeStrapi()
+  const bad = await createAccountGroup(strapi, { name: 'HR', adminEmail: 'hr@acme.com', seats: { TBT03: 1 }, expiresOn: '2027-11-15' }, NOW)
+  assert.match(bad.error, /at least 2 seats in total/)
+  assert.match((await createAccountGroup(strapi, { name: 'HR', adminEmail: 'hr@acme.com', seats: { TBT03: 3 }, expiresOn: '2026-01-01' }, NOW)).error, /from today/)
+  assert.deepEqual([db.orgs.size, db.users.size, db.orders.size], [0, 0, 0])
+
+  const r = await createAccountGroup(strapi, { name: 'Human Resources', adminEmail: 'HR@acme.com', adminName: 'Hana', seats: { TBT03: 3, ABT03: 2 }, expiresOn: '2027-11-15' }, NOW)
+  assert.equal(r.ok, true, r.error)
+  assert.ok(r.administrator.password)
+  assert.equal(r.organisation.name, 'Human Resources')
+  assert.deepEqual([r.products.made.sort(), r.products.expiresOn], [['ABT03', 'TBT03'], '15 November 2027'])
+  const view = await managerOverview(strapi, NOW)
+  assert.deepEqual(view.organisations[0].contracts.map(c => [c.productCode, c.seats, c.owner]).sort(),
+    [['ABT03', 2, 'hr@acme.com'], ['TBT03', 3, 'hr@acme.com']])
+  assert.match((await createAccountGroup(strapi, { name: 'IT', adminEmail: 'hr@acme.com', seats: { TBT03: 3 }, expiresOn: '2027-11-15' }, NOW)).error, /already belongs to "Human Resources"/)
 })
 
 console.log(failed ? `\n${failed} failed` : '\nall passed')

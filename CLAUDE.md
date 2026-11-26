@@ -651,6 +651,9 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 - `/admin/licences` (`app/admin/licences/`, rules `lib/licence/selfManaged.js`, test `npm run test:licences`). Same
   records as tbwww's Enterprise seats: organisation, contract order with `seats` (its Administrator's own seat
   included), free seat orders. tbrunp and the helpapp licence checks read them unchanged.
+- Self-managed wording (Jim, 26 Nov 2026): the page is **Enterprise Account Groups** (an organisation is an *account
+  group*, e.g. a department); sales mode keeps **Licences & Accounts**. `createAccountGroup` makes the group, its
+  Administrator and its products in one step (seats and date checked first); **Change products** edits them.
 - `LICENSING_MODE` (`.env.local`): `sales` (default) or `self-managed`. A licence manager (self-managed, email in
   `LICENCE_MANAGERS`, Strapi `primary_role` Administrator) sets up companies (new Administrator accounts get a
   one-time password) and its contracts with `total` 0 and `checkout_session` `self-managed`, all in one form

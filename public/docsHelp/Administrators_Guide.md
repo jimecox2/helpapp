@@ -480,17 +480,21 @@ companies and their contracts on the same page. In the tbown package set, in `tb
 | `LICENSING_MODE` | `self-managed` (default `sales`) |
 | `LICENCE_MANAGERS` | comma list of the licence managers' emails; each must also be an Administrator (`primary_role`) in Strapi |
 
-Run `apply`, then `deploy-all.sh`. On **Licences & Accounts** the licence manager:
+Run `apply`, then `deploy-all.sh`. In this mode the page is called **Enterprise Account Groups**, because the
+software runs inside the enterprise under its own contract: there is nothing to buy, only accounts so that people
+can sign in. An **account group** is a part of the enterprise that plans its own work with its own people and
+resources, for example a department such as HR or Engineering, a division or a site. (In Strapi it is an
+Organisation.) The licence manager:
 
-1. **Sets up a company**: its name and its Administrator's email. A new email gets an account with a
-   one-time password; an existing person can come only from their own individual organisation.
-2. **Sets the contracts** in one form: Costbars, Timebars and Agilebars seats and **one expiry date** for
-   the company, the same rules as a purchase. A product can be 0, with at least 2 seats in total. A live
-   product never goes below the seats in use, and 0 ends it only while nobody but the Administrator holds
-   a seat. A new date moves every contract and seat. Choose the company (or **Change contracts** in the
-   table) to see its current seats and date.
+1. **Creates an account group and its products in one step**: the group's name, its Administrator's email, the
+   Costbars, Timebars and Agilebars seats and **one expiry date**. A new email gets an account with a one-time
+   password; an existing person can come only from their own individual organisation. At least 2 seats in total.
+   The seats and date are checked first, so a mistake there creates nothing.
+2. **Changes a group's products** with **Change products** in the Current Account Groups table: the same seats
+   and date, the same rules as a purchase. A product can be 0. A product in use never goes below the seats in use,
+   and 0 ends it only while nobody but the group's Administrator holds a seat. A new date moves every seat.
 
-The company's Administrator then manages accounts and seats as in sales mode.
+The group's Administrator then manages accounts and seats as in sales mode.
 
 ---
 

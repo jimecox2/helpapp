@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { parsePool } from '@/lib/licence/parsePool'
 import {
-  getLicencesPage, setUpOrganisationAction, saveContractsAction, accountsFromPoolAction, setSeatAction, newOneTimePasswordAction,
+  getLicencesPage, createAccountGroupAction, saveContractsAction, accountsFromPoolAction, setSeatAction, newOneTimePasswordAction,
 } from '../_actions'
 
 const input = 'rounded border border-gray-300 px-2 py-1'
@@ -57,73 +57,78 @@ export default function Licences() {
     <div className="space-y-8">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm text-gray-600">
-          Licensing on this server: <b>{page.mode === 'self-managed' ? 'self-managed (no payment)' : 'sales (contracts are bought on the website)'}</b>
+          Licensing on this server: <b>{page.mode === 'self-managed' ? 'self-managed (account groups, no payment)' : 'sales (contracts are bought on the website)'}</b>
           {page.manager && ', you are a licence manager'}.
         </p>
         <Button variant="outline" size="sm" onClick={load}><RefreshCw className="h-4 w-4 mr-1" /> Refresh</Button>
       </div>
       {page.manager && <Manager view={page.managerView} reload={load} />}
       {page.company
-        ? <Company company={page.company} reload={load} />
+        ? <Company company={page.company} reload={load} selfManaged={page.mode === 'self-managed'} />
         : !page.manager && <p className="rounded border border-gray-200 bg-gray-50 p-4 text-gray-700">{page.companyError}</p>}
     </div>
   )
 }
 
-// --- Licence manager -------------------------------------------------------------------------------
+// --- Licence manager: account groups -------------------------------------------------------------------------------
 
 function Manager({ view, reload }) {
-  const [org, setOrg] = useState({ name: '', adminEmail: '', adminName: '' })
+  // Account groups (Jim, 26 Nov 2026): one form makes a group, its Administrator and its products; the same form
+  // changes an existing group's products (seats and date).
+  const blankSeats = () => Object.fromEntries(view.products.map(p => [p.code, 0]))
+  const blank = () => ({ orgId: '', name: '', adminEmail: '', adminName: '', seats: blankSeats(), expiresOn: '' })
+  const [form, setForm] = useState(blank)
   const [made, setMade] = useState(null)
-  // One form per company: seats of each Enterprise product and the company's one expiry date.
-  const [contract, setContract] = useState({ orgId: '', seats: {}, expiresOn: '' })
-  const [busy, setBusy] = useState('')
+  const [busy, setBusy] = useState(false)
+  const editing = view.organisations.find(o => String(o.id) === form.orgId)
+  const inUse = code => editing?.contracts.find(c => c.productCode === code)
 
-  const setUp = async e => {
+  const edit = o => {
+    setMade(null)
+    setForm({
+      ...blank(), orgId: String(o.id),
+      seats: Object.fromEntries(view.products.map(p => [p.code, o.contracts.find(c => c.productCode === p.code)?.seats || 0])),
+      expiresOn: o.expiresOnInput || '',
+    })
+  }
+  const submit = async e => {
     e.preventDefault()
-    setBusy('org')
+    setBusy(true)
     try {
-      const r = await setUpOrganisationAction(org)
-      if (!r?.ok) { toast.error(r?.error || 'Could not set up the company.'); return }
-      setMade(r)
-      setOrg({ name: '', adminEmail: '', adminName: '' })
+      if (editing) {
+        const r = await saveContractsAction({ orgId: form.orgId, seats: form.seats, expiresOn: form.expiresOn })
+        if (!r?.ok) { toast.error(r?.error || 'Could not save the products.'); return }
+        const said = [r.made.length && `added: ${r.made.join(', ')}`, r.changed.length && `changed: ${r.changed.join(', ')}`, r.ended.length && `ended: ${r.ended.join(', ')}`].filter(Boolean)
+        toast.success(`${editing.name} saved (${said.join('; ')}), all until ${r.expiresOn}.`)
+        setForm(blank())
+      } else {
+        const { orgId, ...input } = form
+        const r = await createAccountGroupAction(input)
+        if (!r?.ok) { toast.error(r?.error || 'Could not create the account group.'); return }
+        setMade(r)
+        if (r.productsError) toast.error(r.productsError)
+        setForm(blank())
+      }
       await reload()
-    } finally { setBusy('') }
+    } finally { setBusy(false) }
   }
-  const save = async e => {
-    e.preventDefault()
-    setBusy('contract')
-    try {
-      const r = await saveContractsAction(contract)
-      if (!r?.ok) { toast.error(r?.error || 'Could not save the contracts.'); return }
-      const said = [r.made.length && `made: ${r.made.join(', ')}`, r.changed.length && `changed: ${r.changed.join(', ')}`, r.ended.length && `ended: ${r.ended.join(', ')}`].filter(Boolean)
-      toast.success(`Contracts saved (${said.join('; ')}), all until ${r.expiresOn}.`)
-      await reload()
-    } finally { setBusy('') }
-  }
-  // Choosing a company fills in its live seats and its date.
-  const pick = orgId => {
-    const o = view.organisations.find(x => String(x.id) === String(orgId))
-    const seats = Object.fromEntries(view.products.map(p => [p.code, o?.contracts.find(c => c.productCode === p.code)?.seats || 0]))
-    setContract({ orgId: String(orgId || ''), seats, expiresOn: o?.expiresOnInput || '' })
-  }
-  const chosen = view.organisations.find(o => String(o.id) === contract.orgId)
-  const inUse = code => chosen?.contracts.find(c => c.productCode === code)
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Companies on this server</CardTitle>
-        <CardDescription>Self-managed licensing: you set up each company and its contracts. No payment is taken.</CardDescription>
+        <CardTitle>Current Account Groups</CardTitle>
+        <CardDescription>
+          Each group has its own Administrator, its people and its seats of each product. Runs on your own servers; no payment is taken.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-gray-500 border-b">
-              <tr><th className="py-2 pr-4">Company</th><th className="py-2 pr-4">Customer ID</th><th className="py-2 pr-4">Administrator</th><th className="py-2 pr-4">People</th><th className="py-2">Contracts</th></tr>
+              <tr><th className="py-2 pr-4">Account group</th><th className="py-2 pr-4">Customer ID</th><th className="py-2 pr-4">Administrator</th><th className="py-2 pr-4">People</th><th className="py-2">Products</th></tr>
             </thead>
             <tbody>
-              {view.organisations.length === 0 && <tr><td colSpan={5} className="py-3 text-gray-500">No companies yet.</td></tr>}
+              {view.organisations.length === 0 && <tr><td colSpan={5} className="py-3 text-gray-500">No account groups yet.</td></tr>}
               {view.organisations.map(o => (
                 <tr key={o.id} className="border-b last:border-0 align-top">
                   <td className="py-2 pr-4 font-semibold">{o.name}</td>
@@ -131,11 +136,9 @@ function Manager({ view, reload }) {
                   <td className="py-2 pr-4">{o.administrator || <span className="text-red-700">none</span>}</td>
                   <td className="py-2 pr-4">{o.members}</td>
                   <td className="py-2 space-y-1">
-                    {o.contracts.map(c => (
-                      <div key={c.id}>{c.productName}: {c.used} of {c.seats} seats</div>
-                    ))}
+                    {o.contracts.map(c => <div key={c.id}>{c.productName}: {c.used} of {c.seats} seats</div>)}
                     {o.expiresOn && <div className="text-gray-500">until {o.expiresOn}</div>}
-                    <button type="button" onClick={() => pick(o.id)} className="text-sm text-blue-700 hover:underline">{o.contracts.length ? 'Change contracts' : '+ contracts'}</button>
+                    <button type="button" onClick={() => edit(o)} className="text-sm text-blue-700 hover:underline">Change products</button>
                   </td>
                 </tr>
               ))}
@@ -143,50 +146,45 @@ function Manager({ view, reload }) {
           </table>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <form onSubmit={setUp} className="space-y-2 rounded border border-gray-200 p-4">
-            <h3 className="font-semibold">Set up a company</h3>
-            <label className="block text-sm">Company name<input className={`${input} w-full`} value={org.name} onChange={e => setOrg({ ...org, name: e.target.value })} required maxLength={100} /></label>
-            <label className="block text-sm">Administrator&apos;s email<input type="email" className={`${input} w-full`} value={org.adminEmail} onChange={e => setOrg({ ...org, adminEmail: e.target.value })} required /></label>
-            <label className="block text-sm">Administrator&apos;s name (new account only)<input className={`${input} w-full`} value={org.adminName} onChange={e => setOrg({ ...org, adminName: e.target.value })} maxLength={100} /></label>
-            <p className="text-xs text-gray-500">A new email gets an account with a one-time password. An existing account may only come from its own individual organisation, and keeps its Customer ID.</p>
-            <Button type="submit" disabled={!!busy}>{busy === 'org' ? 'Please wait…' : 'Set up'}</Button>
-            {made && (
-              <div className="rounded border border-green-300 bg-green-50 p-3 text-sm">
-                <p><b>{made.organisation.name}</b> is set up, Customer ID <span className="font-mono">{made.organisation.customerId}</span>.</p>
-                {made.administrator.password
-                  ? <p>Give {made.administrator.email} this one-time password now, it is not shown again: <span className="font-mono text-base">{made.administrator.password}</span></p>
-                  : <p>{made.administrator.email} keeps their own password.</p>}
-              </div>
-            )}
-          </form>
-
-          <form onSubmit={save} className="space-y-2 rounded border border-gray-200 p-4">
-            <h3 className="font-semibold">Contracts</h3>
-            <label className="block text-sm">Company
-              <select className={`${input} w-full`} value={contract.orgId} onChange={e => pick(e.target.value)} required>
-                <option value="">Choose…</option>
-                {view.organisations.map(o => <option key={o.id} value={o.id}>{o.name}</option>)}
-              </select>
-            </label>
-            {view.products.length === 0 && <p className="text-xs text-red-700">No Enterprise products (CBT03, TBT03, ABT03) in Strapi. Add the product rows first.</p>}
+        <form onSubmit={submit} className="space-y-3 rounded border border-gray-200 p-4 max-w-2xl">
+          <h3 className="font-semibold">{editing ? `Change products: ${editing.name}` : 'Create Account Group & Products'}</h3>
+          {!editing && (
+            <>
+              <label className="block text-sm">Account group name, for example a department<input className={`${input} w-full`} value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required maxLength={100} placeholder="e.g. Human Resources" /></label>
+              <label className="block text-sm">Administrator&apos;s email<input type="email" className={`${input} w-full`} value={form.adminEmail} onChange={e => setForm({ ...form, adminEmail: e.target.value })} required /></label>
+              <label className="block text-sm">Administrator&apos;s name (new account only)<input className={`${input} w-full`} value={form.adminName} onChange={e => setForm({ ...form, adminName: e.target.value })} maxLength={100} /></label>
+            </>
+          )}
+          {view.products.length === 0 && <p className="text-xs text-red-700">No Enterprise products (CBT03, TBT03, ABT03) in Strapi. Add the product rows first.</p>}
+          <div className="flex flex-wrap gap-4">
             {view.products.map(p => (
               <label key={p.code} className="block text-sm">{p.name} seats
                 {inUse(p.code) && <span className="text-gray-500"> ({inUse(p.code).used} in use)</span>}
                 <input type="number" min={0} max={1000} aria-label={`${p.name} seats`} className={`${input} ml-2 w-24`}
-                  value={contract.seats[p.code] ?? 0}
-                  onChange={e => setContract({ ...contract, seats: { ...contract.seats, [p.code]: e.target.value } })} />
+                  value={form.seats[p.code] ?? 0}
+                  onChange={e => setForm({ ...form, seats: { ...form.seats, [p.code]: e.target.value } })} />
               </label>
             ))}
-            <label className="block text-sm">Expires on (every product)<input type="date" className={`${input} w-48`} value={contract.expiresOn} onChange={e => setContract({ ...contract, expiresOn: e.target.value })} required /></label>
-            <p className="text-xs text-gray-500">
-              One date for the whole company, at least 2 seats in total. The Administrator holds one seat of each product
-              with seats. A product can be 0; a live one keeps at least the seats in use, and 0 ends it only when nobody
-              else holds a seat. A new date moves every seat with it.
-            </p>
-            <Button type="submit" disabled={!!busy || !contract.orgId}>{busy === 'contract' ? 'Please wait…' : 'Save contracts'}</Button>
-          </form>
-        </div>
+          </div>
+          <label className="block text-sm">Expires on (every product)<input type="date" className={`${input} ml-2 w-48`} value={form.expiresOn} onChange={e => setForm({ ...form, expiresOn: e.target.value })} required /></label>
+          <p className="text-xs text-gray-500">
+            {editing
+              ? 'A product can be 0; one in use keeps at least the seats in use, and 0 ends it only when nobody but the Administrator holds a seat. A new date moves every seat with it.'
+              : 'A new email gets an account with a one-time password. An existing account may only come from its own individual organisation. The Administrator holds one seat of each product with seats; at least 2 seats in total.'}
+          </p>
+          <div className="flex gap-2">
+            <Button type="submit" disabled={busy}>{busy ? 'Please wait…' : editing ? 'Save products' : 'Create'}</Button>
+            {editing && <Button type="button" variant="outline" onClick={() => setForm(blank())}>Cancel</Button>}
+          </div>
+          {made && (
+            <div className="rounded border border-green-300 bg-green-50 p-3 text-sm">
+              <p><b>{made.organisation.name}</b> is created, Customer ID <span className="font-mono">{made.organisation.customerId}</span>{made.products ? `, products until ${made.products.expiresOn}` : ''}.</p>
+              {made.administrator.password
+                ? <p>Give {made.administrator.email} this one-time password now, it is not shown again: <span className="font-mono text-base">{made.administrator.password}</span></p>
+                : <p>{made.administrator.email} keeps their own password.</p>}
+            </div>
+          )}
+        </form>
       </CardContent>
     </Card>
   )
@@ -194,7 +192,7 @@ function Manager({ view, reload }) {
 
 // --- A company's Administrator ---------------------------------------------------------------------
 
-function Company({ company, reload }) {
+function Company({ company, reload, selfManaged }) {
   const { organisation: org, contracts, members } = company
   const [busy, setBusy] = useState('')
   const [password, setPassword] = useState(null)
@@ -277,8 +275,9 @@ function Company({ company, reload }) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 overflow-x-auto">
-          {contracts.length === 0 && <p className="text-gray-600">No live Enterprise contract yet. Enterprise licences are bought on Costbars Enterprise (CBT03) on the website, with seats of Costbars, Timebars and Agilebars in one order.</p>}
-          {contracts.length > 0 && <p className="text-sm text-gray-600">Each person can hold a seat of every product your company has: tick the seats they need.</p>}
+          {contracts.length === 0 && selfManaged && <p className="text-gray-600">No products for {org.name} yet. Your licence manager adds them.</p>}
+          {contracts.length === 0 && !selfManaged && <p className="text-gray-600">No live Enterprise contract yet. Enterprise licences are bought on Costbars Enterprise (CBT03) on the website, with seats of Costbars, Timebars and Agilebars in one order.</p>}
+          {contracts.length > 0 && <p className="text-sm text-gray-600">Each person can hold a seat of every product {selfManaged ? 'your group' : 'your company'} has: tick the seats they need.</p>}
           {contracts.map(c => (
             <p key={c.id} className="text-sm"><b>{c.productName}</b> <span className="font-mono text-gray-500">{c.productCode}</span>: {c.used} of {c.seats} seats in use, {c.free} free, until {c.expiresOn}{c.selfManaged ? ' (self-managed)' : ''}</p>
           ))}
@@ -340,7 +339,7 @@ function Company({ company, reload }) {
         </CardHeader>
         <CardContent className="space-y-4">
           {contracts.length === 0
-            ? <p className="rounded border border-yellow-300 bg-yellow-50 p-3 text-sm text-yellow-900">Import needs a live Enterprise contract: every person imported takes one of its seats.</p>
+            ? <p className="rounded border border-yellow-300 bg-yellow-50 p-3 text-sm text-yellow-900">Import needs a live product: every person imported takes one of its seats.</p>
             : (
               <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50">
                 <Upload className="h-4 w-4" /> Choose file
