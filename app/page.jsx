@@ -48,9 +48,9 @@ const FEATURES = [
   },
   {
     icon: ShieldCheck,
-    title: 'Users & Roles',
+    title: 'Users, Roles & Seats',
     href: '/admin/users',
-    text: 'Administrators decide who sees which pubsets and dashboards, with roles taken from your resource pool.',
+    text: 'Administrators make accounts from the resource pool, decide who sees which pubsets and dashboards, and give out seats.',
   },
 ]
 

@@ -606,7 +606,7 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
 | `/help/ask?tool=byguide` | **AI Ask by Guide** button on Ask AI: the original helpapp help panel (`HelpChatPanel.jsx`, guide picker, Gemini/Ollama). Was `/aitemp` "AI Help (beta)", which redirects here | yes |
 | `/dashboard/*` | Enterprise Dashboard, copied from tbwww (two nav rows: app nav + `EnterpriseHeader`). Data comes from `lib/crud/dashboardData.js` (active source, or the user's connected pubset). `/personaldashboard` was removed and redirects here | yes |
 | `/pubsets` | Redirects to `/dashboard/pubsets` | yes |
-| `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users & Roles, Administrator only) | yes |
+| `/admin/*` | Notifications (settings, history, tests) and `/admin/users` (Users, Roles & Seats, Administrator only) | yes |
 | `/update-help` | Push `public/docsHelp` into Strapi help-articles: Create / Update per guide, Update All (existing articles only), checkbox to also update title, description, tags and SEO (`app/update-help/`, `/api/help-sync`, `lib/help/strapiSync.js`). Strapi Administrator whose email is in `HELP_EDITORS` | yes |
 | `/help/ask?tool=generator` | AI Generator (`components/TbGeneratorPanel.jsx`), opened by the **AI Generator** button on the Help Assistant: paste text, get a transferBars JSON file; sample documents in `public/projectArtifacts/` (login needed to download). `/tbgenerator` redirects here | yes |
 
@@ -661,17 +661,20 @@ helpapp is now the customer "Cloud" site. tbwww keeps marketing, registration an
   and one expiry date for the company; a product may be 0, at least 2 seats in total; a live product never below the
   seats in use, 0 ends it only while nobody but the Administrator holds a seat; every contract and seat order moves to
   the date.
-- A company's Administrator (both modes): accounts from the resource pool (`lib/licence/parsePool.js`: a backup,
-  tbResources.json, a tbrunp tbResources.js data file or a CSV; Human rows with an email; existing accounts move in
-  only from their own individual organisation when alone). Import needs a live contract: each person gets one
-  licence (TBT03 by default, `defaultContract()`, changeable per row or Skip) and nobody gets an account without a
-  seat (Jim, 16 Nov 2026). The people table has a seat checkbox per product (a person may hold several licences);
-  a new one-time password. The pool's Administrator role is never given (one Administrator per organisation).
-  One-time passwords are shown once and never stored.
+- A company's Administrator (both modes): **Users, Roles & Seats** (`/admin/users`, Jim 26 Nov 2026) is the one people
+  page: role dropdown (`setMemberRole`), a seat checkbox per product (a person may hold several licences), account
+  status, new one-time password. One import from the resource pool (`lib/licence/parsePool.js`: a backup,
+  tbResources.json, a tbrunp tbResources.js data file or a CSV; Human rows with an email) previews each row
+  (`accountsFromPool`: Create account / Move in / Update role / Give seat / No change / Skip) and one Apply runs it.
+  Existing accounts move in only from their own individual organisation when alone. A new account needs a seat
+  (TBT03 by default, `defaultContract()`); with no seat left it is skipped (Jim, 16 Nov 2026); members without a seat
+  get one (default TBT03). The pool's Administrator role is never given (one Administrator per organisation).
+  One-time passwords are shown once and never stored. `/admin/licences` shows only products (and account groups
+  for a licence manager).
 - `/account/password`: Change password through Strapi `/auth/change-password` with the user's own login (the
   Authenticated role needs `changePassword`). No email needed.
 - Enterprise contracts are bought only on tbwww CBT03 (Costbars, Timebars and Agilebars seats in one order, one date per
-  company); the Licences page shows a seat column per product the company has.
+  company); Users, Roles & Seats shows a seat column per product the company has.
 - Copies of tbwww, kept the same (only import paths differ; last synced 23 Nov 2026): `lib/org/orgRules.js`, `lib/orders/seatRules.js`,
   `lib/orders/seatPrice.js`, `lib/orders/licenseOrders.js` (tbwww `lib/licenseOrders.js`), `lib/strapiAdmin.js`,
   `tests/fakeStrapi.mjs`. All writes use `STRAPI_ADMIN_TOKEN` on the server.

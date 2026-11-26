@@ -6926,10 +6926,11 @@ My Orders), which goes to the Costbars Enterprise page:
 - **Add seats or a product now**: more seats, or a product the company does not have yet, charged for the
   months left. Everything still ends on the company's date.
 
-**Timebars Cloud.** The Administrator can also manage accounts and seats on **Licences & Accounts**
-(Users & Roles menu, cloud.timebars.com): make accounts for the people in the resource pool (each gets a
-one-time password and a seat, Timebars by default), tick or untick each person's seat of each product,
-and set a new one-time password. Setup details: [Administrators Guide](https://help.timebars.com/administrators-guide#102-enterprise-companies-seats-and-self-managed-licensing).
+**Timebars Cloud.** The Administrator can also manage people on **Users, Roles & Seats**
+(menu of the same name, cloud.timebars.com): set each person's role, tick or untick their seat of each product,
+and set a new one-time password. **Import people from the resource pool** shows what will happen to each person
+(new account with a one-time password and a seat, Timebars by default; role update; seat given) and one
+**Apply** does it. Setup details: [Administrators Guide](https://help.timebars.com/administrators-guide#102-enterprise-companies-seats-and-self-managed-licensing).
 
 The exact numbers for each product are on the pricing page. They come from your
 purchased product and are downloaded each time you log in (gold icon, top right):

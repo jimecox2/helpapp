@@ -12,7 +12,7 @@ import { strapiAdmin as strapi, strapiProblem } from '@/lib/strapiAdmin'
 import { getUser } from '@/lib/org/orgRules'
 import {
   licensingMode, isLicenceManager, managerOverview, saveCompanyContracts, createAccountGroup,
-  companyOverview, accountsFromPool, setSeat, newOneTimePassword,
+  companyOverview,
 } from '@/lib/licence/selfManaged'
 
 async function run(label, fn) {
@@ -54,16 +54,4 @@ export async function createAccountGroupAction(input) {
 
 export async function saveContractsAction(input) {
   return run('save contracts', managerOnly(() => saveCompanyContracts(strapi, input || {})))
-}
-
-export async function accountsFromPoolAction(input) {
-  return run('accounts from pool', me => accountsFromPool(strapi, me.id, input || {}))
-}
-
-export async function setSeatAction(input) {
-  return run('seat', me => setSeat(strapi, me.id, input || {}))
-}
-
-export async function newOneTimePasswordAction(userId) {
-  return run('one-time password', me => newOneTimePassword(strapi, me.id, userId))
 }

@@ -1,4 +1,4 @@
-// app/admin/licences/page.jsx — Licences & Accounts (Phase 3). Who sees what is decided on the server
+// app/admin/licences/page.jsx — Licences & Accounts, or Enterprise Account Groups when self-managed. Who sees what is decided on the server
 // (./_actions.js); this page only needs a login.
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth/auth'
@@ -23,16 +23,15 @@ export default async function LicencesPage() {
             An account group is a part of your enterprise that plans its own work with its own people and resources:
             a department such as HR or Engineering, a division, a programme or a site. Each group has an Administrator,
             accounts for its people so they can sign in, and seats of Costbars, Timebars and Agilebars. The group&apos;s
-            Administrator makes the accounts from the resource pool, gives out the seats, and sets a new one-time
-            password when someone is locked out.
+            Administrator makes the accounts from the resource pool and gives out the seats on Users, Roles &amp; Seats.
           </p>
         </>
       ) : (
         <>
           <h1 className="text-3xl font-extrabold text-gray-900">Licences &amp; Accounts</h1>
           <p className="text-gray-600 mt-2 mb-6">
-            Your company&apos;s Enterprise contracts and seats. Make accounts for your people from the resource pool,
-            give them seats, and set a new one-time password when someone is locked out.
+            Your company&apos;s Enterprise contracts: the seats of each product and when they end. Make accounts for
+            your people and give them seats on Users, Roles &amp; Seats.
           </p>
         </>
       )}

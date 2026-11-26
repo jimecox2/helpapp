@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict'
 import {
   licensingMode, licenceManagers, isLicenceManager, makeOneTimePassword,
-  managerOverview, setUpOrganisation, saveCompanyContracts, createAccountGroup, companyOverview, accountsFromPool, setSeat, newOneTimePassword,
+  managerOverview, setUpOrganisation, saveCompanyContracts, createAccountGroup, setMemberRole, companyOverview, accountsFromPool, setSeat, newOneTimePassword,
 } from '../lib/licence/selfManaged.js'
 import { createOrganisation } from '../lib/org/orgRules.js'
 import { fakeStrapi as baseFake } from './fakeStrapi.mjs'
@@ -214,11 +214,14 @@ await t('administrator: seats on and off, one-time password; only for their own 
   assert.match((await companyOverview(strapi, a.id, NOW)).error, /Only the Administrator/)
   assert.match((await accountsFromPool(strapi, a.id, { rows: [] }, NOW)).error, /Only the Administrator/)
 })
-await t('import: needs a live contract; one licence each, TBT03 by default, switchable; skip', async () => {
+await t('import: nobody new without a live product; one licence each, TBT03 by default, switchable; skip', async () => {
   const { strapi, db } = fakeStrapi()
   const r = await setUpOrganisation(strapi, { name: 'Acme', adminEmail: 'boss@acme.com' })
   const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
-  assert.match((await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com' }] }, NOW)).error, /no live Enterprise contract/)
+  // No live product: nobody new gets an account.
+  const none = await accountsFromPool(strapi, admin.id, { rows: [{ email: 'a@acme.com' }], apply: true }, NOW)
+  assert.deepEqual(none.rows.map(x => [x.email, x.status]), [['a@acme.com', 'skipped']])
+  assert.equal([...db.users.values()].some(u => u.email === 'a@acme.com'), false)
   const cb = await saveContract(strapi, { orgId: r.organisation.id, productId: 8, seats: 3, expiresOn: '2027-11-15' }, NOW)
   const tb = await saveContract(strapi, { orgId: r.organisation.id, productId: 9, seats: 3, expiresOn: '2027-11-15' }, NOW)
   const rows = [{ email: 'a@acme.com' }, { email: 'b@acme.com' }, { email: 'c@acme.com' }]
@@ -293,6 +296,46 @@ await t('manager: one step makes an account group, its Administrator and its pro
   assert.deepEqual(view.organisations[0].contracts.map(c => [c.productCode, c.seats, c.owner]).sort(),
     [['ABT03', 2, 'hr@acme.com'], ['TBT03', 3, 'hr@acme.com']])
   assert.match((await createAccountGroup(strapi, { name: 'IT', adminEmail: 'hr@acme.com', seats: { TBT03: 3 }, expiresOn: '2027-11-15' }, NOW)).error, /already belongs to "Human Resources"/)
+})
+
+await t('import, one button: people already in get a new role or a seat when they have none; never Administrator', async () => {
+  const { strapi, db } = fakeStrapi()
+  const r = await createAccountGroup(strapi, { name: 'Acme', adminEmail: 'boss@acme.com', seats: { TBT03: 5, CBT03: 3 }, expiresOn: '2027-11-15' }, NOW)
+  const admin = [...db.users.values()].find(u => u.email === 'boss@acme.com')
+  const view = await companyOverview(strapi, admin.id, NOW)
+  const tb = view.contracts.find(c => c.productCode === 'TBT03')
+  const cb = view.contracts.find(c => c.productCode === 'CBT03')
+  await accountsFromPool(strapi, admin.id, { rows: [
+    { email: 'seated@acme.com', role: 'Team Member', contractId: cb.id },
+    { email: 'noseat@acme.com', role: 'Team Member', contractId: tb.id },
+  ], apply: true }, NOW)
+  const noseat = [...db.users.values()].find(u => u.email === 'noseat@acme.com')
+  await setSeat(strapi, admin.id, { userId: noseat.id, contractId: tb.id, on: false }, NOW)
+
+  const rows = [
+    { email: 'seated@acme.com', role: 'Project Manager' },
+    { email: 'noseat@acme.com', role: 'Team Member' },
+    { email: 'new@acme.com', role: 'Administrator' },
+  ]
+  const preview = await accountsFromPool(strapi, admin.id, { rows }, NOW)
+  const by = Object.fromEntries(preview.rows.map(x => [x.email, x]))
+  assert.deepEqual([by['seated@acme.com'].status, by['seated@acme.com'].currentRole, by['seated@acme.com'].role, by['seated@acme.com'].contractId], ['member', 'Team Member', 'Project Manager', cb.id])
+  assert.deepEqual([by['noseat@acme.com'].status, by['noseat@acme.com'].contractId], ['member', tb.id])
+  assert.deepEqual([by['new@acme.com'].role, !!by['new@acme.com'].roleNote], ['', true])
+
+  const done = await accountsFromPool(strapi, admin.id, { rows: preview.rows.map(x => ({ ...x, contractId: x.contractId })), apply: true }, NOW)
+  const out = Object.fromEntries(done.rows.map(x => [x.email, x]))
+  assert.deepEqual([out['seated@acme.com'].status, out['seated@acme.com'].roleChanged, out['seated@acme.com'].seats], ['updated', true, []])
+  assert.deepEqual([out['noseat@acme.com'].status, out['noseat@acme.com'].seats], ['updated', ['TBT03']])
+  assert.equal(out['new@acme.com'].status, 'created')
+  assert.equal([...db.users.values()].find(u => u.email === 'new@acme.com').primary_role, '')
+  assert.equal([...db.users.values()].find(u => u.email === 'seated@acme.com').primary_role, 'Project Manager')
+  const again = await accountsFromPool(strapi, admin.id, { rows: (await accountsFromPool(strapi, admin.id, { rows }, NOW)).rows, apply: true }, NOW)
+  assert.deepEqual(again.rows.map(x => x.status), ['no change', 'no change', 'no change'])
+
+  assert.equal((await setMemberRole(strapi, admin.id, { userId: noseat.id, role: 'Executive' })).ok, true)
+  assert.equal(db.users.get(noseat.id).primary_role, 'Executive')
+  assert.match((await setMemberRole(strapi, admin.id, { userId: admin.id, role: 'Team Member' })).error, /your own role/)
 })
 
 console.log(failed ? `\n${failed} failed` : '\nall passed')

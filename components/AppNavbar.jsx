@@ -39,10 +39,10 @@ const NAV = [
     ],
   },
   {
-    label: 'Users & Roles',
+    label: 'Users, Roles & Seats',
     adminOnly: true,
     children: [
-      { label: 'Users & Roles', href: '/admin/users', adminOnly: true },
+      { label: 'Users, Roles & Seats', href: '/admin/users', adminOnly: true },
       { label: SELF_MANAGED ? 'Account Groups' : 'Licences & Accounts', href: '/admin/licences', adminOnly: true },
     ],
   },

@@ -466,11 +466,14 @@ checkout session, and each saves the payment id in `stripe_payment_id`. Orders a
 websites' servers with the server key, never with a user's login.
 
 **Sales mode (default).** Companies buy, renew and add seats at www.timebars.com (Cloud Publishing Guide,
-section 9). The company's Administrator manages accounts and seats on Timebars Cloud,
-**Licences & Accounts** (`/admin/licences`): accounts from the resource pool (a backup, `tbResources.json`
-or `.js`, or a CSV), one licence each (TBT03 by default), a seat checkbox per product, and one-time
-passwords (shown once, never stored; the person changes it on **Change password**). Nobody gets an account
-without a seat.
+section 9). The company's Administrator manages people on Timebars Cloud, **Users, Roles & Seats**
+(`/admin/users`, menu of the same name): one table with each person's role, a seat checkbox per product, the
+account status and a new one-time password (shown once, never stored; the person changes it on
+**Change password**). **Import people from the resource pool** (a backup, `tbResources.json` or `.js`, or a CSV)
+shows what will happen to each person before anything is saved: create an account, move an account in, update
+the role, give a seat (Timebars by default) or skip; one **Apply** does it all. Nobody gets an account without a
+seat, and the pool never makes anyone Administrator. **Licences & Accounts** (`/admin/licences`) shows only the
+company's products and seats.
 
 **Self-managed mode (containers, own the code, air-gapped).** No payment: a **licence manager** sets up the
 companies and their contracts on the same page. In the tbown package set, in `tbapps.conf`:
@@ -494,7 +497,7 @@ Organisation.) The licence manager:
    and date, the same rules as a purchase. A product can be 0. A product in use never goes below the seats in use,
    and 0 ends it only while nobody but the group's Administrator holds a seat. A new date moves every seat.
 
-The group's Administrator then manages accounts and seats as in sales mode.
+The group's Administrator then manages people, roles and seats on **Users, Roles & Seats**, as in sales mode.
 
 ---
 
