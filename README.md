@@ -30,7 +30,7 @@ tools/makeCompleteGuidePdfs.mjs
 
 # git add commit push
 acp "message"
-
+acp "jim notes"
 
 
 # Lecal help models specs, do this later with better hardware.
