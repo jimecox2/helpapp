@@ -5,6 +5,9 @@
 // browser as window.__TB_CLOUD__ before any app code runs. Unset = Timebars Ltd.'s own addresses.
 // Same names as tbwww's config/site.js.
 
+import axios from 'axios'
+import { installStrapiCompat } from '@/lib/strapiCompat'
+
 const isServer = typeof window === 'undefined'
 
 const runtime = isServer
@@ -27,6 +30,9 @@ const pick = (value, fallback) =>
 
 // Strapi REST API, e.g. https://be2.timebars.com/api
 export const API_URL = pick(runtime.apiUrl, 'https://be2.timebars.com/api')
+
+// Strapi 4 and 5 both work: Strapi-Response-Format v4 header and numeric ids turned into documentIds (lib/strapiCompat.js)
+installStrapiCompat(API_URL, axios)
 
 // Strapi's own address without /api (uploaded images). Defaults to API_URL with /api taken off.
 export const API_URL_GQL = pick(runtime.apiUrlGql, API_URL.replace(/\/api$/, ''))
